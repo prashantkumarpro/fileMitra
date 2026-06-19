@@ -1,0 +1,414 @@
+---
+import ToolLayout from '../../layouts/ToolLayout.astro';
+import { Upload, Download, RefreshCw, FileText, ArrowUp, ArrowDown, Trash2 } from 'lucide-astro';
+---
+
+<ToolLayout
+  title="Image to PDF"
+  description="Convert PNG, JPG, or WebP images into a single clean PDF document client-side. Reorder images and configure page margins."
+  activeTool="image-to-pdf"
+>
+  <div class="flex-grow flex flex-col gap-6">
+    
+    <!-- Drag & Drop Upload Zone -->
+    <div
+      id="upload-zone"
+      class="border-2 border-dashed border-hairline hover:border-hairline-strong bg-canvas rounded-lg p-16 flex flex-col items-center justify-center text-center cursor-pointer transition-all duration-200 shadow-level-2 select-none group"
+    >
+      <input type="file" id="file-input" accept="image/png, image/jpeg, image/webp" multiple class="hidden" />
+      <span class="p-4 bg-canvas-soft rounded-full text-mute group-hover:text-primary border border-hairline mb-4 transition-colors">
+        <Upload class="w-6 h-6 animate-pulse" />
+      </span>
+      <h3 class="text-ink font-semibold text-lg mb-1">Drag and drop your images to compile</h3>
+      <p class="text-mute text-xs max-w-xs mb-4">
+        Supports JPEG, PNG, and WebP formats. Reorder layout frames before downloading.
+      </p>
+      <button class="bg-primary text-on-primary hover:bg-primary/95 text-xs font-semibold px-4 py-2 rounded-pill shadow-level-2 transition-all">
+        Select Images
+      </button>
+    </div>
+
+    <!-- Active Workspace Area -->
+    <div id="workspace" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-6 items-start animate-in fade-in duration-200">
+      
+      <!-- Left side: Image Queue List (2 columns) -->
+      <div class="flex flex-col gap-4 lg:col-span-2">
+        <div class="bg-canvas border border-hairline rounded-md p-6 shadow-level-3">
+          <div class="flex items-center justify-between border-b border-hairline pb-4 mb-4 select-none">
+            <h3 class="font-sans font-semibold text-sm text-ink">Image Slides Queue</h3>
+            <span id="queue-count" class="font-mono text-[10px] text-mute uppercase">0 files selected</span>
+          </div>
+
+          <!-- Dynamic Queue rows -->
+          <div id="file-list" class="flex flex-col gap-3 max-h-[450px] overflow-y-auto pr-1">
+            <!-- Dynamic items go here -->
+          </div>
+
+          <button id="add-more-btn" class="w-full mt-4 border border-dashed border-hairline hover:border-hairline-strong hover:bg-canvas-soft text-body hover:text-ink text-xs font-semibold py-3.5 rounded-sm flex items-center justify-center gap-1.5 transition-all">
+            <Upload class="w-3.5 h-3.5" />
+            Add More Images
+          </button>
+        </div>
+      </div>
+
+      <!-- Right side: Formatting / Settings & Compile (1 column) -->
+      <div class="flex flex-col gap-6 lg:col-span-1">
+        <div class="bg-canvas border border-hairline rounded-md p-6 shadow-level-3 flex flex-col gap-6">
+          <h3 class="font-sans font-semibold text-sm text-ink pb-3 border-b border-hairline select-none flex items-center gap-1.5">
+            <FileText class="w-4 h-4 text-mute" />
+            PDF Options
+          </h3>
+
+          <!-- Page sizing configurations -->
+          <div class="flex flex-col gap-4">
+            <div class="flex flex-col gap-1.5">
+              <label for="page-size" class="font-medium text-xs text-ink select-none">Page Size</label>
+              <select
+                id="page-size"
+                class="w-full bg-canvas text-ink border border-hairline focus:border-hairline-strong text-xs rounded-sm px-2.5 h-9 outline-none transition-all shadow-level-1 cursor-pointer"
+              >
+                <option value="fit">Fit to Image Size</option>
+                <option value="a4">A4 Standard</option>
+                <option value="letter">US Letter</option>
+              </select>
+            </div>
+
+            <div class="flex flex-col gap-1.5">
+              <label for="page-orientation" class="font-medium text-xs text-ink select-none">Orientation</label>
+              <select
+                id="page-orientation"
+                class="w-full bg-canvas text-ink border border-hairline focus:border-hairline-strong text-xs rounded-sm px-2.5 h-9 outline-none transition-all shadow-level-1 cursor-pointer"
+              >
+                <option value="portrait">Portrait</option>
+                <option value="landscape">Landscape</option>
+              </select>
+            </div>
+
+            <div class="flex flex-col gap-1.5">
+              <label for="page-margins" class="font-medium text-xs text-ink select-none">Margins</label>
+              <select
+                id="page-margins"
+                class="w-full bg-canvas text-ink border border-hairline focus:border-hairline-strong text-xs rounded-sm px-2.5 h-9 outline-none transition-all shadow-level-1 cursor-pointer"
+              >
+                <option value="0">None (0px)</option>
+                <option value="20">Thin (20px)</option>
+                <option value="40">Thick (40px)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <button id="compile-download-btn" class="bg-primary text-on-primary hover:bg-primary/95 text-xs font-semibold h-10 rounded-pill flex items-center justify-center gap-1.5 transition-all shadow-level-3">
+              <Download class="w-4 h-4" />
+              Compile & Download PDF
+            </button>
+            <button id="reset-btn" class="bg-canvas border border-hairline hover:bg-canvas-soft text-ink text-xs font-semibold h-10 rounded-pill flex items-center justify-center gap-1.5 transition-all shadow-level-1">
+              <RefreshCw class="w-3.5 h-3.5" />
+              Clear Queue
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</ToolLayout>
+
+<script>
+  import { PDFDocument, PageSizes } from 'pdf-lib';
+
+  const uploadZone = document.getElementById('upload-zone');
+  const fileInput = document.getElementById('file-input') as HTMLInputElement;
+  const workspace = document.getElementById('workspace');
+  
+  const fileListContainer = document.getElementById('file-list');
+  const queueCountText = document.getElementById('queue-count');
+  
+  const pageSizeSelect = document.getElementById('page-size') as HTMLSelectElement;
+  const pageOrientationSelect = document.getElementById('page-orientation') as HTMLSelectElement;
+  const pageMarginsSelect = document.getElementById('page-margins') as HTMLSelectElement;
+  
+  const addMoreBtn = document.getElementById('add-more-btn');
+  const compileDownloadBtn = document.getElementById('compile-download-btn') as HTMLButtonElement;
+  const resetBtn = document.getElementById('reset-btn');
+
+  interface QueueItem {
+    file: File;
+    dataUrl: string;
+    id: string;
+    width: number;
+    height: number;
+  }
+
+  let compileQueue: QueueItem[] = [];
+
+  uploadZone?.addEventListener('click', () => fileInput.click());
+  addMoreBtn?.addEventListener('click', () => fileInput.click());
+
+  uploadZone?.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    uploadZone.classList.add('border-primary', 'bg-canvas-soft');
+  });
+
+  uploadZone?.addEventListener('dragleave', () => {
+    uploadZone.classList.remove('border-primary', 'bg-canvas-soft');
+  });
+
+  uploadZone?.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadZone.classList.remove('border-primary', 'bg-canvas-soft');
+    if (e.dataTransfer?.files && e.dataTransfer.files.length > 0) {
+      handleFiles(Array.from(e.dataTransfer.files));
+    }
+  });
+
+  fileInput?.addEventListener('change', () => {
+    if (fileInput.files && fileInput.files.length > 0) {
+      handleFiles(Array.from(fileInput.files));
+    }
+  });
+
+  async function handleFiles(files: File[]) {
+    const images = files.filter(f => f.type.startsWith('image/'));
+    if (images.length === 0) {
+      alert('Please upload only images (PNG, JPEG, WebP).');
+      return;
+    }
+
+    uploadZone?.classList.add('hidden');
+    workspace?.classList.remove('hidden');
+
+    for (const file of images) {
+      await new Promise<void>((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const dataUrl = e.target?.result as string;
+          const img = new Image();
+          img.onload = () => {
+            compileQueue.push({
+              file,
+              dataUrl,
+              id: Math.random().toString(36).substring(2, 9),
+              width: img.width,
+              height: img.height
+            });
+            resolve();
+          };
+          img.src = dataUrl;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    fileInput.value = '';
+    renderQueue();
+  }
+
+  function renderQueue() {
+    if (!fileListContainer) return;
+    fileListContainer.innerHTML = '';
+
+    if (compileQueue.length === 0) {
+      workspace?.classList.add('hidden');
+      uploadZone?.classList.remove('hidden');
+      return;
+    }
+
+    compileQueue.forEach((item, index) => {
+      const row = document.createElement('div');
+      row.className = 'flex items-center justify-between border border-hairline bg-canvas-soft rounded-sm p-4 animate-in fade-in slide-in-from-bottom-2 duration-150 shadow-level-1';
+      
+      row.innerHTML = `
+        <div class="flex items-center gap-4 min-w-0 flex-grow pr-4">
+          <div class="w-10 h-10 border border-hairline bg-canvas rounded-sm flex items-center justify-center overflow-hidden flex-shrink-0 select-none">
+            <img src="${item.dataUrl}" class="max-h-full max-w-full object-contain" alt="" />
+          </div>
+          <div class="flex flex-col min-w-0">
+            <span class="text-xs font-semibold text-ink truncate">${item.file.name}</span>
+            <div class="flex gap-2 text-[10px] text-mute font-mono mt-0.5 select-none">
+              <span>${formatBytes(item.file.size)}</span>
+              <span>•</span>
+              <span class="text-primary font-medium">${item.width} × ${item.height} px</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-1.5 flex-shrink-0">
+          <button data-id="${item.id}" data-action="up" class="action-btn p-1.5 text-mute hover:text-ink rounded-sm hover:bg-canvas-soft-2 transition-colors" ${index === 0 ? 'disabled style="opacity: 0.3;"' : ''} title="Move Up">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m18 15-6-6-6 6"/></svg>
+          </button>
+          <button data-id="${item.id}" data-action="down" class="action-btn p-1.5 text-mute hover:text-ink rounded-sm hover:bg-canvas-soft-2 transition-colors" ${index === compileQueue.length - 1 ? 'disabled style="opacity: 0.3;"' : ''} title="Move Down">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <button data-id="${item.id}" data-action="delete" class="action-btn p-1.5 text-mute hover:text-error rounded-sm hover:bg-error-soft transition-colors" title="Delete">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2M10 11v6M14 11v6"/></svg>
+          </button>
+        </div>
+      `;
+
+      fileListContainer.appendChild(row);
+    });
+
+    document.querySelectorAll('.action-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const target = e.currentTarget as HTMLElement;
+        const id = target.dataset.id;
+        const action = target.dataset.action;
+        if (!id || !action) return;
+        
+        handleAction(id, action);
+      });
+    });
+
+    if (queueCountText) queueCountText.innerText = `${compileQueue.length} files selected`;
+  }
+
+  function handleAction(id: string, action: string) {
+    const idx = compileQueue.findIndex(item => item.id === id);
+    if (idx === -1) return;
+
+    if (action === 'up' && idx > 0) {
+      const temp = compileQueue[idx];
+      compileQueue[idx] = compileQueue[idx - 1];
+      compileQueue[idx - 1] = temp;
+    } else if (action === 'down' && idx < compileQueue.length - 1) {
+      const temp = compileQueue[idx];
+      compileQueue[idx] = compileQueue[idx + 1];
+      compileQueue[idx + 1] = temp;
+    } else if (action === 'delete') {
+      compileQueue.splice(idx, 1);
+    }
+
+    renderQueue();
+  }
+
+  // Compile PDF action logic
+  compileDownloadBtn?.addEventListener('click', async () => {
+    if (compileQueue.length === 0) return;
+
+    compileDownloadBtn.disabled = true;
+    const initialText = compileDownloadBtn.innerHTML;
+    compileDownloadBtn.innerHTML = `
+      <svg class="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+      Compiling PDF...
+    `;
+
+    try {
+      const pdfDoc = await PDFDocument.create();
+      
+      const sizeOpt = pageSizeSelect.value;
+      const orientOpt = pageOrientationSelect.value;
+      const margin = parseInt(pageMarginsSelect.value) || 0;
+
+      for (const item of compileQueue) {
+        // Resolve target image bytes. In browser, we fetch the data url arrayBuffer
+        const res = await fetch(item.dataUrl);
+        const imgBytes = await res.arrayBuffer();
+
+        let pdfImage;
+        if (item.file.type === 'image/png') {
+          pdfImage = await pdfDoc.embedPng(imgBytes);
+        } else if (item.file.type === 'image/jpeg' || item.file.type === 'image/jpg') {
+          pdfImage = await pdfDoc.embedJpg(imgBytes);
+        } else {
+          // WebP fallback: Draw to canvas as PNG and embed
+          const canvas = document.createElement('canvas');
+          canvas.width = item.width;
+          canvas.height = item.height;
+          const ctx = canvas.getContext('2d');
+          
+          await new Promise<void>((resolve) => {
+            const tempImg = new Image();
+            tempImg.onload = () => {
+              ctx?.drawImage(tempImg, 0, 0);
+              resolve();
+            };
+            tempImg.src = item.dataUrl;
+          });
+
+          const pngDataUrl = canvas.toDataURL('image/png');
+          const pngRes = await fetch(pngDataUrl);
+          const pngBytes = await pngRes.arrayBuffer();
+          pdfImage = await pdfDoc.embedPng(pngBytes);
+        }
+
+        // Configure page dimensions
+        let pageWidth = item.width;
+        let pageHeight = item.height;
+
+        if (sizeOpt === 'a4') {
+          const a4Size = orientOpt === 'portrait' ? PageSizes.A4 : [PageSizes.A4[1], PageSizes.A4[0]];
+          pageWidth = a4Size[0];
+          pageHeight = a4Size[1];
+        } else if (sizeOpt === 'letter') {
+          const letterSize = orientOpt === 'portrait' ? PageSizes.Letter : [PageSizes.Letter[1], PageSizes.Letter[0]];
+          pageWidth = letterSize[0];
+          pageHeight = letterSize[1];
+        }
+
+        const page = pdfDoc.addPage([pageWidth, pageHeight]);
+
+        // Draw image keeping ratio and applying margins
+        const usableWidth = pageWidth - margin * 2;
+        const usableHeight = pageHeight - margin * 2;
+
+        const imgWidth = pdfImage.width;
+        const imgHeight = pdfImage.height;
+
+        // Calculate fitting scale
+        const scaleX = usableWidth / imgWidth;
+        const scaleY = usableHeight / imgHeight;
+        const scale = Math.min(scaleX, scaleY);
+
+        const drawWidth = imgWidth * scale;
+        const drawHeight = imgHeight * scale;
+
+        // Centering
+        const drawX = margin + (usableWidth - drawWidth) / 2;
+        const drawY = margin + (usableHeight - drawHeight) / 2;
+
+        page.drawImage(pdfImage, {
+          x: drawX,
+          y: drawY,
+          width: drawWidth,
+          height: drawHeight
+        });
+      }
+
+      const pdfBytes = await pdfDoc.save();
+
+      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+      const downloadUrl = URL.createObjectURL(blob);
+
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.download = 'compiled-images.pdf';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      URL.revokeObjectURL(downloadUrl);
+    } catch (err) {
+      console.error('Error creating PDF from images:', err);
+      alert('Could not compile PDF document.');
+    } finally {
+      compileDownloadBtn.disabled = false;
+      compileDownloadBtn.innerHTML = initialText;
+    }
+  });
+
+  resetBtn?.addEventListener('click', () => {
+    compileQueue = [];
+    renderQueue();
+  });
+
+  function formatBytes(bytes: number, decimals = 2) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const dm = decimals < 0 ? 0 : decimals;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+  }
+</script>

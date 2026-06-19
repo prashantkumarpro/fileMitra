@@ -1,11 +1,426 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
+import { Image, FileText, Settings, ArrowRight, Check, Search } from 'lucide-astro';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const tools = [
+  {
+    id: 'image-compress',
+    name: 'Compress Image',
+    desc: 'Reduce file sizes of JPG, PNG, and WebP images without losing quality.',
+    category: 'image',
+    href: '/tools/image-compress',
+    tags: ['Popular', 'Lossless'],
+  },
+  {
+    id: 'image-resize',
+    name: 'Resize Image',
+    desc: 'Change dimensions, crop, rotate, and scale images to exact pixel sizes.',
+    category: 'image',
+    href: '/tools/image-resize',
+    tags: ['Canvas'],
+  },
+  {
+    id: 'image-convert',
+    name: 'Convert Format',
+    desc: 'Transform images between JPEG, PNG, WebP, and other formats instantly.',
+    category: 'image',
+    href: '/tools/image-convert',
+    tags: ['Offline'],
+  },
+  {
+    id: 'pdf-merge',
+    name: 'Merge PDFs',
+    desc: 'Combine multiple PDF documents into a single, organized file client-side.',
+    category: 'pdf',
+    href: '/tools/pdf-merge',
+    tags: ['PDF-Lib', 'Privacy'],
+  },
+  {
+    id: 'pdf-split',
+    name: 'Split PDF',
+    desc: 'Extract specific pages or page ranges from a PDF into a separate document.',
+    category: 'pdf',
+    href: '/tools/pdf-split',
+    tags: ['Fast'],
+  },
+  {
+    id: 'pdf-to-image',
+    name: 'PDF to Image',
+    desc: 'Convert PDF pages into high-resolution JPG or PNG image files.',
+    category: 'pdf',
+    href: '/tools/pdf-to-image',
+    tags: ['Canvas'],
+  },
+  {
+    id: 'image-to-pdf',
+    name: 'Image to PDF',
+    desc: 'Transform individual or multiple images into a single PDF document.',
+    category: 'pdf',
+    href: '/tools/image-to-pdf',
+    tags: ['New'],
+  },
+];
 ---
 
 <Layout>
-	<Welcome />
+  <!-- Hero Section -->
+  <section class="relative overflow-hidden bg-canvas py-12 md:py-24 border-b border-hairline">
+    <!-- Atmospheric Mesh Gradient Backdrop -->
+    <div class="absolute inset-0 z-0 flex items-center justify-center overflow-hidden">
+      <div class="w-[800px] h-[400px] rounded-full mesh-gradient-bg opacity-45 pointer-events-none"></div>
+    </div>
+
+    <div class="relative z-10 max-w-[1200px] mx-auto px-6 flex flex-col items-center text-center">
+      <!-- Announcement Pill -->
+      <a href="javascript:void(0)" id="ask-ai-trigger" class="inline-flex items-center gap-2 bg-canvas-soft border border-hairline hover:border-hairline-strong px-3 py-1 rounded-full text-xs text-body hover:text-ink transition-colors mb-6 shadow-level-1 select-none">
+        <span class="bg-primary text-on-primary text-[10px] font-semibold px-2 py-0.5 rounded-full uppercase tracking-wider scale-95">New</span>
+        <span>Introducing on-device AI File Assistant.</span>
+        <ArrowRight class="w-3 h-3 text-mute" />
+      </a>
+
+      <!-- Headline (sentence-case, period-terminated) -->
+      <h1 class="display-xl text-ink font-sans max-w-[800px] tracking-tight mb-6">
+        Process images and PDFs directly in your browser.
+      </h1>
+
+      <!-- Subtitle -->
+      <p class="body-lg text-body max-w-[650px] mb-8 font-sans">
+        FileMitra runs everything client-side. No uploads to server, no privacy leaks, and instant processing at visual quality.
+      </p>
+
+      <!-- CTAs -->
+      <div class="flex items-center gap-4">
+        <a href="#tools" class="bg-primary text-on-primary hover:bg-primary/95 shadow-level-3 h-12 px-6 rounded-pill flex items-center justify-center text-sm font-semibold transition-all">
+          Explore Tools
+        </a>
+        <a href="/auth?tab=signup" class="bg-canvas text-ink border border-hairline hover:border-hairline-strong shadow-level-2 h-12 px-6 rounded-pill flex items-center justify-center text-sm font-semibold transition-all">
+          Get Pro Account
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Logo Strip (Hidden on Mobile) -->
+  <section class="hidden md:block bg-canvas border-b border-hairline py-8 px-6 overflow-hidden">
+    <div class="max-w-[1200px] mx-auto flex flex-col items-center gap-4">
+      <p class="font-mono text-[10px] tracking-widest text-mute uppercase font-semibold select-none">
+        Trusted by developers at leading platforms
+      </p>
+      <div class="flex flex-wrap items-center justify-center gap-12 opacity-40 grayscale select-none">
+        <!-- Mock SVGs representing standard tech brands -->
+        <span class="font-sans font-bold text-lg text-ink tracking-tight flex items-center gap-1">
+          <svg viewBox="0 0 100 100" class="w-5 h-5 fill-ink"><polygon points="50,15 90,85 10,85"/></svg>
+          VERCEL
+        </span>
+        <span class="font-sans font-bold text-lg text-ink tracking-tight flex items-center gap-1">
+          <svg viewBox="0 0 100 100" class="w-5 h-5 fill-ink"><circle cx="50" cy="50" r="35"/></svg>
+          SUPABASE
+        </span>
+        <span class="font-sans font-bold text-lg text-ink tracking-tight flex items-center gap-1">
+          <svg viewBox="0 0 100 100" class="w-5 h-5 fill-ink"><rect x="20" y="20" width="60" height="60" rx="10"/></svg>
+          STRIPE
+        </span>
+        <span class="font-sans font-bold text-lg text-ink tracking-tight flex items-center gap-1">
+          <svg viewBox="0 0 100 100" class="w-5 h-5 fill-ink"><polygon points="10,10 90,50 10,90 30,50"/></svg>
+          RAILWAY
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tools Grid Section -->
+  <section id="tools" class="py-20 px-6 bg-canvas-soft border-b border-hairline">
+    <div class="max-w-[1200px] mx-auto flex flex-col gap-10">
+      
+      <!-- Headline & Filter Controls -->
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div class="flex flex-col gap-2">
+          <span class="font-mono text-[11px] tracking-wider text-mute uppercase font-semibold select-none">
+            Utilities Directory
+          </span>
+          <h2 class="display-lg text-ink">
+            A compute model for all workloads.
+          </h2>
+        </div>
+
+        <!-- Filter Tab Row -->
+        <div class="flex p-1 bg-canvas-soft-2 border border-hairline rounded-pill-sm gap-1 self-start select-none shadow-level-1">
+          <button data-filter="all" class="filter-tab px-4 py-1.5 rounded-pill-sm text-xs font-semibold text-ink bg-canvas shadow-level-2 transition-all">
+            All Tools
+          </button>
+          <button data-filter="image" class="filter-tab px-4 py-1.5 rounded-pill-sm text-xs font-semibold text-body hover:text-ink transition-all">
+            Image Tools
+          </button>
+          <button data-filter="pdf" class="filter-tab px-4 py-1.5 rounded-pill-sm text-xs font-semibold text-body hover:text-ink transition-all">
+            PDF Tools
+          </button>
+        </div>
+      </div>
+
+      <!-- Search Box Input -->
+      <div class="relative max-w-md w-full">
+        <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-mute">
+          <Search class="w-4 h-4" />
+        </span>
+        <input
+          type="text"
+          id="search-input"
+          placeholder="Search tools (e.g. compress, merge, resize...)"
+          class="w-full bg-canvas text-ink border border-hairline focus:border-hairline-strong text-sm rounded-sm pl-10 pr-4 py-2.5 outline-none transition-all placeholder:text-mute shadow-level-2"
+        />
+      </div>
+
+      <!-- Tools Grid -->
+      <div id="tools-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {tools.map((tool) => (
+          <div
+            data-category={tool.category}
+            data-name={tool.name.toLowerCase()}
+            data-desc={tool.desc.toLowerCase()}
+            class="tool-card group bg-canvas border border-hairline rounded-md p-6 hover:shadow-level-3 transition-all duration-200 flex flex-col justify-between"
+          >
+            <div>
+              <div class="flex items-center justify-between mb-4">
+                <span class="p-2.5 rounded-sm bg-canvas-soft-2 text-ink border border-hairline group-hover:bg-primary group-hover:text-on-primary transition-colors duration-200">
+                  {tool.category === 'image' ? <Image class="w-5 h-5" /> : <FileText class="w-5 h-5" />}
+                </span>
+                <div class="flex items-center gap-1.5">
+                  {tool.tags.map(tag => (
+                    <span class="font-mono text-[9px] tracking-wider text-body uppercase bg-canvas-soft-2 px-2 py-0.5 rounded-full border border-hairline">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <h3 class="display-sm text-ink mb-2">{tool.name}</h3>
+              <p class="text-body text-sm mb-6 leading-relaxed">{tool.desc}</p>
+            </div>
+            <a
+              href={tool.href}
+              class="w-full flex items-center justify-between font-semibold text-sm border-t border-hairline pt-4 text-ink group-hover:text-link group-hover:border-hairline-strong transition-all duration-200"
+            >
+              Open Tool
+              <ArrowRight class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
+            </a>
+          </div>
+        ))}
+      </div>
+      
+      <!-- Empty State for Search -->
+      <div id="search-empty-state" class="hidden flex-col items-center justify-center py-16 px-6 bg-canvas border border-hairline rounded-lg text-center shadow-level-2">
+        <span class="p-4 bg-canvas-soft rounded-full text-mute border border-hairline mb-4">
+          <Search class="w-6 h-6" />
+        </span>
+        <h3 class="text-ink font-semibold text-lg mb-1">No tools matched your search</h3>
+        <p class="text-mute text-sm max-w-xs">
+          Try typing a different keyword like "compress", "merge", or "resize".
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Developer Highlight / Atmospheric Section (Hidden on Mobile) -->
+  <section class="hidden md:block relative bg-primary text-on-primary py-24 px-6 border-b border-hairline overflow-hidden">
+    <div class="absolute inset-0 z-0 flex items-center justify-center overflow-hidden">
+      <div class="w-[800px] h-[400px] rounded-full bg-gradient-to-tr from-violet/40 to-highlight-pink/40 filter blur-3xl opacity-20 pointer-events-none"></div>
+    </div>
+    
+    <div class="relative z-10 max-w-[1200px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <div class="flex flex-col gap-4">
+        <span class="font-mono text-[11px] tracking-wider text-mute uppercase font-semibold select-none">
+          Client-Side Core Engine
+        </span>
+        <h2 class="display-lg text-on-primary max-w-lg">
+          Fast processing, built on zero server logic.
+        </h2>
+        <p class="text-mute text-sm max-w-md leading-relaxed">
+          Because FileMitra performs conversions, splits, and compression inside your local browser runtime via Canvas and PDF-Lib, files never hit a network server.
+        </p>
+        <ul class="flex flex-col gap-2 mt-2">
+          <li class="flex items-center gap-2.5 text-xs text-mute"><Check class="w-4 h-4 text-cyan" /> 100% private: Files stay in your local memory</li>
+          <li class="flex items-center gap-2.5 text-xs text-mute"><Check class="w-4 h-4 text-cyan" /> Lightning speed: Zero network upload latency</li>
+          <li class="flex items-center gap-2.5 text-xs text-mute"><Check class="w-4 h-4 text-cyan" /> Unlimited capability: Large sizes processed instantly</li>
+        </ul>
+      </div>
+
+      <!-- Live Mockup of code editor -->
+      <div class="bg-[#0c0c0c] border border-[#262626] rounded-md p-6 shadow-level-5 font-mono text-xs text-[#d4d4d4] select-none">
+        <div class="flex items-center justify-between border-b border-[#262626] pb-4 mb-4">
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-[#ff5f56]"></span>
+            <span class="w-3 h-3 rounded-full bg-[#ffbd2e]"></span>
+            <span class="w-3 h-3 rounded-full bg-[#27c93f]"></span>
+            <span class="text-mute text-[10px] ml-2">file-compressor.js</span>
+          </div>
+          <span class="text-[10px] text-mute uppercase font-semibold">Local JavaScript</span>
+        </div>
+        <pre class="overflow-x-auto text-[11px] leading-relaxed"><code class="text-violet-soft">import</code> &#123; PDFDocument &#125; <code class="text-violet-soft">from</code> <code class="text-cyan-soft">'pdf-lib'</code>;
+
+<code class="text-[#8a8a8a]">// Fast local client-side merge</code>
+<code class="text-violet-soft">async function</code> <code class="text-cyan-deep">mergePDFs</code>(files) &#123;
+  <code class="text-violet-soft">const</code> mergedPdf = <code class="text-violet-soft">await</code> PDFDocument.<code class="text-cyan-deep">create</code>();
+  <code class="text-violet-soft">for</code> (<code class="text-violet-soft">const</code> file <code class="text-violet-soft">of</code> files) &#123;
+    <code class="text-violet-soft">const</code> bytes = <code class="text-violet-soft">await</code> file.<code class="text-cyan-deep">arrayBuffer</code>();
+    <code class="text-violet-soft">const</code> doc = <code class="text-violet-soft">await</code> PDFDocument.<code class="text-cyan-deep">load</code>(bytes);
+    <code class="text-violet-soft">const</code> pages = <code class="text-violet-soft">await</code> mergedPdf.<code class="text-cyan-deep">copyPages</code>(doc, doc.<code class="text-cyan-deep">getPageIndices</code>());
+    pages.<code class="text-cyan-deep">forEach</code>(p => mergedPdf.<code class="text-cyan-deep">addPage</code>(p));
+  &#125;
+  <code class="text-violet-soft">return await</code> mergedPdf.<code class="text-cyan-deep">save</code>();
+&#125;</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing Section (Hidden on Mobile) -->
+  <section id="pricing" class="hidden md:block py-24 px-6 bg-canvas border-b border-hairline">
+    <div class="max-w-[1200px] mx-auto flex flex-col gap-16">
+      
+      <!-- Header -->
+      <div class="flex flex-col items-center text-center gap-2">
+        <span class="font-mono text-[11px] tracking-wider text-mute uppercase font-semibold select-none">
+          Pricing Plans
+        </span>
+        <h2 class="display-lg text-ink">
+          Simple pricing for teams of all sizes.
+        </h2>
+        <p class="text-body text-sm max-w-md">
+          Use all standard tool features free of charge, or upgrade to lift size restrictions and enable batch automation.
+        </p>
+      </div>
+
+      <!-- Grid Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch max-w-5xl mx-auto w-full">
+        <!-- Tier 1: Free -->
+        <div class="bg-canvas-soft border border-hairline rounded-lg p-8 flex flex-col justify-between hover:shadow-level-2 transition-all">
+          <div>
+            <h3 class="display-sm text-ink mb-2">Hobby</h3>
+            <p class="text-body text-xs mb-6">For individual devs and quick edits.</p>
+            <div class="flex items-baseline gap-1 mb-6">
+              <span class="display-lg text-ink font-semibold">$0</span>
+              <span class="text-mute text-xs">/ month</span>
+            </div>
+            <ul class="flex flex-col gap-3 mb-8">
+              <li class="flex items-center gap-2 text-xs text-body"><Check class="w-4 h-4 text-link" /> Compression quality sliders</li>
+              <li class="flex items-center gap-2 text-xs text-body"><Check class="w-4 h-4 text-link" /> Canvas-based image resizing</li>
+              <li class="flex items-center gap-2 text-xs text-body"><Check class="w-4 h-4 text-link" /> PDF Merge up to 3 files</li>
+              <li class="flex items-center gap-2 text-xs text-body"><Check class="w-4 h-4 text-link" /> 100% private on-device runtime</li>
+            </ul>
+          </div>
+          <a href="/auth?tab=signup" class="bg-canvas border border-hairline hover:border-hairline-strong text-ink hover:bg-canvas-soft-2 font-semibold text-xs py-2 rounded-pill flex items-center justify-center transition-all shadow-level-1">
+            Start Free
+          </a>
+        </div>
+
+        <!-- Tier 2: Pro (Polarity-Flipped) -->
+        <div class="bg-primary text-on-primary rounded-lg p-8 flex flex-col justify-between shadow-level-4 relative overflow-hidden transform md:-translate-y-2">
+          <!-- Spotlight highlight line -->
+          <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-cyan via-violet to-highlight-pink"></div>
+          
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <h3 class="display-sm text-on-primary">Pro</h3>
+              <span class="bg-canvas text-primary text-[9px] font-mono font-semibold px-2 py-0.5 rounded-full uppercase tracking-wider">Popular</span>
+            </div>
+            <p class="text-mute text-xs mb-6">For power users and media professionals.</p>
+            <div class="flex items-baseline gap-1 mb-6">
+              <span class="display-lg text-on-primary font-semibold">$9</span>
+              <span class="text-mute text-xs">/ month</span>
+            </div>
+            <ul class="flex flex-col gap-3 mb-8">
+              <li class="flex items-center gap-2 text-xs text-mute"><Check class="w-4 h-4 text-cyan" /> Infinite batch image scaling</li>
+              <li class="flex items-center gap-2 text-xs text-mute"><Check class="w-4 h-4 text-cyan" /> Unlimited PDF files and pages</li>
+              <li class="flex items-center gap-2 text-xs text-mute"><Check class="w-4 h-4 text-cyan" /> OCR Scan-to-Text translation</li>
+              <li class="flex items-center gap-2 text-xs text-mute"><Check class="w-4 h-4 text-cyan" /> Custom compression profiles</li>
+            </ul>
+          </div>
+          <a href="/auth?tab=signup" class="bg-on-primary text-primary hover:bg-[#eaeaea] font-semibold text-xs py-2.5 rounded-pill flex items-center justify-center transition-all">
+            Get Pro Access
+          </a>
+        </div>
+
+        <!-- Tier 3: Enterprise -->
+        <div class="bg-canvas-soft border border-hairline rounded-lg p-8 flex flex-col justify-between hover:shadow-level-2 transition-all">
+          <div>
+            <h3 class="display-sm text-ink mb-2">Enterprise</h3>
+            <p class="text-body text-xs mb-6">Custom nodes and programmatic API keys.</p>
+            <div class="flex items-baseline gap-1 mb-6">
+              <span class="display-lg text-ink font-semibold">Custom</span>
+            </div>
+            <ul class="flex flex-col gap-3 mb-8">
+              <li class="flex items-center gap-2 text-xs text-body"><Check class="w-4 h-4 text-link" /> Dedicated serverless API bindings</li>
+              <li class="flex items-center gap-2 text-xs text-body"><Check class="w-4 h-4 text-link" /> SLA metrics and custom integrations</li>
+              <li class="flex items-center gap-2 text-xs text-body"><Check class="w-4 h-4 text-link" /> Multi-seat billing control panels</li>
+              <li class="flex items-center gap-2 text-xs text-body"><Check class="w-4 h-4 text-link" /> Priority support SLA</li>
+            </ul>
+          </div>
+          <a href="mailto:support@filemitra.com" class="bg-canvas border border-hairline hover:border-hairline-strong text-ink hover:bg-canvas-soft-2 font-semibold text-xs py-2 rounded-pill flex items-center justify-center transition-all shadow-level-1">
+            Contact Sales
+          </a>
+        </div>
+      </div>
+      
+    </div>
+  </section>
 </Layout>
+
+<script>
+  // Simple client-side search & category filtering logic
+  const filterTabs = document.querySelectorAll('.filter-tab');
+  const toolCards = document.querySelectorAll('.tool-card');
+  const searchInput = document.getElementById('search-input') as HTMLInputElement;
+  const emptyState = document.getElementById('search-empty-state');
+
+  let activeCategory = 'all';
+  let searchQuery = '';
+
+  function updateGrid() {
+    let visibleCount = 0;
+    
+    toolCards.forEach(card => {
+      const category = (card as HTMLElement).dataset.category || '';
+      const name = (card as HTMLElement).dataset.name || '';
+      const desc = (card as HTMLElement).dataset.desc || '';
+      
+      const categoryMatch = activeCategory === 'all' || category === activeCategory;
+      const searchMatch = searchQuery === '' || name.includes(searchQuery) || desc.includes(searchQuery);
+
+      if (categoryMatch && searchMatch) {
+        card.classList.remove('hidden');
+        visibleCount++;
+      } else {
+        card.classList.add('hidden');
+      }
+    });
+
+    if (visibleCount === 0) {
+      emptyState?.classList.remove('hidden');
+      emptyState?.classList.add('flex');
+    } else {
+      emptyState?.classList.add('hidden');
+      emptyState?.classList.remove('flex');
+    }
+  }
+
+  // Handle Tab Click
+  filterTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      // Toggle styles
+      filterTabs.forEach(t => {
+        t.classList.remove('bg-canvas', 'shadow-level-2', 'text-ink');
+        t.classList.add('text-body', 'hover:text-ink');
+      });
+      tab.classList.add('bg-canvas', 'shadow-level-2', 'text-ink');
+      tab.classList.remove('text-body', 'hover:text-ink');
+
+      activeCategory = (tab as HTMLElement).dataset.filter || 'all';
+      updateGrid();
+    });
+  });
+
+  // Handle Search Input
+  searchInput?.addEventListener('input', (e) => {
+    searchQuery = (e.target as HTMLInputElement).value.toLowerCase().trim();
+    updateGrid();
+  });
+</script>

@@ -1,0 +1,222 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { Sparkles, ArrowLeft, Eye, EyeOff } from 'lucide-astro';
+---
+
+<Layout title="Sign In - FileMitra" description="Access your FileMitra account to unlock premium tools and integrations.">
+  <div class="flex-grow flex items-center justify-center py-16 px-4 relative overflow-hidden bg-canvas-soft">
+    <!-- Spot shadow design background -->
+    <div class="absolute inset-0 z-0 flex items-center justify-center overflow-hidden">
+      <div class="w-[600px] h-[300px] rounded-full mesh-gradient-bg opacity-30 pointer-events-none"></div>
+    </div>
+
+    <!-- Auth Card container -->
+    <div class="relative z-10 w-full max-w-[420px] bg-canvas border border-hairline rounded-lg p-8 shadow-level-4 flex flex-col gap-6 animate-in fade-in zoom-in-95 duration-200">
+      
+      <!-- Back to Home Link -->
+      <a href="/" class="self-start flex items-center gap-1.5 text-xs text-mute hover:text-ink transition-colors font-medium select-none">
+        <ArrowLeft class="w-3.5 h-3.5" />
+        Back to Dashboard
+      </a>
+
+      <!-- Title / Brand -->
+      <div class="flex flex-col gap-1.5 text-center mt-2">
+        <div class="flex items-center justify-center gap-2">
+          <!-- FileMitra Custom Isometric Folded Document Logo -->
+          <svg viewBox="0 0 100 100" class="w-5.5 h-5.5" aria-hidden="true">
+            <polygon points="20,35 50,15 50,85 20,65" fill="url(#auth-brand-grad-1)" />
+            <polygon points="80,35 50,15 50,85 80,65" fill="url(#auth-brand-grad-2)" />
+            <polygon points="50,15 80,35 50,55 20,35" fill="#ffffff" fill-opacity="0.15" />
+            <defs>
+              <linearGradient id="auth-brand-grad-1" x1="20" y1="35" x2="50" y2="85" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#0070f3" />
+                <stop offset="100%" stop-color="#7928ca" />
+              </linearGradient>
+              <linearGradient id="auth-brand-grad-2" x1="80" y1="35" x2="50" y2="85" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#ff0080" />
+                <stop offset="100%" stop-color="#f9cb28" />
+              </linearGradient>
+            </defs>
+          </svg>
+          <span class="font-sans font-bold text-sm tracking-tight select-none">FileMitra Platform</span>
+        </div>
+        <h2 id="auth-title" class="display-sm text-ink mt-2">Welcome back.</h2>
+        <p id="auth-subtitle" class="text-body text-xs">Enter your details below to sign in to your dashboard.</p>
+      </div>
+
+      <!-- Tab Switcher -->
+      <div class="flex p-0.5 bg-canvas-soft-2 border border-hairline rounded-sm select-none shadow-level-1">
+        <button id="tab-login" class="flex-1 text-center py-1.5 rounded-sm text-xs font-semibold text-ink bg-canvas shadow-level-1 transition-all">
+          Log In
+        </button>
+        <button id="tab-signup" class="flex-1 text-center py-1.5 rounded-sm text-xs font-semibold text-body hover:text-ink transition-all">
+          Sign Up
+        </button>
+      </div>
+
+      <!-- Main Form -->
+      <form id="auth-form" class="flex flex-col gap-4">
+        
+        <!-- Name (Sign-up only) -->
+        <div id="field-name" class="flex flex-col gap-1.5 hidden animate-in fade-in duration-200">
+          <label for="name" class="font-sans font-medium text-xs text-ink select-none">Full Name</label>
+          <input
+            type="text"
+            id="name"
+            placeholder="John Doe"
+            class="bg-canvas text-ink border border-hairline focus:border-hairline-strong text-sm rounded-sm px-3 h-10 outline-none transition-all placeholder:text-mute shadow-level-1"
+          />
+        </div>
+
+        <!-- Email -->
+        <div class="flex flex-col gap-1.5">
+          <label for="email" class="font-sans font-medium text-xs text-ink select-none">Email Address</label>
+          <input
+            type="email"
+            id="email"
+            required
+            placeholder="name@example.com"
+            class="bg-canvas text-ink border border-hairline focus:border-hairline-strong text-sm rounded-sm px-3 h-10 outline-none transition-all placeholder:text-mute shadow-level-1"
+          />
+        </div>
+
+        <!-- Password -->
+        <div class="flex flex-col gap-1.5">
+          <div class="flex justify-between items-center">
+            <label for="password" class="font-sans font-medium text-xs text-ink select-none">Password</label>
+            <a href="#" id="forgot-password" class="text-[11px] text-link hover:text-link-deep transition-colors font-medium">Forgot?</a>
+          </div>
+          <div class="relative">
+            <input
+              type="password"
+              id="password"
+              required
+              placeholder="••••••••"
+              class="w-full bg-canvas text-ink border border-hairline focus:border-hairline-strong text-sm rounded-sm pl-3 pr-10 h-10 outline-none transition-all placeholder:text-mute shadow-level-1"
+            />
+            <button type="button" id="toggle-pw" class="absolute inset-y-0 right-0 pr-3 flex items-center text-mute hover:text-ink transition-colors" aria-label="Toggle password visibility">
+              <Eye id="eye-open" class="w-4 h-4" />
+              <EyeOff id="eye-closed" class="w-4 h-4 hidden" />
+            </button>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" id="submit-btn" class="bg-primary text-on-primary hover:bg-primary/95 text-xs font-semibold h-10 rounded-sm mt-2 transition-all shadow-level-2 select-none">
+          Sign In
+        </button>
+
+        <!-- Terms agreement notice -->
+        <p class="text-[10px] text-mute text-center leading-normal px-2 mt-1 select-none">
+          By continuing, you agree to FileMitra's <a href="#" class="text-body hover:text-ink underline">Terms of Service</a> and <a href="#" class="text-body hover:text-ink underline">Privacy Policy</a>.
+        </p>
+
+      </form>
+
+      <!-- Divider line -->
+      <div class="flex items-center gap-3">
+        <span class="flex-grow h-px bg-hairline"></span>
+        <span class="font-mono text-[9px] text-mute uppercase select-none">or continue with</span>
+        <span class="flex-grow h-px bg-hairline"></span>
+      </div>
+
+      <!-- Third Party login options -->
+      <div class="flex flex-col gap-2">
+        <button class="bg-canvas border border-hairline hover:bg-canvas-soft text-ink font-semibold text-xs h-9 rounded-sm flex items-center justify-center gap-2 transition-all shadow-level-1">
+          <!-- Custom GitHub Icon representation -->
+          <svg viewBox="0 0 24 24" class="w-4 h-4 fill-ink" aria-hidden="true">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.11.82-.26.82-.577v-2.234c-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22v3.293c0 .319.22.694.825.576C20.565 21.795 24 17.3 24 12c0-6.63-5.37-12-12-12z" />
+          </svg>
+          GitHub
+        </button>
+      </div>
+
+    </div>
+  </div>
+</Layout>
+
+<script>
+  // Auth Form Tab toggle script
+  const tabLogin = document.getElementById('tab-login');
+  const tabSignup = document.getElementById('tab-signup');
+  const authTitle = document.getElementById('auth-title');
+  const authSubtitle = document.getElementById('auth-subtitle');
+  const fieldName = document.getElementById('field-name');
+  const forgotPassword = document.getElementById('forgot-password');
+  const submitBtn = document.getElementById('submit-btn');
+  const passwordInput = document.getElementById('password') as HTMLInputElement;
+  const togglePw = document.getElementById('toggle-pw');
+  const eyeOpen = document.getElementById('eye-open');
+  const eyeClosed = document.getElementById('eye-closed');
+
+  // Parse URL search params to initial set tab
+  const urlParams = new URLSearchParams(window.location.search);
+  const initialTab = urlParams.get('tab');
+
+  function setTab(mode: 'login' | 'signup') {
+    if (mode === 'signup') {
+      tabSignup?.classList.add('bg-canvas', 'shadow-level-1', 'text-ink');
+      tabSignup?.classList.remove('text-body', 'hover:text-ink');
+      tabLogin?.classList.remove('bg-canvas', 'shadow-level-1', 'text-ink');
+      tabLogin?.classList.add('text-body', 'hover:text-ink');
+
+      if (authTitle) authTitle.innerText = "Create an account.";
+      if (authSubtitle) authSubtitle.innerText = "Get started with FileMitra to unlock high-capacity compression.";
+      fieldName?.classList.remove('hidden');
+      forgotPassword?.classList.add('hidden');
+      if (submitBtn) submitBtn.innerText = "Sign Up";
+    } else {
+      tabLogin?.classList.add('bg-canvas', 'shadow-level-1', 'text-ink');
+      tabLogin?.classList.remove('text-body', 'hover:text-ink');
+      tabSignup?.classList.remove('bg-canvas', 'shadow-level-1', 'text-ink');
+      tabSignup?.classList.add('text-body', 'hover:text-ink');
+
+      if (authTitle) authTitle.innerText = "Welcome back.";
+      if (authSubtitle) authSubtitle.innerText = "Enter your details below to sign in to your dashboard.";
+      fieldName?.classList.add('hidden');
+      forgotPassword?.classList.remove('hidden');
+      if (submitBtn) submitBtn.innerText = "Sign In";
+    }
+  }
+
+  // Bind Switch Click events
+  tabLogin?.addEventListener('click', () => setTab('login'));
+  tabSignup?.addEventListener('click', () => setTab('signup'));
+
+  // Initial call
+  if (initialTab === 'signup') {
+    setTab('signup');
+  } else {
+    setTab('login');
+  }
+
+  // Toggle Password visibility
+  togglePw?.addEventListener('click', () => {
+    if (passwordInput.type === 'password') {
+      passwordInput.type = 'text';
+      eyeOpen?.classList.add('hidden');
+      eyeClosed?.classList.remove('hidden');
+    } else {
+      passwordInput.type = 'password';
+      eyeOpen?.classList.remove('hidden');
+      eyeClosed?.classList.add('hidden');
+    }
+  });
+
+  // Handle Form Submission Mock
+  const form = document.getElementById('auth-form');
+  const emailInput = document.getElementById('email') as HTMLInputElement;
+  const nameInput = document.getElementById('name') as HTMLInputElement;
+
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const email = emailInput?.value || 'user@example.com';
+    const name = nameInput?.value || email.split('@')[0];
+    
+    // Save user session to localStorage
+    localStorage.setItem('filemitra_user', JSON.stringify({ email, name }));
+    
+    // Redirect to home dashboard
+    window.location.href = '/';
+  });
+</script>

@@ -1,0 +1,215 @@
+---
+import { Sparkles, Menu, X } from 'lucide-astro';
+---
+
+<header class="sticky top-0 z-50 bg-canvas/80 backdrop-blur-md border-b border-hairline h-16 px-6 lg:px-8 flex items-center justify-between">
+  <!-- Left: Logo -->
+  <div class="flex items-center gap-6">
+    <a href="/" class="flex items-center gap-2.5 group">
+      <!-- FileMitra Custom Isometric Folded Document Logo -->
+      <svg viewBox="0 0 100 100" class="w-6.5 h-6.5 transition-transform group-hover:scale-105" aria-hidden="true">
+        <polygon points="20,35 50,15 50,85 20,65" fill="url(#nav-brand-grad-1)" />
+        <polygon points="80,35 50,15 50,85 80,65" fill="url(#nav-brand-grad-2)" />
+        <polygon points="50,15 80,35 50,55 20,35" fill="#ffffff" fill-opacity="0.15" />
+        <defs>
+          <linearGradient id="nav-brand-grad-1" x1="20" y1="35" x2="50" y2="85" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#0070f3" />
+            <stop offset="100%" stop-color="#7928ca" />
+          </linearGradient>
+          <linearGradient id="nav-brand-grad-2" x1="80" y1="35" x2="50" y2="85" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#ff0080" />
+            <stop offset="100%" stop-color="#f9cb28" />
+          </linearGradient>
+        </defs>
+      </svg>
+      <span class="font-sans font-semibold text-lg tracking-tight select-none">
+        FileMitra<span class="text-mute font-normal text-sm ml-1 select-none">.com</span>
+      </span>
+    </a>
+
+    <!-- Desktop Nav Links -->
+    <nav class="hidden md:flex items-center gap-1">
+      <a href="/#tools" class="text-body hover:text-ink text-sm px-3 py-1.5 rounded-full transition-colors">
+        Tools
+      </a>
+      <a href="/#pricing" class="text-body hover:text-ink text-sm px-3 py-1.5 rounded-full transition-colors">
+        Pricing
+      </a>
+    </nav>
+  </div>
+
+  <!-- Right: CTAs -->
+  <div id="nav-user-area" class="hidden md:flex items-center gap-2">
+    <!-- Always visible Ask AI trigger -->
+    <a href="javascript:void(0)" id="ask-ai-trigger" class="flex items-center gap-1.5 bg-canvas text-ink border border-hairline hover:border-hairline-strong text-xs font-semibold px-3 h-7 rounded-sm transition-all shadow-level-1 mr-1">
+      <Sparkles class="w-3.5 h-3.5 text-violet" />
+      Ask AI
+    </a>
+
+    <!-- Logged out state -->
+    <div id="nav-logged-out" class="flex items-center gap-2">
+      <a href="/auth?tab=login" class="text-ink hover:bg-canvas-soft text-xs font-semibold px-3 h-7 flex items-center justify-center rounded-sm transition-all">
+        Log In
+      </a>
+      <a href="/auth?tab=signup" class="bg-primary text-on-primary hover:bg-primary/90 text-xs font-semibold px-3 h-7 flex items-center justify-center rounded-sm transition-all">
+        Sign Up
+      </a>
+    </div>
+
+    <!-- Logged in state (hidden by default) -->
+    <div id="nav-logged-in" class="hidden items-center gap-3">
+      <span id="user-display-email" class="font-mono text-xs text-body select-none"></span>
+      <div id="user-avatar-char" class="w-6 h-6 rounded-full bg-primary text-on-primary text-[10px] font-bold flex items-center justify-center select-none shadow-level-1">
+        U
+      </div>
+      <button id="logout-btn" class="text-xs text-mute hover:text-error font-semibold px-2 h-7 rounded-sm transition-colors cursor-pointer select-none">
+        Log Out
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Nav Toggle -->
+  <button id="mobile-menu-btn" class="md:hidden p-1.5 text-body hover:text-ink rounded-md hover:bg-canvas-soft transition-colors" aria-label="Toggle menu">
+    <Menu id="menu-icon" class="w-5 h-5" />
+    <X id="close-icon" class="w-5 h-5 hidden" />
+  </button>
+</header>
+
+<!-- Mobile Navigation Drawer -->
+<div id="mobile-drawer" class="fixed inset-0 top-16 z-40 bg-canvas/95 backdrop-blur-md border-b border-hairline hidden flex-col p-6 animate-in fade-in slide-in-from-top duration-200">
+  <nav class="flex flex-col gap-4 mb-8">
+    <a href="/#tools" class="mobile-nav-link text-ink text-lg font-medium border-b border-hairline pb-2">
+      Tools
+    </a>
+    <a href="/#pricing" class="mobile-nav-link text-ink text-lg font-medium border-b border-hairline pb-2">
+      Pricing
+    </a>
+  </nav>
+
+  <div id="mobile-nav-user-area" class="flex flex-col gap-4">
+    <!-- Always visible Ask AI trigger for mobile -->
+    <a href="javascript:void(0)" id="mobile-ask-ai-trigger" class="flex items-center justify-center gap-2 bg-canvas text-ink border border-hairline py-2.5 rounded-sm font-medium text-sm shadow-level-2">
+      <Sparkles class="w-4 h-4 text-violet" />
+      Ask AI to process files
+    </a>
+
+    <div class="border-t border-hairline my-1"></div>
+
+    <!-- Logged out -->
+    <div id="mobile-logged-out" class="flex flex-col gap-3">
+      <a href="/auth?tab=login" class="flex items-center justify-center bg-canvas-soft hover:bg-canvas-soft-2 text-ink py-2.5 rounded-sm font-medium text-sm">
+        Log In
+      </a>
+      <a href="/auth?tab=signup" class="flex items-center justify-center bg-primary text-on-primary hover:bg-primary/90 py-2.5 rounded-sm font-medium text-sm">
+        Sign Up for Free
+      </a>
+    </div>
+
+    <!-- Logged in (hidden by default) -->
+    <div id="mobile-logged-in" class="hidden flex-col gap-4 text-center">
+      <div class="flex items-center justify-center gap-2.5">
+        <div id="mobile-user-avatar-char" class="w-8 h-8 rounded-full bg-primary text-on-primary text-sm font-bold flex items-center justify-center select-none shadow-level-2">
+          U
+        </div>
+        <span id="mobile-user-display-email" class="font-sans text-sm text-ink font-medium"></span>
+      </div>
+      <button id="mobile-logout-btn" class="w-full bg-canvas-soft hover:bg-canvas-soft-2 border border-hairline text-error hover:border-error text-sm font-medium py-2.5 rounded-sm transition-all cursor-pointer">
+        Log Out
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+  const mobileDrawer = document.getElementById('mobile-drawer');
+  const menuIcon = document.getElementById('menu-icon');
+  const closeIcon = document.getElementById('close-icon');
+  const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+
+  function toggleMenu() {
+    const isHidden = mobileDrawer?.classList.contains('hidden');
+    if (isHidden) {
+      mobileDrawer?.classList.remove('hidden');
+      mobileDrawer?.classList.add('flex');
+      menuIcon?.classList.add('hidden');
+      closeIcon?.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    } else {
+      mobileDrawer?.classList.add('hidden');
+      mobileDrawer?.classList.remove('flex');
+      menuIcon?.classList.remove('hidden');
+      closeIcon?.classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+  }
+
+  mobileMenuBtn?.addEventListener('click', toggleMenu);
+  
+  // Close menu when a link is clicked
+  mobileNavLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      mobileDrawer?.classList.add('hidden');
+      mobileDrawer?.classList.remove('flex');
+      menuIcon?.classList.remove('hidden');
+      closeIcon?.classList.add('hidden');
+      document.body.style.overflow = '';
+    });
+  });
+
+  // Client-side authentication display logic
+  function checkLoginState() {
+    const userStr = localStorage.getItem('filemitra_user');
+    if (userStr) {
+      try {
+        const user = JSON.parse(userStr);
+        const email = user.email || 'user@example.com';
+        const char = email.substring(0, 1).toUpperCase();
+        
+        // Desktop elements
+        const loggedOutNode = document.getElementById('nav-logged-out');
+        const loggedInNode = document.getElementById('nav-logged-in');
+        const displayEmailNode = document.getElementById('user-display-email');
+        const avatarNode = document.getElementById('user-avatar-char');
+        
+        if (loggedOutNode) loggedOutNode.style.display = 'none';
+        if (loggedInNode) {
+          loggedInNode.style.display = 'flex';
+          loggedInNode.classList.remove('hidden');
+        }
+        if (displayEmailNode) displayEmailNode.innerText = email;
+        if (avatarNode) avatarNode.innerText = char;
+
+        // Mobile elements
+        const mobileLoggedOut = document.getElementById('mobile-logged-out');
+        const mobileLoggedIn = document.getElementById('mobile-logged-in');
+        const mobileDisplayEmail = document.getElementById('mobile-user-display-email');
+        const mobileAvatar = document.getElementById('mobile-user-avatar-char');
+
+        if (mobileLoggedOut) mobileLoggedOut.style.display = 'none';
+        if (mobileLoggedIn) {
+          mobileLoggedIn.style.display = 'flex';
+          mobileLoggedIn.classList.remove('hidden');
+        }
+        if (mobileDisplayEmail) mobileDisplayEmail.innerText = email;
+        if (mobileAvatar) mobileAvatar.innerText = char;
+        
+      } catch (err) {
+        console.error('Error parsing session state:', err);
+      }
+    }
+  }
+
+  checkLoginState();
+
+  // Wire up logouts
+  document.getElementById('logout-btn')?.addEventListener('click', () => {
+    localStorage.removeItem('filemitra_user');
+    window.location.reload();
+  });
+
+  document.getElementById('mobile-logout-btn')?.addEventListener('click', () => {
+    localStorage.removeItem('filemitra_user');
+    window.location.reload();
+  });
+</script>

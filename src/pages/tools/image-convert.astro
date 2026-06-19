@@ -1,0 +1,228 @@
+---
+import ToolLayout from '../../layouts/ToolLayout.astro';
+import { Upload, Download, RefreshCw, RefreshCw as Convert } from 'lucide-astro';
+---
+
+<ToolLayout
+  title="Convert Image Format"
+  description="Convert your images to PNG, JPG, or WebP formats client-side instantly. Fast batch selection support."
+  activeTool="image-convert"
+>
+  <div class="flex-grow flex flex-col gap-6">
+    
+    <!-- Drag & Drop Upload Zone -->
+    <div
+      id="upload-zone"
+      class="border-2 border-dashed border-hairline hover:border-hairline-strong bg-canvas rounded-lg p-16 flex flex-col items-center justify-center text-center cursor-pointer transition-all duration-200 shadow-level-2 select-none group"
+    >
+      <input type="file" id="file-input" accept="image/png, image/jpeg, image/webp" class="hidden" />
+      <span class="p-4 bg-canvas-soft rounded-full text-mute group-hover:text-primary border border-hairline mb-4 transition-colors">
+        <Upload class="w-6 h-6 animate-pulse" />
+      </span>
+      <h3 class="text-ink font-semibold text-lg mb-1">Drag and drop your image to convert</h3>
+      <p class="text-mute text-xs max-w-xs mb-4">
+        Supports conversion between JPEG, PNG, and WebP. Processed locally in memory.
+      </p>
+      <button class="bg-primary text-on-primary hover:bg-primary/95 text-xs font-semibold px-4 py-2 rounded-pill shadow-level-2 transition-all">
+        Select File
+      </button>
+    </div>
+
+    <!-- Active Workspace Area -->
+    <div id="workspace" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-6 items-start animate-in fade-in duration-200">
+      
+      <!-- Controls Panel (1 column) -->
+      <div class="flex flex-col gap-6 lg:col-span-1">
+        <div class="bg-canvas border border-hairline rounded-md p-6 shadow-level-3 flex flex-col gap-6">
+          <h3 class="font-sans font-semibold text-sm text-ink pb-3 border-b border-hairline select-none flex items-center gap-1.5">
+            <Convert class="w-4 h-4 text-mute animate-spin-slow" />
+            Conversion Settings
+          </h3>
+
+          <!-- Format conversion option -->
+          <div class="flex flex-col gap-2">
+            <label for="format-select" class="font-medium text-xs text-ink select-none">Target Format</label>
+            <select
+              id="format-select"
+              class="w-full bg-canvas text-ink border border-hairline focus:border-hairline-strong text-xs rounded-sm px-2.5 h-9 outline-none transition-all shadow-level-1 cursor-pointer"
+            >
+              <option value="image/jpeg">JPEG (.jpg)</option>
+              <option value="image/png">PNG (.png)</option>
+              <option value="image/webp">WebP (.webp)</option>
+            </select>
+          </div>
+
+          <!-- Metadata Details -->
+          <div class="bg-canvas-soft border border-hairline rounded-sm p-4 flex flex-col gap-3 text-xs text-body">
+            <span class="font-mono text-[10px] text-mute uppercase font-semibold select-none">File Profile</span>
+            <div class="flex justify-between">
+              <span>File name:</span>
+              <span id="file-name" class="font-mono text-ink max-w-[150px] truncate">image.png</span>
+            </div>
+            <div class="flex justify-between">
+              <span>Original Format:</span>
+              <span id="original-format" class="font-mono text-ink">PNG</span>
+            </div>
+            <div class="flex justify-between">
+              <span>Original Size:</span>
+              <span id="original-size" class="font-mono text-ink">0 KB</span>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="flex flex-col gap-2">
+            <button id="download-btn" class="bg-primary text-on-primary hover:bg-primary/95 text-xs font-semibold h-10 rounded-pill flex items-center justify-center gap-1.5 transition-all shadow-level-3">
+              <Download class="w-4 h-4" />
+              Convert & Download
+            </button>
+            <button id="reset-btn" class="bg-canvas border border-hairline hover:bg-canvas-soft text-ink text-xs font-semibold h-10 rounded-pill flex items-center justify-center gap-1.5 transition-all shadow-level-1">
+              <RefreshCw class="w-3.5 h-3.5" />
+              Clear Workspace
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Preview Workspace (2 columns) -->
+      <div class="flex flex-col gap-6 lg:col-span-2">
+        <div class="bg-canvas border border-hairline rounded-md p-6 shadow-level-3 flex flex-col gap-4">
+          <div class="flex items-center justify-between select-none">
+            <h3 class="font-sans font-semibold text-sm text-ink">Original Preview</h3>
+            <span class="font-mono text-[10px] text-mute uppercase">Input source image</span>
+          </div>
+
+          <div class="border border-hairline bg-canvas-soft-2 rounded-sm h-[380px] overflow-hidden flex items-center justify-center p-4 relative">
+            <img id="img-preview" class="max-h-full max-w-full object-contain" alt="Converter Source View" />
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</ToolLayout>
+
+<script>
+  const uploadZone = document.getElementById('upload-zone');
+  const fileInput = document.getElementById('file-input') as HTMLInputElement;
+  const workspace = document.getElementById('workspace');
+  
+  const formatSelect = document.getElementById('format-select') as HTMLSelectElement;
+  
+  const fileNameDisplay = document.getElementById('file-name');
+  const originalFormatDisplay = document.getElementById('original-format');
+  const originalSizeDisplay = document.getElementById('original-size');
+  
+  const imgPreview = document.getElementById('img-preview') as HTMLImageElement;
+  const downloadBtn = document.getElementById('download-btn');
+  const resetBtn = document.getElementById('reset-btn');
+
+  let activeFile: File | null = null;
+  let sourceImage = new Image();
+
+  uploadZone?.addEventListener('click', () => fileInput.click());
+
+  uploadZone?.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    uploadZone.classList.add('border-primary', 'bg-canvas-soft');
+  });
+
+  uploadZone?.addEventListener('dragleave', () => {
+    uploadZone.classList.remove('border-primary', 'bg-canvas-soft');
+  });
+
+  uploadZone?.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadZone.classList.remove('border-primary', 'bg-canvas-soft');
+    if (e.dataTransfer?.files && e.dataTransfer.files.length > 0) {
+      handleFileSelection(e.dataTransfer.files[0]);
+    }
+  });
+
+  fileInput?.addEventListener('change', () => {
+    if (fileInput.files && fileInput.files.length > 0) {
+      handleFileSelection(fileInput.files[0]);
+    }
+  });
+
+  function handleFileSelection(file: File) {
+    if (!file.type.startsWith('image/')) {
+      alert('Please upload an image file.');
+      return;
+    }
+    activeFile = file;
+
+    // Show workspace
+    uploadZone?.classList.add('hidden');
+    workspace?.classList.remove('hidden');
+
+    if (fileNameDisplay) fileNameDisplay.innerText = file.name;
+    if (originalFormatDisplay) originalFormatDisplay.innerText = file.type.split('/')[1].toUpperCase();
+    if (originalSizeDisplay) originalSizeDisplay.innerText = formatBytes(file.size);
+
+    // Auto-update select option to prevent converting to the same format initially
+    const type = file.type;
+    if (type === 'image/png') {
+      formatSelect.value = 'image/jpeg';
+    } else if (type === 'image/jpeg') {
+      formatSelect.value = 'image/png';
+    } else if (type === 'image/webp') {
+      formatSelect.value = 'image/png';
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const dataUrl = e.target?.result as string;
+      imgPreview.src = dataUrl;
+      sourceImage.src = dataUrl;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  downloadBtn?.addEventListener('click', () => {
+    if (!activeFile || !sourceImage.src) return;
+
+    // Canvas drawing
+    const canvas = document.createElement('canvas');
+    canvas.width = sourceImage.width;
+    canvas.height = sourceImage.height;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    ctx.drawImage(sourceImage, 0, 0);
+
+    const mimeType = formatSelect.value;
+    const ext = mimeType.split('/')[1];
+
+    const cleanName = activeFile.name.substring(0, activeFile.name.lastIndexOf('.')) || activeFile.name;
+    const downloadName = `${cleanName}.${ext}`;
+
+    const dataUrl = canvas.toDataURL(mimeType);
+
+    const link = document.createElement('a');
+    link.href = dataUrl;
+    link.download = downloadName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  });
+
+  resetBtn?.addEventListener('click', () => {
+    activeFile = null;
+    fileInput.value = '';
+    
+    workspace?.classList.add('hidden');
+    uploadZone?.classList.remove('hidden');
+    
+    imgPreview.removeAttribute('src');
+  });
+
+  function formatBytes(bytes: number, decimals = 2) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const dm = decimals < 0 ? 0 : decimals;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+  }
+</script>

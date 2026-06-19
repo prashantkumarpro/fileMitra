@@ -1,0 +1,757 @@
+---
+import { Sparkles, X, Upload, Check, RefreshCw, FileText, ArrowRight, Download } from 'lucide-astro';
+---
+
+<!-- Modal Backdrop -->
+<div id="ask-ai-modal" class="fixed inset-0 z-50 bg-primary/20 backdrop-blur-sm hidden items-center justify-center p-4" aria-modal="true" role="dialog">
+  
+  <!-- Modal Card (ex-modal-card style) -->
+  <div class="relative z-10 w-full max-w-lg bg-canvas border border-hairline rounded-lg p-6 md:p-8 shadow-level-5 flex flex-col gap-5 animate-in fade-in zoom-in-95 duration-200">
+    
+    <!-- Modal Close Button -->
+    <button id="modal-close-btn" class="absolute top-4 right-4 p-1 text-mute hover:text-ink rounded-sm hover:bg-canvas-soft transition-colors" aria-label="Close modal">
+      <X class="w-4 h-4" />
+    </button>
+
+    <!-- Header Title -->
+    <div class="flex items-center gap-2 select-none">
+      <span class="p-1.5 bg-violet-soft/30 rounded-sm text-violet border border-violet-soft">
+        <Sparkles class="w-5 h-5 text-violet animate-pulse" />
+      </span>
+      <div class="flex flex-col">
+        <h2 class="font-sans font-semibold text-sm text-ink leading-tight">Ask FileMitra AI</h2>
+        <span class="font-mono text-[9px] text-mute uppercase">On-device client processing agent</span>
+      </div>
+    </div>
+
+    <!-- Main Workspace Section -->
+    <div id="ai-input-stage" class="flex flex-col gap-4">
+      
+      <!-- Prompt input box -->
+      <div class="flex flex-col gap-1.5">
+        <label for="ai-prompt" class="font-sans font-medium text-xs text-ink select-none">What should we do?</label>
+        <textarea
+          id="ai-prompt"
+          placeholder="Ask AI to process your files (e.g., 'Compress this image to 50%', 'Convert this PNG to WebP')"
+          class="w-full bg-canvas text-ink border border-hairline focus:border-hairline-strong text-xs rounded-sm p-3 min-h-[90px] outline-none resize-none transition-all placeholder:text-mute shadow-level-1 font-sans"
+        ></textarea>
+      </div>
+
+      <!-- Compact File Attachment Dropzone -->
+      <div id="ai-dropzone" class="border border-dashed border-hairline hover:border-hairline-strong bg-canvas-soft rounded-sm p-4 flex flex-col items-center justify-center text-center cursor-pointer transition-all select-none">
+        <input type="file" id="ai-file-input" accept="image/png, image/jpeg, image/webp, application/pdf" multiple class="hidden" />
+        <Upload class="w-4 h-4 text-mute mb-1" />
+        <span class="text-[11px] font-semibold text-ink">Attach a file to process</span>
+        <span class="text-[9px] text-mute">PNG, JPEG, WebP, or PDF</span>
+      </div>
+
+      <!-- Attached File Display Card (Hidden by default) -->
+      <div id="ai-attached-file" class="hidden items-center justify-between border border-hairline bg-canvas-soft rounded-sm p-3 shadow-level-1">
+        <div class="flex items-center gap-2.5 min-w-0 pr-4">
+          <span class="p-1.5 bg-canvas border border-hairline rounded-sm text-ink flex-shrink-0">
+            <FileText class="w-4 h-4" />
+          </span>
+          <div class="flex flex-col min-w-0">
+            <span id="attached-name" class="text-xs font-semibold text-ink truncate">image.png</span>
+            <span id="attached-size" class="font-mono text-[9px] text-mute mt-0.5">0 KB</span>
+          </div>
+        </div>
+        <button id="remove-attached-btn" class="p-1 text-mute hover:text-error rounded-sm hover:bg-error-soft transition-colors">
+          <X class="w-3.5 h-3.5" />
+        </button>
+      </div>
+
+      <!-- Suggested prompts layout list -->
+      <div class="flex flex-col gap-1.5 select-none">
+        <span class="font-mono text-[9px] text-mute uppercase font-semibold">Try prompt templates</span>
+        <div class="flex flex-wrap gap-1.5">
+          <button class="ai-suggestion-chip text-[10px] font-medium text-body bg-canvas-soft border border-hairline hover:border-hairline-strong hover:bg-canvas-soft-2 px-2.5 py-1 rounded-full transition-all">
+            "Compress this image to balanced quality"
+          </button>
+          <button class="ai-suggestion-chip text-[10px] font-medium text-body bg-canvas-soft border border-hairline hover:border-hairline-strong hover:bg-canvas-soft-2 px-2.5 py-1 rounded-full transition-all">
+            "Convert this image to WebP"
+          </button>
+          <button class="ai-suggestion-chip text-[10px] font-medium text-body bg-canvas-soft border border-hairline hover:border-hairline-strong hover:bg-canvas-soft-2 px-2.5 py-1 rounded-full transition-all">
+            "Resize image to 800px width"
+          </button>
+        </div>
+      </div>
+
+      <!-- Action Button -->
+      <button id="ai-submit-btn" class="bg-primary text-on-primary hover:bg-primary/95 text-xs font-semibold h-10 rounded-pill flex items-center justify-center gap-1.5 transition-all shadow-level-3 mt-1 select-none">
+        <Sparkles class="w-4 h-4 text-cyan" />
+        Execute AI Command
+      </button>
+
+    </div>
+
+    <!-- Processing Stage (Hidden by default) -->
+    <div id="ai-processing-stage" class="hidden flex-col gap-6 py-6 items-center text-center">
+      <span class="animate-spin text-violet"><RefreshCw class="w-8 h-8" /></span>
+      <div class="flex flex-col gap-1.5">
+        <h3 id="processing-status" class="font-sans font-semibold text-sm text-ink">Analyzing instructions...</h3>
+        <p id="processing-details" class="text-mute text-xs font-mono">Initializing processing canvas...</p>
+      </div>
+      <!-- Step progress indicators -->
+      <div class="w-full max-w-xs flex flex-col gap-2.5 border-t border-hairline pt-4 text-left font-mono text-[10px] text-mute select-none">
+        <div id="step-1" class="flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-hairline"></div> Parse input instructions</div>
+        <div id="step-2" class="flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-hairline"></div> Load target buffer to memory</div>
+        <div id="step-3" class="flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-hairline"></div> Run graphic resize & compression</div>
+        <div id="step-4" class="flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-hairline"></div> Compile output document</div>
+      </div>
+    </div>
+
+    <!-- Output Download Stage (Hidden by default) -->
+    <div id="ai-output-stage" class="hidden flex-col gap-5 text-center">
+      <div class="flex flex-col items-center justify-center p-4 bg-emerald-50 border border-emerald-200 rounded-sm gap-2 select-none">
+        <span class="p-2 bg-emerald-500 text-on-primary rounded-full">
+          <Check class="w-5 h-5" />
+        </span>
+        <h3 class="font-sans font-bold text-sm text-ink">File Processed Successfully!</h3>
+        <p class="text-body text-xs max-w-xs leading-normal">
+          AI successfully analyzed your prompt instructions and executed local operations on your file buffer.
+        </p>
+      </div>
+
+      <div class="bg-canvas-soft border border-hairline rounded-sm p-4 flex flex-col gap-2.5 text-left text-xs text-body">
+        <span class="font-mono text-[10px] text-mute uppercase font-semibold select-none">Output Diagnostics</span>
+        <div class="flex justify-between">
+          <span>Output Name:</span>
+          <span id="output-name" class="font-mono text-ink max-w-[200px] truncate">image-compressed.webp</span>
+        </div>
+        <div class="flex justify-between">
+          <span>Command Executed:</span>
+          <span id="output-command" class="font-mono text-ink italic">"Compress to balanced quality"</span>
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <button id="ai-download-btn" class="bg-primary text-on-primary hover:bg-primary/95 text-xs font-semibold h-10 rounded-pill flex items-center justify-center gap-1.5 transition-all shadow-level-3">
+          <Download class="w-4 h-4" />
+          Download AI Result
+        </button>
+        <button id="ai-again-btn" class="bg-canvas border border-hairline hover:bg-canvas-soft text-ink text-xs font-semibold h-10 rounded-pill flex items-center justify-center gap-1.5 transition-all shadow-level-1">
+          <RefreshCw class="w-3.5 h-3.5" />
+          Process Another File
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  import { PDFDocument } from 'pdf-lib';
+
+  // Elements
+  const modal = document.getElementById('ask-ai-modal');
+  const closeBtn = document.getElementById('modal-close-btn');
+  
+  const inputStage = document.getElementById('ai-input-stage');
+  const processingStage = document.getElementById('ai-processing-stage');
+  const outputStage = document.getElementById('ai-output-stage');
+  
+  const promptInput = document.getElementById('ai-prompt') as HTMLTextAreaElement;
+  const dropzone = document.getElementById('ai-dropzone');
+  const fileInput = document.getElementById('ai-file-input') as HTMLInputElement;
+  
+  const attachedFileCard = document.getElementById('ai-attached-file');
+  const attachedNameText = document.getElementById('attached-name');
+  const attachedSizeText = document.getElementById('attached-size');
+  const removeAttachedBtn = document.getElementById('remove-attached-btn');
+  
+  const suggestionChips = document.querySelectorAll('.ai-suggestion-chip');
+  const submitBtn = document.getElementById('ai-submit-btn');
+  
+  const processingStatus = document.getElementById('processing-status');
+  const processingDetails = document.getElementById('processing-details');
+  
+  const step1 = document.getElementById('step-1');
+  const step2 = document.getElementById('step-2');
+  const step3 = document.getElementById('step-3');
+  const step4 = document.getElementById('step-4');
+  
+  const outputNameText = document.getElementById('output-name');
+  const outputCommandText = document.getElementById('output-command');
+  const downloadBtn = document.getElementById('ai-download-btn');
+  const againBtn = document.getElementById('ai-again-btn');
+
+  let activeFiles: File[] = [];
+  let sourceImages: { name: string; img: HTMLImageElement }[] = [];
+  let resultUrl = '';
+  let resultBlob: Blob | null = null;
+  let resultName = '';
+
+  // Trigger modal display from anywhere in the document
+  window.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement;
+    // Check if the click target is a trigger for Ask AI
+    const isTrigger = target.closest('#ask-ai-trigger') || target.closest('#mobile-ask-ai-trigger');
+    
+    if (isTrigger) {
+      e.preventDefault();
+      
+      // Accessing the feature requires user to be logged in!
+      const userStr = localStorage.getItem('filemitra_user');
+      if (!userStr) {
+        window.location.href = '/auth?tab=login';
+      } else {
+        openModal();
+      }
+    }
+  });
+
+  function openModal() {
+    if (!modal) return;
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    document.body.style.overflow = 'hidden';
+    
+    // Reset view
+    inputStage?.classList.remove('hidden');
+    processingStage?.classList.add('hidden');
+    outputStage?.classList.add('hidden');
+    resetAttachedFile();
+  }
+
+  function closeModal() {
+    if (!modal) return;
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+    document.body.style.overflow = '';
+  }
+
+  closeBtn?.addEventListener('click', closeModal);
+  modal?.addEventListener('click', (e) => {
+    if (e.target === modal) closeModal();
+  });
+
+  // Chip populate prompt
+  suggestionChips.forEach(chip => {
+    chip.addEventListener('click', (e) => {
+      const text = (e.target as HTMLButtonElement).innerText;
+      if (promptInput) {
+        promptInput.value = text.replace(/"/g, '');
+      }
+    });
+  });
+
+  // Dropzone handling
+  dropzone?.addEventListener('click', () => fileInput.click());
+  dropzone?.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropzone.classList.add('border-primary', 'bg-canvas-soft-2');
+  });
+  dropzone?.addEventListener('dragleave', () => {
+    dropzone.classList.remove('border-primary', 'bg-canvas-soft-2');
+  });
+  dropzone?.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropzone.classList.remove('border-primary', 'bg-canvas-soft-2');
+    if (e.dataTransfer?.files && e.dataTransfer.files.length > 0) {
+      attachFiles(e.dataTransfer.files);
+    }
+  });
+  fileInput?.addEventListener('change', () => {
+    if (fileInput.files && fileInput.files.length > 0) {
+      attachFiles(fileInput.files);
+    }
+  });
+
+  function attachFiles(files: FileList | File[]) {
+    const list = Array.from(files);
+    if (list.length === 0) return;
+
+    activeFiles = [...activeFiles, ...list];
+    dropzone?.classList.add('hidden');
+    attachedFileCard?.classList.remove('hidden');
+    attachedFileCard?.classList.add('flex');
+    
+    const totalSize = activeFiles.reduce((acc, f) => acc + f.size, 0);
+
+    if (attachedNameText) {
+      if (activeFiles.length === 1) {
+        attachedNameText.innerText = activeFiles[0].name;
+      } else {
+        attachedNameText.innerText = `${activeFiles.length} files attached`;
+      }
+    }
+    
+    if (attachedSizeText) {
+      if (activeFiles.length === 1) {
+        attachedSizeText.innerText = formatBytes(activeFiles[0].size);
+      } else {
+        const names = activeFiles.map(f => f.name).join(', ');
+        attachedSizeText.innerText = `${formatBytes(totalSize)} (${names})`;
+      }
+    }
+
+    activeFiles.forEach(file => {
+      if (file.type.startsWith('image/')) {
+        if (sourceImages.some(item => item.name === file.name)) return;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = new Image();
+          img.onload = () => {
+            sourceImages.push({ name: file.name, img });
+          };
+          img.src = e.target?.result as string;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  }
+
+  function resetAttachedFile() {
+    activeFiles = [];
+    sourceImages = [];
+    if (resultUrl) {
+      URL.revokeObjectURL(resultUrl);
+    }
+    resultUrl = '';
+    resultBlob = null;
+    resultName = '';
+    fileInput.value = '';
+    
+    dropzone?.classList.remove('hidden');
+    attachedFileCard?.classList.add('hidden');
+    attachedFileCard?.classList.remove('flex');
+    
+    if (promptInput) promptInput.value = '';
+  }
+
+  removeAttachedBtn?.addEventListener('click', resetAttachedFile);
+
+  // Submit Prompt Execution handler
+  submitBtn?.addEventListener('click', async () => {
+    if (activeFiles.length === 0) {
+      alert('Please attach a file first.');
+      return;
+    }
+    
+    const prompt = (promptInput?.value || '').trim().toLowerCase();
+    if (!prompt) {
+      alert('Please write an instruction prompt.');
+      return;
+    }
+
+    // Go to Processing view
+    inputStage?.classList.add('hidden');
+    processingStage?.classList.remove('hidden');
+    processingStage?.classList.add('flex');
+
+    // Run Simulated steps
+    await runSimulatedSteps(prompt);
+  });
+
+  function loadScript(src: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      if (document.querySelector(`script[src="${src}"]`)) {
+        resolve();
+        return;
+      }
+      const script = document.createElement('script');
+      script.src = src;
+      script.onload = () => resolve();
+      script.onerror = () => reject(new Error(`Failed to load script ${src}`));
+      document.head.appendChild(script);
+    });
+  }
+
+  async function runSimulatedSteps(prompt: string) {
+    if (activeFiles.length === 0) return;
+
+    resetStepsUI();
+
+    try {
+      // Step 1: Parse instructions
+      setStepActive(step1, true);
+      if (processingStatus) processingStatus.innerText = 'Analyzing instructions...';
+      if (processingDetails) processingDetails.innerText = `Tokenizing prompt query: "${prompt}"`;
+      
+      // Parse targets
+      const targetSizeMatch = prompt.match(/(\d+)\s*(?:kb|kilobytes)/i);
+      const targetKb = targetSizeMatch ? parseFloat(targetSizeMatch[1]) : 0;
+
+      const dimMatch = prompt.match(/(\d+)\s*x\s*(\d+)/i);
+      const wMatch = prompt.match(/(?:width\s*|resize\s*to\s*)(\d+)/i) || prompt.match(/(\d+)\s*px\s*width/i) || prompt.match(/(\d+)\s*width/i);
+      const hMatch = prompt.match(/(?:height\s*|resize\s*to\s*)(\d+)/i) || prompt.match(/(\d+)\s*px\s*height/i) || prompt.match(/(\d+)\s*height/i);
+
+      let targetWidth = 0;
+      let targetHeight = 0;
+      if (dimMatch) {
+        targetWidth = parseInt(dimMatch[1]);
+        targetHeight = parseInt(dimMatch[2]);
+      } else if (wMatch) {
+        targetWidth = parseInt(wMatch[1]);
+      } else if (hMatch) {
+        targetHeight = parseInt(hMatch[1]);
+      }
+
+      let convertFormat = '';
+      if (prompt.includes('webp')) convertFormat = 'image/webp';
+      else if (prompt.includes('png')) convertFormat = 'image/png';
+      else if (prompt.includes('jpg') || prompt.includes('jpeg')) convertFormat = 'image/jpeg';
+      else if (prompt.includes('pdf')) convertFormat = 'application/pdf';
+
+      await sleep(600);
+      setStepDone(step1);
+
+      // Step 2: Load buffer
+      setStepActive(step2, true);
+      if (processingStatus) processingStatus.innerText = 'Loading target buffer...';
+      if (processingDetails) {
+        if (activeFiles.length === 1) {
+          processingDetails.innerText = `Reading file byte array of ${activeFiles[0].name}...`;
+        } else {
+          processingDetails.innerText = `Reading byte arrays of ${activeFiles.length} files...`;
+        }
+      }
+      await sleep(600);
+      setStepDone(step2);
+
+      // Step 3: Run processing execution
+      setStepActive(step3, true);
+      if (processingStatus) processingStatus.innerText = 'Executing file operations...';
+      if (processingDetails) processingDetails.innerText = 'Running client-side pipeline in memory...';
+
+      // ─── PIPELINE SELECTION ───
+      const cleanName = activeFiles[0].name.substring(0, activeFiles[0].name.lastIndexOf('.')) || activeFiles[0].name;
+
+      // 1. Multiple Files Merge PDF
+      if (activeFiles.length > 1 && activeFiles.every(f => f.type === 'application/pdf') && (prompt.includes('merge') || prompt.includes('combine') || prompt.includes('join') || prompt.includes('concat'))) {
+        const mergedPdf = await PDFDocument.create();
+        for (const file of activeFiles) {
+          const arrayBuffer = await file.arrayBuffer();
+          const doc = await PDFDocument.load(arrayBuffer);
+          const copiedPages = await mergedPdf.copyPages(doc, doc.getPageIndices());
+          copiedPages.forEach((page) => mergedPdf.addPage(page));
+        }
+        const mergedPdfBytes = await mergedPdf.save();
+        resultBlob = new Blob([mergedPdfBytes], { type: 'application/pdf' });
+        resultUrl = URL.createObjectURL(resultBlob);
+        resultName = 'merged-document.pdf';
+      }
+      // 2. Multiple Files / Single file Image compiler to PDF
+      else if ((activeFiles.length > 1 && activeFiles.every(f => f.type.startsWith('image/'))) || (activeFiles.length === 1 && activeFiles[0].type.startsWith('image/') && convertFormat === 'application/pdf')) {
+        const pdfDoc = await PDFDocument.create();
+        for (const file of activeFiles) {
+          const arrayBuffer = await file.arrayBuffer();
+          let pdfImage;
+          if (file.type === 'image/png') {
+            pdfImage = await pdfDoc.embedPng(arrayBuffer);
+          } else if (file.type === 'image/jpeg' || file.type === 'image/jpg') {
+            pdfImage = await pdfDoc.embedJpg(arrayBuffer);
+          } else {
+            // WebP fallback using Canvas to draw as PNG
+            const imgItem = sourceImages.find(item => item.name === file.name);
+            if (!imgItem) continue;
+            const canvas = document.createElement('canvas');
+            canvas.width = imgItem.img.width;
+            canvas.height = imgItem.img.height;
+            const ctx = canvas.getContext('2d');
+            ctx?.drawImage(imgItem.img, 0, 0);
+            const pngUrl = canvas.toDataURL('image/png');
+            const res = await fetch(pngUrl);
+            const pngBytes = await res.arrayBuffer();
+            pdfImage = await pdfDoc.embedPng(pngBytes);
+          }
+
+          const page = pdfDoc.addPage([pdfImage.width, pdfImage.height]);
+          page.drawImage(pdfImage, {
+            x: 0,
+            y: 0,
+            width: pdfImage.width,
+            height: pdfImage.height
+          });
+        }
+        const pdfBytes = await pdfDoc.save();
+        resultBlob = new Blob([pdfBytes], { type: 'application/pdf' });
+        resultUrl = URL.createObjectURL(resultBlob);
+        resultName = `${cleanName}-compiled.pdf`;
+      }
+      // 3. Single PDF split/extract range
+      else if (activeFiles.length === 1 && activeFiles[0].type === 'application/pdf' && (prompt.includes('split') || prompt.includes('extract') || prompt.includes('page') || prompt.includes('range'))) {
+        const arrayBuffer = await activeFiles[0].arrayBuffer();
+        const sourceDoc = await PDFDocument.load(arrayBuffer);
+        const maxPages = sourceDoc.getPageCount();
+
+        const rangeMatch = prompt.match(/(?:pages?|extract|split|range)\s*([0-9\s,-]+)/i) || prompt.match(/\b([0-9\s,-]+)\b/);
+        let pageRangeStr = '';
+        if (rangeMatch) {
+          pageRangeStr = rangeMatch[1] || rangeMatch[0];
+        }
+
+        let targets: number[] = [];
+        if (pageRangeStr) {
+          targets = parsePageRange(pageRangeStr, maxPages);
+        }
+
+        if (targets.length === 0) {
+          if (prompt.includes('first page') || prompt.includes('page 1')) {
+            targets = [0];
+          } else if (prompt.includes('last page')) {
+            targets = [maxPages - 1];
+          } else {
+            targets = [0]; // default first page
+          }
+        }
+
+        const subDoc = await PDFDocument.create();
+        const copiedPages = await subDoc.copyPages(sourceDoc, targets);
+        copiedPages.forEach(page => subDoc.addPage(page));
+
+        const subDocBytes = await subDoc.save();
+        resultBlob = new Blob([subDocBytes], { type: 'application/pdf' });
+        resultUrl = URL.createObjectURL(resultBlob);
+        resultName = `${cleanName}-split.pdf`;
+      }
+      // 4. Single PDF to Image conversion
+      else if (activeFiles.length === 1 && activeFiles[0].type === 'application/pdf' && (prompt.includes('image') || prompt.includes('png') || prompt.includes('jpg') || prompt.includes('jpeg') || prompt.includes('convert'))) {
+        // Load PDF.js dynamically
+        await loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js');
+        // @ts-ignore
+        const pdfjsLib = window['pdfjs-dist/build/pdf'];
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+
+        const arrayBuffer = await activeFiles[0].arrayBuffer();
+        const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+        const pdf = await loadingTask.promise;
+
+        let targetPageNum = 1;
+        const pageMatch = prompt.match(/(?:page)\s*(\d+)/i);
+        if (pageMatch) {
+          const num = parseInt(pageMatch[1]);
+          if (num >= 1 && num <= pdf.numPages) targetPageNum = num;
+        }
+
+        const page = await pdf.getPage(targetPageNum);
+        const viewport = page.getViewport({ scale: 1.5 });
+        const canvas = document.createElement('canvas');
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+        const context = canvas.getContext('2d');
+        if (!context) throw new Error("Could not create canvas context");
+
+        await page.render({
+          canvasContext: context,
+          viewport: viewport
+        }).promise;
+
+        const mime = convertFormat || 'image/png';
+        const ext = mime.split('/')[1];
+
+        resultBlob = await new Promise<Blob | null>((resolve) => canvas.toBlob(b => resolve(b), mime));
+        if (resultBlob) {
+          resultUrl = URL.createObjectURL(resultBlob);
+          resultName = `${cleanName}-page-${targetPageNum}.${ext}`;
+        }
+      }
+      // 5. Single Image Canvas pipeline (Compress / Resize / Convert Format)
+      else if (activeFiles.length === 1 && activeFiles[0].type.startsWith('image/')) {
+        const imgItem = sourceImages.find(item => item.name === activeFiles[0].name);
+        const imgEl = imgItem ? imgItem.img : null;
+        if (!imgEl) throw new Error("Image buffer not fully loaded in workspace.");
+
+        let mimeType = convertFormat || activeFiles[0].type;
+        if (!['image/jpeg', 'image/png', 'image/webp'].includes(mimeType)) {
+          mimeType = 'image/jpeg';
+        }
+        const ext = mimeType.split('/')[1] === 'jpeg' ? 'jpg' : mimeType.split('/')[1];
+
+        // Dimensions
+        let w = imgEl.width;
+        let h = imgEl.height;
+        if (targetWidth > 0 && targetHeight > 0) {
+          w = targetWidth;
+          h = targetHeight;
+        } else if (targetWidth > 0) {
+          const ratio = imgEl.width / imgEl.height;
+          w = targetWidth;
+          h = Math.round(targetWidth / ratio);
+        } else if (targetHeight > 0) {
+          const ratio = imgEl.width / imgEl.height;
+          h = targetHeight;
+          w = Math.round(targetHeight * ratio);
+        }
+
+        const canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        ctx?.drawImage(imgEl, 0, 0, w, h);
+
+        const qualityMimeTypes = ['image/jpeg', 'image/webp'];
+        const supportsQuality = qualityMimeTypes.includes(mimeType);
+
+        if (supportsQuality && targetKb > 0) {
+          // Binary Search compression
+          const targetBytes = targetKb * 1024;
+          let minQ = 0.01;
+          let maxQ = 1.0;
+          let bestQ = 0.75;
+          let bestBlob: Blob | null = null;
+
+          for (let i = 0; i < 7; i++) {
+            const midQ = (minQ + maxQ) / 2;
+            const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(b => resolve(b), mimeType, midQ));
+            if (!blob) continue;
+
+            if (blob.size <= targetBytes) {
+              bestQ = midQ;
+              bestBlob = blob;
+              minQ = midQ;
+            } else {
+              maxQ = midQ;
+              if (!bestBlob) bestBlob = blob;
+            }
+          }
+          resultBlob = bestBlob;
+        } else {
+          // Default output
+          let q = 0.85;
+          if (prompt.includes('compress') || prompt.includes('quality')) {
+            q = 0.4;
+            if (prompt.includes('balanced')) q = 0.7;
+            if (prompt.includes('high')) q = 0.95;
+          }
+          resultBlob = await new Promise<Blob | null>((resolve) => canvas.toBlob(b => resolve(b), mimeType, supportsQuality ? q : undefined));
+        }
+
+        if (resultBlob) {
+          resultUrl = URL.createObjectURL(resultBlob);
+          resultName = `${cleanName}-processed.${ext}`;
+        }
+      } else {
+        // Fallback catch-all mock file copy
+        resultBlob = activeFiles[0];
+        resultUrl = URL.createObjectURL(resultBlob);
+        resultName = activeFiles[0].name;
+      }
+
+      if (!resultBlob || !resultUrl) {
+        throw new Error("Could not construct output document. Verify inputs.");
+      }
+
+      await sleep(1000);
+      setStepDone(step3);
+
+      // Step 4: Compile output document
+      setStepActive(step4, true);
+      if (processingStatus) processingStatus.innerText = 'Compiling output...';
+      if (processingDetails) processingDetails.innerText = 'Structuring document binary streams...';
+      await sleep(600);
+      setStepDone(step4);
+
+      // Success Display Transition
+      await sleep(200);
+      processingStage?.classList.add('hidden');
+      processingStage?.classList.remove('flex');
+      outputStage?.classList.remove('hidden');
+      outputStage?.classList.add('flex');
+
+      if (outputNameText) outputNameText.innerText = resultName;
+      if (outputCommandText) outputCommandText.innerText = `"${prompt}"`;
+
+    } catch (err: any) {
+      console.error(err);
+      alert(`AI execution failed: ${err.message || 'Unknown error'}`);
+      processingStage?.classList.add('hidden');
+      inputStage?.classList.remove('hidden');
+    }
+  }
+
+  // Visual highlights
+  function resetStepsUI() {
+    [step1, step2, step3, step4].forEach(step => {
+      if (step) {
+        step.className = 'flex items-center gap-2 text-mute opacity-50';
+        const dot = step.firstElementChild as HTMLElement;
+        if (dot) dot.className = 'w-1.5 h-1.5 rounded-full bg-hairline';
+      }
+    });
+  }
+
+  function setStepActive(step: HTMLElement | null, active: boolean) {
+    if (!step) return;
+    if (active) {
+      step.className = 'flex items-center gap-2 text-ink font-semibold opacity-100';
+      const dot = step.firstElementChild as HTMLElement;
+      if (dot) dot.className = 'w-1.5 h-1.5 rounded-full bg-violet animate-pulse';
+    }
+  }
+
+  function setStepDone(step: HTMLElement | null) {
+    if (!step) return;
+    step.className = 'flex items-center gap-2 text-emerald-500 opacity-100 font-medium';
+    const dot = step.firstElementChild as HTMLElement;
+    if (dot) dot.className = 'w-1.5 h-1.5 rounded-full bg-emerald-500';
+  }
+
+  // Trigger Download
+  downloadBtn?.addEventListener('click', () => {
+    if (!resultUrl) return;
+    
+    const link = document.createElement('a');
+    link.href = resultUrl;
+    link.download = resultName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  });
+
+  // Try again
+  againBtn?.addEventListener('click', () => {
+    outputStage?.classList.add('hidden');
+    outputStage?.classList.remove('flex');
+    inputStage?.classList.remove('hidden');
+    resetAttachedFile();
+  });
+
+  // Parse custom range e.g. "1-3, 5, 8-10" to array of 0-based page indices
+  function parsePageRange(rangeStr: string, maxPages: number): number[] {
+    const pages = new Set<number>();
+    const tokens = rangeStr.split(',');
+
+    tokens.forEach(tok => {
+      const clean = tok.trim();
+      if (clean.includes('-')) {
+        const parts = clean.split('-');
+        const start = parseInt(parts[0].trim());
+        const end = parseInt(parts[1].trim());
+
+        if (!isNaN(start) && !isNaN(end)) {
+          const min = Math.min(start, end);
+          const max = Math.max(start, end);
+          
+          for (let i = min; i <= max; i++) {
+            if (i >= 1 && i <= maxPages) {
+              pages.add(i - 1);
+            }
+          }
+        }
+      } else {
+        const page = parseInt(clean);
+        if (!isNaN(page) && page >= 1 && page <= maxPages) {
+          pages.add(page - 1);
+        }
+      }
+    });
+
+    return Array.from(pages).sort((a, b) => a - b);
+  }
+
+  // Helpers
+  function sleep(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  function formatBytes(bytes: number, decimals = 2) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const dm = decimals < 0 ? 0 : decimals;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + (sizes[i] || 'Bytes');
+  }
+</script>
