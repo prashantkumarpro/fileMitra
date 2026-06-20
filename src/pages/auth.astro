@@ -46,10 +46,10 @@ import { Sparkles, ArrowLeft, Eye, EyeOff } from 'lucide-astro';
 
       <!-- Tab Switcher -->
       <div class="flex p-0.5 bg-canvas-soft-2 border border-hairline rounded-sm select-none shadow-level-1">
-        <button id="tab-login" class="flex-1 text-center py-1.5 rounded-sm text-xs font-semibold text-ink bg-canvas shadow-level-1 transition-all">
+        <button id="tab-login" class="flex-1 text-center py-1.5 rounded-sm text-xs font-semibold text-ink bg-canvas shadow-level-1 transition-all active:scale-[0.97] cursor-pointer">
           Log In
         </button>
-        <button id="tab-signup" class="flex-1 text-center py-1.5 rounded-sm text-xs font-semibold text-body hover:text-ink transition-all">
+        <button id="tab-signup" class="flex-1 text-center py-1.5 rounded-sm text-xs font-semibold text-body hover:text-ink transition-all active:scale-[0.97] cursor-pointer">
           Sign Up
         </button>
       </div>
@@ -102,7 +102,7 @@ import { Sparkles, ArrowLeft, Eye, EyeOff } from 'lucide-astro';
         </div>
 
         <!-- Submit Button -->
-        <button type="submit" id="submit-btn" class="bg-primary text-on-primary hover:bg-primary/95 text-xs font-semibold h-10 rounded-sm mt-2 transition-all shadow-level-2 select-none">
+        <button type="submit" id="submit-btn" class="bg-primary text-on-primary hover:bg-primary/95 text-xs font-semibold h-10 rounded-sm mt-2 transition-all shadow-level-2 select-none active:scale-[0.98] cursor-pointer">
           Sign In
         </button>
 
@@ -122,7 +122,7 @@ import { Sparkles, ArrowLeft, Eye, EyeOff } from 'lucide-astro';
 
       <!-- Third Party login options -->
       <div class="flex flex-col gap-2">
-        <button class="bg-canvas border border-hairline hover:bg-canvas-soft text-ink font-semibold text-xs h-9 rounded-sm flex items-center justify-center gap-2 transition-all shadow-level-1">
+        <button class="bg-canvas border border-hairline hover:bg-canvas-soft text-ink font-semibold text-xs h-9 rounded-sm flex items-center justify-center gap-2 transition-all shadow-level-1 active:scale-[0.98] cursor-pointer">
           <!-- Custom GitHub Icon representation -->
           <svg viewBox="0 0 24 24" class="w-4 h-4 fill-ink" aria-hidden="true">
             <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.11.82-.26.82-.577v-2.234c-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22v3.293c0 .319.22.694.825.576C20.565 21.795 24 17.3 24 12c0-6.63-5.37-12-12-12z" />

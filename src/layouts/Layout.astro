@@ -3,6 +3,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import AskAIModal from '../components/AskAIModal.astro';
 import MobileBottomNav from '../components/MobileBottomNav.astro';
+import MobileToolsDrawer from '../components/MobileToolsDrawer.astro';
 import '../styles/global.css';
 
 interface Props {
@@ -24,6 +25,31 @@ const {
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
 		
+		<!-- Theme Initialization Script to Prevent White Flash -->
+		<script is:inline>
+			(function() {
+				const theme = localStorage.getItem('theme') || 
+					(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+				if (theme === 'dark') {
+					document.documentElement.classList.add('dark');
+				} else {
+					document.documentElement.classList.remove('dark');
+				}
+				
+				// Set dynamic theme-color meta tag
+				const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+				const color = theme === 'dark' ? '#000000' : '#fafafa';
+				if (metaThemeColor) {
+					metaThemeColor.setAttribute('content', color);
+				} else {
+					const meta = document.createElement('meta');
+					meta.setAttribute('name', 'theme-color');
+					meta.setAttribute('content', color);
+					document.head.appendChild(meta);
+				}
+			})();
+		</script>
+		
 		<!-- SEO Meta Tags -->
 		<title>{title}</title>
 		<meta name="description" content={description} />
@@ -42,5 +68,6 @@ const {
 		<Footer />
 		<AskAIModal />
 		<MobileBottomNav />
+		<MobileToolsDrawer />
 	</body>
 </html>

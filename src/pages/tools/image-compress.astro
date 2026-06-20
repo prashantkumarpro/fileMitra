@@ -172,6 +172,8 @@ import { Upload, Download, Sparkles, RefreshCw, Layers } from 'lucide-astro';
 </ToolLayout>
 
 <script>
+  import { addProcessedFile, getProcessedFile } from '../../utils/db.js';
+
   const uploadZone = document.getElementById('upload-zone');
   const fileInput = document.getElementById('file-input') as HTMLInputElement;
   const workspace = document.getElementById('workspace');
@@ -400,7 +402,7 @@ import { Upload, Download, Sparkles, RefreshCw, Layers } from 'lucide-astro';
   });
 
   // Perform Download output
-  downloadBtn?.addEventListener('click', () => {
+  downloadBtn?.addEventListener('click', async () => {
     if (!compressedDataUrl || !activeFile) return;
 
     let mimeType = formatSelect.value;
@@ -416,6 +418,28 @@ import { Upload, Download, Sparkles, RefreshCw, Layers } from 'lucide-astro';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+
+    // Save to IndexedDB
+    try {
+      const response = await fetch(compressedDataUrl);
+      const blob = await response.blob();
+      await addProcessedFile(downloadName, mimeType, blob.size, 'image-compress', blob);
+    } catch (err) {
+      console.error('Failed to save compressed image to history:', err);
+    }
+  });
+
+  // Check for editId on load
+  window.addEventListener('load', async () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const editId = urlParams.get('editId');
+    if (editId) {
+      const record = await getProcessedFile(parseInt(editId));
+      if (record) {
+        const file = new File([record.blob], record.name, { type: record.type });
+        handleFileSelection(file);
+      }
+    }
   });
 
   // Utilities helper

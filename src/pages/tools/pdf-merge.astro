@@ -97,6 +97,7 @@ import { Upload, Download, RefreshCw, FileText, ArrowUp, ArrowDown, Trash2 } fro
 <!-- Script for pdf-lib parsing & merging -->
 <script>
   import { PDFDocument } from 'pdf-lib';
+  import { addProcessedFile, getProcessedFile } from '../../utils/db.js';
 
   const uploadZone = document.getElementById('upload-zone');
   const fileInput = document.getElementById('file-input') as HTMLInputElement;
@@ -305,6 +306,13 @@ import { Upload, Download, RefreshCw, FileText, ArrowUp, ArrowDown, Trash2 } fro
       link.click();
       document.body.removeChild(link);
       
+      // Save to IndexedDB
+      try {
+        await addProcessedFile('merged-document.pdf', 'application/pdf', blob.size, 'pdf-merge', blob);
+      } catch (dbErr) {
+        console.error('Failed to save merged PDF to history:', dbErr);
+      }
+
       URL.revokeObjectURL(downloadUrl);
     } catch (err) {
       console.error('Error merging PDF files:', err);
@@ -312,6 +320,19 @@ import { Upload, Download, RefreshCw, FileText, ArrowUp, ArrowDown, Trash2 } fro
     } finally {
       mergeDownloadBtn.disabled = false;
       mergeDownloadBtn.innerHTML = initialText;
+    }
+  });
+
+  // Check for editId on load
+  window.addEventListener('load', async () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const editId = urlParams.get('editId');
+    if (editId) {
+      const record = await getProcessedFile(parseInt(editId));
+      if (record) {
+        const file = new File([record.blob], record.name, { type: record.type });
+        handleFiles([file]);
+      }
     }
   });
 

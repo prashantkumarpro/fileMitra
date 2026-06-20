@@ -117,6 +117,7 @@ import { Upload, Download, RefreshCw, FileText, ArrowUp, ArrowDown, Trash2 } fro
 
 <script>
   import { PDFDocument, PageSizes } from 'pdf-lib';
+  import { addProcessedFile, getProcessedFile } from '../../utils/db.js';
 
   const uploadZone = document.getElementById('upload-zone');
   const fileInput = document.getElementById('file-input') as HTMLInputElement;
@@ -388,6 +389,13 @@ import { Upload, Download, RefreshCw, FileText, ArrowUp, ArrowDown, Trash2 } fro
       link.click();
       document.body.removeChild(link);
 
+      // Save to IndexedDB
+      try {
+        await addProcessedFile('compiled-images.pdf', 'application/pdf', blob.size, 'image-to-pdf', blob);
+      } catch (dbErr) {
+        console.error('Failed to save compiled PDF to history:', dbErr);
+      }
+
       URL.revokeObjectURL(downloadUrl);
     } catch (err) {
       console.error('Error creating PDF from images:', err);
@@ -401,6 +409,15 @@ import { Upload, Download, RefreshCw, FileText, ArrowUp, ArrowDown, Trash2 } fro
   resetBtn?.addEventListener('click', () => {
     compileQueue = [];
     renderQueue();
+  });
+
+  // Check for editId on load
+  window.addEventListener('load', async () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const editId = urlParams.get('editId');
+    if (editId) {
+      window.location.href = `/tools/pdf-split?editId=${editId}`;
+    }
   });
 
   function formatBytes(bytes: number, decimals = 2) {

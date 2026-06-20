@@ -1,5 +1,5 @@
 ---
-import { Home, Sparkles, User } from 'lucide-astro';
+import { Home, Sparkles, User, Compass } from 'lucide-astro';
 ---
 
 <nav class="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-canvas/90 backdrop-blur-md border-t border-hairline h-14 flex items-center justify-around px-6 shadow-level-5 select-none pb-safe">
@@ -10,13 +10,19 @@ import { Home, Sparkles, User } from 'lucide-astro';
     <span class="text-[9px] font-sans font-medium">Home</span>
   </a>
 
-  <!-- Tab 2: Ask AI (Stateful shortcut) -->
+  <!-- Tab 2: Tools (Drawer trigger) -->
+  <button id="mobile-bottom-explore-tools" class="flex flex-col items-center justify-center gap-1 text-body hover:text-ink active:scale-95 transition-all flex-1 py-1 cursor-pointer outline-none">
+    <Compass class="w-4.5 h-4.5" />
+    <span class="text-[9px] font-sans font-medium">Tools</span>
+  </button>
+
+  <!-- Tab 3: Ask AI (Stateful shortcut) -->
   <button id="mobile-bottom-ask-ai" class="flex flex-col items-center justify-center gap-1 text-body hover:text-ink active:scale-95 transition-all flex-1 py-1 cursor-pointer outline-none">
     <Sparkles class="w-4.5 h-4.5 text-violet animate-pulse" />
     <span class="text-[9px] font-sans font-medium text-violet-deep">Ask AI</span>
   </button>
 
-  <!-- Tab 3: Account Profile -->
+  <!-- Tab 4: Account Profile -->
   <a href="/auth" id="mobile-bottom-auth" class="flex flex-col items-center justify-center gap-1 text-body hover:text-ink active:scale-95 transition-all flex-1 py-1">
     <div id="mobile-bottom-avatar-container" class="relative w-5 h-5 flex items-center justify-center">
       <User id="mobile-bottom-user-icon" class="w-4.5 h-4.5" />
@@ -49,7 +55,6 @@ import { Home, Sparkles, User } from 'lucide-astro';
         }
         if (accountLabel) accountLabel.innerText = 'Profile';
         if (accountLink) {
-          // Point profile to auth page which dynamically shows logout/profile state now
           accountLink.href = '/auth';
         }
       } catch (err) {
@@ -59,6 +64,12 @@ import { Home, Sparkles, User } from 'lucide-astro';
   }
 
   checkBottomNavAuth();
+
+  // Bind Tools trigger click to dispatch global open event
+  document.getElementById('mobile-bottom-explore-tools')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    window.dispatchEvent(new CustomEvent('open-tools-drawer'));
+  });
 
   // Bind AI trigger click to global listener
   document.getElementById('mobile-bottom-ask-ai')?.addEventListener('click', (e) => {

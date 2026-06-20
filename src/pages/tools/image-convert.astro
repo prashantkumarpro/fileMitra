@@ -103,6 +103,8 @@ import { Upload, Download, RefreshCw, RefreshCw as Convert } from 'lucide-astro'
 </ToolLayout>
 
 <script>
+  import { addProcessedFile, getProcessedFile } from '../../utils/db.js';
+
   const uploadZone = document.getElementById('upload-zone');
   const fileInput = document.getElementById('file-input') as HTMLInputElement;
   const workspace = document.getElementById('workspace');
@@ -179,7 +181,7 @@ import { Upload, Download, RefreshCw, RefreshCw as Convert } from 'lucide-astro'
     reader.readAsDataURL(file);
   }
 
-  downloadBtn?.addEventListener('click', () => {
+  downloadBtn?.addEventListener('click', async () => {
     if (!activeFile || !sourceImage.src) return;
 
     // Canvas drawing
@@ -205,6 +207,15 @@ import { Upload, Download, RefreshCw, RefreshCw as Convert } from 'lucide-astro'
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+
+    // Save to IndexedDB
+    try {
+      const response = await fetch(dataUrl);
+      const blob = await response.blob();
+      await addProcessedFile(downloadName, mimeType, blob.size, 'image-convert', blob);
+    } catch (err) {
+      console.error('Failed to save converted image to history:', err);
+    }
   });
 
   resetBtn?.addEventListener('click', () => {
@@ -215,6 +226,19 @@ import { Upload, Download, RefreshCw, RefreshCw as Convert } from 'lucide-astro'
     uploadZone?.classList.remove('hidden');
     
     imgPreview.removeAttribute('src');
+  });
+
+  // Check for editId on load
+  window.addEventListener('load', async () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const editId = urlParams.get('editId');
+    if (editId) {
+      const record = await getProcessedFile(parseInt(editId));
+      if (record) {
+        const file = new File([record.blob], record.name, { type: record.type });
+        handleFileSelection(file);
+      }
+    }
   });
 
   function formatBytes(bytes: number, decimals = 2) {

@@ -1,11 +1,11 @@
 ---
 import ToolLayout from '../../layouts/ToolLayout.astro';
-import { Upload, Download, RefreshCw, Maximize2 } from 'lucide-astro';
+import { Upload, Download, RefreshCw, Maximize2, RotateCw, RotateCcw, FlipHorizontal, FlipVertical, Scissors, Sliders } from 'lucide-astro';
 ---
 
 <ToolLayout
-  title="Resize Image"
-  description="Scale your images to custom dimensions (pixels or percentage). Lock aspect ratios and convert format completely client-side."
+  title="Edit & Resize Image"
+  description="Scale, crop, rotate, flip, and apply adjustment filters to your images client-side with absolute privacy."
   activeTool="image-resize"
 >
   <div class="flex-grow flex flex-col gap-6">
@@ -19,11 +19,11 @@ import { Upload, Download, RefreshCw, Maximize2 } from 'lucide-astro';
       <span class="p-4 bg-canvas-soft rounded-full text-mute group-hover:text-primary border border-hairline mb-4 transition-colors">
         <Upload class="w-6 h-6 animate-pulse" />
       </span>
-      <h3 class="text-ink font-semibold text-lg mb-1">Drag and drop your image to resize</h3>
+      <h3 class="text-ink font-semibold text-lg mb-1">Drag and drop your image to start editing</h3>
       <p class="text-mute text-xs max-w-xs mb-4">
         Supports PNG, JPEG, and WebP formats. Files stay completely in your browser memory.
       </p>
-      <button class="bg-primary text-on-primary hover:bg-primary/95 text-xs font-semibold px-4 py-2 rounded-pill shadow-level-2 transition-all">
+      <button class="bg-primary text-on-primary hover:bg-primary/95 text-xs font-semibold px-4 py-2 rounded-pill shadow-level-2 transition-all cursor-pointer active:scale-95">
         Select File
       </button>
     </div>
@@ -33,31 +33,32 @@ import { Upload, Download, RefreshCw, Maximize2 } from 'lucide-astro';
       
       <!-- Controls Panel (1 column) -->
       <div class="flex flex-col gap-6 lg:col-span-1">
-        <div class="bg-canvas border border-hairline rounded-md p-6 shadow-level-3 flex flex-col gap-6">
-          <h3 class="font-sans font-semibold text-sm text-ink pb-3 border-b border-hairline select-none flex items-center gap-1.5">
+        <div class="bg-canvas border border-hairline rounded-md p-5 shadow-level-3 flex flex-col gap-5 max-h-[80vh] overflow-y-auto">
+          
+          <h3 class="font-sans font-semibold text-sm text-ink pb-2.5 border-b border-hairline select-none flex items-center gap-1.5">
             <Maximize2 class="w-4 h-4 text-mute" />
             Resize Controls
           </h3>
 
           <!-- Dimensions Config -->
-          <div class="flex flex-col gap-4">
-            <div class="grid grid-cols-2 gap-4">
-              <div class="flex flex-col gap-1.5">
-                <label for="width-input" class="font-medium text-xs text-ink select-none font-sans">Width (px)</label>
+          <div class="flex flex-col gap-3">
+            <div class="grid grid-cols-2 gap-3">
+              <div class="flex flex-col gap-1">
+                <label for="width-input" class="font-medium text-[11px] text-ink select-none font-sans">Width (px)</label>
                 <input
                   type="number"
                   id="width-input"
                   min="1"
-                  class="bg-canvas text-ink border border-hairline focus:border-hairline-strong text-xs rounded-sm px-2.5 h-9 outline-none transition-all shadow-level-1"
+                  class="bg-canvas text-ink border border-hairline focus:border-hairline-strong text-xs rounded-sm px-2.5 h-8.5 outline-none transition-all shadow-level-1"
                 />
               </div>
-              <div class="flex flex-col gap-1.5">
-                <label for="height-input" class="font-medium text-xs text-ink select-none font-sans">Height (px)</label>
+              <div class="flex flex-col gap-1">
+                <label for="height-input" class="font-medium text-[11px] text-ink select-none font-sans">Height (px)</label>
                 <input
                   type="number"
                   id="height-input"
                   min="1"
-                  class="bg-canvas text-ink border border-hairline focus:border-hairline-strong text-xs rounded-sm px-2.5 h-9 outline-none transition-all shadow-level-1"
+                  class="bg-canvas text-ink border border-hairline focus:border-hairline-strong text-xs rounded-sm px-2.5 h-8.5 outline-none transition-all shadow-level-1"
                 />
               </div>
             </div>
@@ -74,12 +75,99 @@ import { Upload, Download, RefreshCw, Maximize2 } from 'lucide-astro';
             </label>
           </div>
 
+          <!-- Visual Crop Mode Button -->
+          <div class="flex flex-col gap-1.5 pt-2 border-t border-hairline">
+            <button id="crop-toggle-btn" type="button" class="bg-canvas border border-hairline hover:border-hairline-strong text-ink text-xs font-semibold py-2 rounded-sm flex items-center justify-center gap-1.5 active:scale-[0.98] transition-all cursor-pointer">
+              <Scissors class="w-3.5 h-3.5" />
+              <span>Enable Crop Mode</span>
+            </button>
+            <p class="text-[9px] text-mute leading-normal text-center select-none">
+              Resizes the crop overlay. Crop box is applied on download.
+            </p>
+          </div>
+
+          <!-- Rotate & Flip Controls -->
+          <div class="flex flex-col gap-2 pt-2 border-t border-hairline">
+            <span class="font-medium text-[11px] text-ink select-none">Rotate & Flip</span>
+            <div class="grid grid-cols-2 gap-2">
+              <button id="rotate-left-btn" type="button" class="bg-canvas border border-hairline hover:bg-canvas-soft-2 text-ink text-[11px] py-1.5 rounded-sm flex items-center justify-center gap-1 active:scale-95 transition-all font-medium cursor-pointer" title="Rotate -90°">
+                <RotateCcw class="w-3 h-3 text-mute" /> Rotate Left
+              </button>
+              <button id="rotate-right-btn" type="button" class="bg-canvas border border-hairline hover:bg-canvas-soft-2 text-ink text-[11px] py-1.5 rounded-sm flex items-center justify-center gap-1 active:scale-95 transition-all font-medium cursor-pointer" title="Rotate 90°">
+                <RotateCw class="w-3 h-3 text-mute" /> Rotate Right
+              </button>
+              <button id="flip-h-btn" type="button" class="bg-canvas border border-hairline hover:bg-canvas-soft-2 text-ink text-[11px] py-1.5 rounded-sm flex items-center justify-center gap-1 active:scale-95 transition-all font-medium cursor-pointer" title="Flip horizontally">
+                <FlipHorizontal class="w-3 h-3 text-mute" /> Flip Horiz
+              </button>
+              <button id="flip-v-btn" type="button" class="bg-canvas border border-hairline hover:bg-canvas-soft-2 text-ink text-[11px] py-1.5 rounded-sm flex items-center justify-center gap-1 active:scale-95 transition-all font-medium cursor-pointer" title="Flip vertically">
+                <FlipVertical class="w-3 h-3 text-mute" /> Flip Vert
+              </button>
+            </div>
+          </div>
+
+          <!-- Image Filters & Adjustments -->
+          <div class="flex flex-col gap-3 pt-2 border-t border-hairline">
+            <span class="font-medium text-[11px] text-ink select-none flex items-center gap-1.5">
+              <Sliders class="w-3.5 h-3.5 text-mute" /> Adjustments
+            </span>
+            
+            <!-- Brightness -->
+            <div class="flex flex-col gap-1">
+              <div class="flex justify-between text-[10px] font-medium select-none">
+                <span class="text-body">Brightness</span>
+                <span id="brightness-val" class="font-mono text-mute">100%</span>
+              </div>
+              <input type="range" id="brightness-slider" min="50" max="150" value="100" class="w-full h-1 bg-canvas-soft-2 rounded-lg appearance-none cursor-pointer accent-primary border border-hairline" />
+            </div>
+
+            <!-- Contrast -->
+            <div class="flex flex-col gap-1">
+              <div class="flex justify-between text-[10px] font-medium select-none">
+                <span class="text-body">Contrast</span>
+                <span id="contrast-val" class="font-mono text-mute">100%</span>
+              </div>
+              <input type="range" id="contrast-slider" min="50" max="150" value="100" class="w-full h-1 bg-canvas-soft-2 rounded-lg appearance-none cursor-pointer accent-primary border border-hairline" />
+            </div>
+
+            <!-- Saturation -->
+            <div class="flex flex-col gap-1">
+              <div class="flex justify-between text-[10px] font-medium select-none">
+                <span class="text-body">Saturation</span>
+                <span id="saturation-val" class="font-mono text-mute">100%</span>
+              </div>
+              <input type="range" id="saturation-slider" min="50" max="150" value="100" class="w-full h-1 bg-canvas-soft-2 rounded-lg appearance-none cursor-pointer accent-primary border border-hairline" />
+            </div>
+
+            <!-- Grayscale -->
+            <div class="flex flex-col gap-1">
+              <div class="flex justify-between text-[10px] font-medium select-none">
+                <span class="text-body">Grayscale</span>
+                <span id="grayscale-val" class="font-mono text-mute">0%</span>
+              </div>
+              <input type="range" id="grayscale-slider" min="0" max="100" value="0" class="w-full h-1 bg-canvas-soft-2 rounded-lg appearance-none cursor-pointer accent-primary border border-hairline" />
+            </div>
+
+            <!-- Blur -->
+            <div class="flex flex-col gap-1">
+              <div class="flex justify-between text-[10px] font-medium select-none">
+                <span class="text-body">Blur</span>
+                <span id="blur-val" class="font-mono text-mute">0px</span>
+              </div>
+              <input type="range" id="blur-slider" min="0" max="10" value="0" class="w-full h-1 bg-canvas-soft-2 rounded-lg appearance-none cursor-pointer accent-primary border border-hairline" />
+            </div>
+
+            <!-- Reset Filters -->
+            <button id="reset-filters-btn" type="button" class="text-[10px] text-mute hover:text-ink font-semibold flex items-center justify-center gap-1 select-none self-end cursor-pointer">
+              <RefreshCw class="w-2.5 h-2.5" /> Reset Filters
+            </button>
+          </div>
+
           <!-- Format conversion option -->
-          <div class="flex flex-col gap-2">
-            <label for="format-select" class="font-medium text-xs text-ink select-none">Output Format</label>
+          <div class="flex flex-col gap-2 pt-2 border-t border-hairline">
+            <label for="format-select" class="font-medium text-[11px] text-ink select-none">Output Format</label>
             <select
               id="format-select"
-              class="w-full bg-canvas text-ink border border-hairline focus:border-hairline-strong text-xs rounded-sm px-2.5 h-9 outline-none transition-all shadow-level-1 cursor-pointer"
+              class="w-full bg-canvas text-ink border border-hairline focus:border-hairline-strong text-xs rounded-sm px-2.5 h-8.5 outline-none transition-all shadow-level-1 cursor-pointer"
             >
               <option value="original">Keep Original Format</option>
               <option value="image/jpeg">JPEG (.jpg)</option>
@@ -89,25 +177,25 @@ import { Upload, Download, RefreshCw, Maximize2 } from 'lucide-astro';
           </div>
 
           <!-- Stats Block -->
-          <div class="bg-canvas-soft border border-hairline rounded-sm p-4 flex flex-col gap-2.5 text-xs text-body">
-            <span class="font-mono text-[10px] text-mute uppercase font-semibold select-none">Scaling Diagnostics</span>
+          <div class="bg-canvas-soft border border-hairline rounded-sm p-4 flex flex-col gap-2 text-xs text-body">
+            <span class="font-mono text-[9px] text-mute uppercase font-semibold select-none">Scaling Diagnostics</span>
             <div class="flex justify-between">
               <span>Original size:</span>
               <span id="original-specs" class="font-mono text-ink">0 × 0 px</span>
             </div>
             <div class="flex justify-between">
-              <span>Resized size:</span>
+              <span>Output size:</span>
               <span id="resized-specs" class="font-mono text-ink font-semibold">0 × 0 px</span>
             </div>
           </div>
 
           <!-- Action targets -->
           <div class="flex flex-col gap-2">
-            <button id="download-btn" class="bg-primary text-on-primary hover:bg-primary/95 text-xs font-semibold h-10 rounded-pill flex items-center justify-center gap-1.5 transition-all shadow-level-3">
+            <button id="download-btn" class="bg-primary text-on-primary hover:bg-primary/95 text-xs font-semibold h-10 rounded-pill flex items-center justify-center gap-1.5 transition-all shadow-level-3 active:scale-95 cursor-pointer">
               <Download class="w-4 h-4" />
-              Resize & Download
+              Download Edited Image
             </button>
-            <button id="reset-btn" class="bg-canvas border border-hairline hover:bg-canvas-soft text-ink text-xs font-semibold h-10 rounded-pill flex items-center justify-center gap-1.5 transition-all shadow-level-1">
+            <button id="reset-btn" class="bg-canvas border border-hairline hover:bg-canvas-soft text-ink text-xs font-semibold h-10 rounded-pill flex items-center justify-center gap-1.5 transition-all shadow-level-1 active:scale-95 cursor-pointer">
               <RefreshCw class="w-3.5 h-3.5" />
               Reset Workspace
             </button>
@@ -119,12 +207,35 @@ import { Upload, Download, RefreshCw, Maximize2 } from 'lucide-astro';
       <div class="flex flex-col gap-6 lg:col-span-2">
         <div class="bg-canvas border border-hairline rounded-md p-6 shadow-level-3 flex flex-col gap-4">
           <div class="flex items-center justify-between select-none">
-            <h3 class="font-sans font-semibold text-sm text-ink">Interactive Scale Preview</h3>
-            <span id="scale-indicator" class="font-mono text-[10px] text-mute uppercase">Scaling ratio: 100%</span>
+            <h3 class="font-sans font-semibold text-sm text-ink">Interactive Studio Canvas</h3>
+            <span id="scale-indicator" class="font-mono text-[10px] text-mute uppercase">Scale: 100%</span>
           </div>
 
-          <div class="border border-hairline bg-canvas-soft-2 rounded-sm h-[380px] overflow-hidden flex items-center justify-center p-4 relative">
-            <img id="img-preview" class="max-h-full max-w-full object-contain" alt="Workspace Resize Target" />
+          <div class="border border-hairline bg-canvas-soft-2 rounded-sm h-[420px] overflow-hidden flex items-center justify-center p-4 relative select-none">
+            
+            <div id="preview-wrapper" class="relative inline-block max-h-full max-w-full">
+              <!-- Preview Image -->
+              <img 
+                id="img-preview" 
+                class="max-h-[380px] max-w-full object-contain pointer-events-none select-none transition-transform duration-250 ease-out" 
+                alt="Workspace Resize Target" 
+              />
+              
+              <!-- Crop overlay container (Hidden by default) -->
+              <div id="crop-overlay" class="absolute inset-0 hidden pointer-events-auto select-none border border-black/35 bg-black/20 z-10">
+                <!-- Visual crop box -->
+                <div id="crop-box" class="absolute border-2 border-dashed border-primary bg-primary/10 cursor-move" style="top: 10%; left: 10%; width: 80%; height: 80%;">
+                  <!-- Resizing handles -->
+                  <div class="absolute -top-1.5 -left-1.5 w-3.5 h-3.5 bg-primary border border-on-primary rounded-full cursor-nwse-resize z-20" data-handle="nw"></div>
+                  <div class="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 bg-primary border border-on-primary rounded-full cursor-nesw-resize z-20" data-handle="ne"></div>
+                  <div class="absolute -bottom-1.5 -left-1.5 w-3.5 h-3.5 bg-primary border border-on-primary rounded-full cursor-nesw-resize z-20" data-handle="sw"></div>
+                  <div class="absolute -bottom-1.5 -right-1.5 w-3.5 h-3.5 bg-primary border border-on-primary rounded-full cursor-nwse-resize z-20" data-handle="se"></div>
+                  <!-- Size Badge -->
+                  <span id="crop-size-badge" class="absolute bottom-2 right-2 bg-primary text-on-primary text-[8px] font-mono px-1 py-0.5 rounded-sm pointer-events-none select-none">0 × 0</span>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
@@ -135,6 +246,9 @@ import { Upload, Download, RefreshCw, Maximize2 } from 'lucide-astro';
 </ToolLayout>
 
 <script>
+  import { addProcessedFile, getProcessedFile } from '../../utils/db.js';
+
+  // UI Elements
   const uploadZone = document.getElementById('upload-zone');
   const fileInput = document.getElementById('file-input') as HTMLInputElement;
   const workspace = document.getElementById('workspace');
@@ -147,16 +261,53 @@ import { Upload, Download, RefreshCw, Maximize2 } from 'lucide-astro';
   const originalSpecs = document.getElementById('original-specs');
   const resizedSpecs = document.getElementById('resized-specs');
   const scaleIndicator = document.getElementById('scale-indicator');
+  
+  const previewWrapper = document.getElementById('preview-wrapper');
   const imgPreview = document.getElementById('img-preview') as HTMLImageElement;
   
   const downloadBtn = document.getElementById('download-btn');
   const resetBtn = document.getElementById('reset-btn');
 
+  // Rotate & Flip buttons
+  const rotateLeftBtn = document.getElementById('rotate-left-btn');
+  const rotateRightBtn = document.getElementById('rotate-right-btn');
+  const flipHBtn = document.getElementById('flip-h-btn');
+  const flipVBtn = document.getElementById('flip-v-btn');
+
+  // Adjustment Sliders
+  const brightnessSlider = document.getElementById('brightness-slider') as HTMLInputElement;
+  const contrastSlider = document.getElementById('contrast-slider') as HTMLInputElement;
+  const saturationSlider = document.getElementById('saturation-slider') as HTMLInputElement;
+  const grayscaleSlider = document.getElementById('grayscale-slider') as HTMLInputElement;
+  const blurSlider = document.getElementById('blur-slider') as HTMLInputElement;
+  const resetFiltersBtn = document.getElementById('reset-filters-btn');
+
+  // Visual Crop elements
+  const cropToggleBtn = document.getElementById('crop-toggle-btn');
+  const cropOverlay = document.getElementById('crop-overlay');
+  const cropBox = document.getElementById('crop-box');
+  const cropSizeBadge = document.getElementById('crop-size-badge');
+
+  // Persistent States
   let activeFile: File | null = null;
   let sourceImage = new Image();
   let originalRatio = 1;
 
-  // Bind drop / selection trigger
+  // Editing parameters
+  let rotationAngle = 0; // 0, 90, 180, 270
+  let flipH = false;
+  let flipV = false;
+
+  let brightness = 100;
+  let contrast = 100;
+  let saturation = 100;
+  let grayscale = 0;
+  let blur = 0;
+
+  let cropActive = false;
+  let cropBoxRect = { top: 10, left: 10, width: 80, height: 80 }; // percentages
+
+  // Bind Upload Triggers
   uploadZone?.addEventListener('click', () => fileInput.click());
 
   uploadZone?.addEventListener('dragover', (e) => {
@@ -207,24 +358,71 @@ import { Upload, Download, RefreshCw, Maximize2 } from 'lucide-astro';
         if (originalSpecs) {
           originalSpecs.innerText = `${sourceImage.width} × ${sourceImage.height} px`;
         }
+        
+        resetEditingStates();
         updateDiagnostics();
+        setupCroppingCoordinates();
       };
       sourceImage.src = dataUrl;
     };
     reader.readAsDataURL(file);
   }
 
-  function updateDiagnostics() {
-    const w = parseInt(widthInput.value) || 0;
-    const h = parseInt(heightInput.value) || 0;
+  function resetEditingStates() {
+    rotationAngle = 0;
+    flipH = false;
+    flipV = false;
     
+    brightness = 100;
+    contrast = 100;
+    saturation = 100;
+    grayscale = 0;
+    blur = 0;
+
+    cropActive = false;
+    cropBoxRect = { top: 10, left: 10, width: 80, height: 80 };
+
+    if (brightnessSlider) brightnessSlider.value = '100';
+    if (contrastSlider) contrastSlider.value = '100';
+    if (saturationSlider) saturationSlider.value = '100';
+    if (grayscaleSlider) grayscaleSlider.value = '0';
+    if (blurSlider) blurSlider.value = '0';
+
+    applyFilters();
+    applyTransforms();
+    
+    cropOverlay?.classList.add('hidden');
+    if (cropToggleBtn) {
+      cropToggleBtn.classList.remove('bg-primary', 'text-on-primary', 'hover:bg-primary/90');
+      cropToggleBtn.classList.add('bg-canvas', 'text-ink');
+      cropToggleBtn.querySelector('span')!.innerText = 'Enable Crop Mode';
+    }
+  }
+
+  // Update layout specs and scaling percentage
+  function updateDiagnostics() {
+    let w = parseInt(widthInput.value) || 0;
+    let h = parseInt(heightInput.value) || 0;
+    
+    if (cropActive) {
+      // Calculate crop dimensions based on current cropBoxRect percentages
+      const cw = Math.round((cropBoxRect.width / 100) * sourceImage.width);
+      const ch = Math.round((cropBoxRect.height / 100) * sourceImage.height);
+      
+      // Update inputs if they are not matching
+      if (aspectRatioLock.checked) {
+        const cropRatio = cw / ch;
+        if (w > 0) h = Math.round(w / cropRatio);
+      }
+    }
+
     if (resizedSpecs) {
       resizedSpecs.innerText = `${w} × ${h} px`;
     }
 
     if (sourceImage.width > 0 && scaleIndicator) {
       const ratio = Math.round((w / sourceImage.width) * 100);
-      scaleIndicator.innerText = `Scaling ratio: ${ratio}%`;
+      scaleIndicator.innerText = `Scale: ${ratio}%`;
     }
   }
 
@@ -232,7 +430,13 @@ import { Upload, Download, RefreshCw, Maximize2 } from 'lucide-astro';
   widthInput?.addEventListener('input', () => {
     const w = parseInt(widthInput.value) || 0;
     if (aspectRatioLock.checked && w > 0 && originalRatio > 0) {
-      heightInput.value = Math.round(w / originalRatio).toString();
+      let ratio = originalRatio;
+      if (cropActive) {
+        const cw = (cropBoxRect.width / 100) * sourceImage.width;
+        const ch = (cropBoxRect.height / 100) * sourceImage.height;
+        ratio = cw / ch;
+      }
+      heightInput.value = Math.round(w / ratio).toString();
     }
     updateDiagnostics();
   });
@@ -241,39 +445,331 @@ import { Upload, Download, RefreshCw, Maximize2 } from 'lucide-astro';
   heightInput?.addEventListener('input', () => {
     const h = parseInt(heightInput.value) || 0;
     if (aspectRatioLock.checked && h > 0 && originalRatio > 0) {
-      widthInput.value = Math.round(h * originalRatio).toString();
+      let ratio = originalRatio;
+      if (cropActive) {
+        const cw = (cropBoxRect.width / 100) * sourceImage.width;
+        const ch = (cropBoxRect.height / 100) * sourceImage.height;
+        ratio = cw / ch;
+      }
+      widthInput.value = Math.round(h * ratio).toString();
     }
     updateDiagnostics();
   });
 
-  // Download Trigger
-  downloadBtn?.addEventListener('click', () => {
+  // Apply filters to CSS display
+  function applyFilters() {
+    imgPreview.style.filter = `brightness(${brightness}%) contrast(${contrast}%) saturate(${saturation}%) grayscale(${grayscale}%) blur(${blur}px)`;
+    
+    // Update labels
+    const brLabel = document.getElementById('brightness-val');
+    const coLabel = document.getElementById('contrast-val');
+    const saLabel = document.getElementById('saturation-val');
+    const grLabel = document.getElementById('grayscale-val');
+    const blLabel = document.getElementById('blur-val');
+
+    if (brLabel) brLabel.innerText = `${brightness}%`;
+    if (coLabel) coLabel.innerText = `${contrast}%`;
+    if (saLabel) saLabel.innerText = `${saturation}%`;
+    if (grLabel) grLabel.innerText = `${grayscale}%`;
+    if (blLabel) blLabel.innerText = `${blur}px`;
+  }
+
+  // Bind Adjustments
+  brightnessSlider?.addEventListener('input', () => {
+    brightness = parseInt(brightnessSlider.value);
+    applyFilters();
+  });
+  contrastSlider?.addEventListener('input', () => {
+    contrast = parseInt(contrastSlider.value);
+    applyFilters();
+  });
+  saturationSlider?.addEventListener('input', () => {
+    saturation = parseInt(saturationSlider.value);
+    applyFilters();
+  });
+  grayscaleSlider?.addEventListener('input', () => {
+    grayscale = parseInt(grayscaleSlider.value);
+    applyFilters();
+  });
+  blurSlider?.addEventListener('input', () => {
+    blur = parseInt(blurSlider.value);
+    applyFilters();
+  });
+
+  resetFiltersBtn?.addEventListener('click', () => {
+    brightness = 100;
+    contrast = 100;
+    saturation = 100;
+    grayscale = 0;
+    blur = 0;
+    
+    if (brightnessSlider) brightnessSlider.value = '100';
+    if (contrastSlider) contrastSlider.value = '100';
+    if (saturationSlider) saturationSlider.value = '100';
+    if (grayscaleSlider) grayscaleSlider.value = '0';
+    if (blurSlider) blurSlider.value = '0';
+
+    applyFilters();
+  });
+
+  // Rotate & Flip logic
+  function applyTransforms() {
+    imgPreview.style.transform = `rotate(${rotationAngle}deg) scale(${flipH ? -1 : 1}, ${flipV ? -1 : 1})`;
+  }
+
+  rotateLeftBtn?.addEventListener('click', () => {
+    rotationAngle = (rotationAngle - 90 + 360) % 360;
+    applyTransforms();
+  });
+
+  rotateRightBtn?.addEventListener('click', () => {
+    rotationAngle = (rotationAngle + 90) % 360;
+    applyTransforms();
+  });
+
+  flipHBtn?.addEventListener('click', () => {
+    flipH = !flipH;
+    applyTransforms();
+  });
+
+  flipVBtn?.addEventListener('click', () => {
+    flipV = !flipV;
+    applyTransforms();
+  });
+
+  // Enable/Disable Visual Cropping Mode
+  cropToggleBtn?.addEventListener('click', () => {
+    cropActive = !cropActive;
+    
+    if (cropActive) {
+      cropOverlay?.classList.remove('hidden');
+      cropToggleBtn.classList.remove('bg-canvas', 'text-ink');
+      cropToggleBtn.classList.add('bg-primary', 'text-on-primary', 'hover:bg-primary/90');
+      cropToggleBtn.querySelector('span')!.innerText = 'Crop Active (Click to Clear)';
+      
+      // Update dimensions to match crop box initially
+      updateCropSizeLabel();
+    } else {
+      cropOverlay?.classList.add('hidden');
+      cropToggleBtn.classList.remove('bg-primary', 'text-on-primary', 'hover:bg-primary/90');
+      cropToggleBtn.classList.add('bg-canvas', 'text-ink');
+      cropToggleBtn.querySelector('span')!.innerText = 'Enable Crop Mode';
+      
+      // Revert width/height inputs to full image specs
+      widthInput.value = sourceImage.width.toString();
+      heightInput.value = sourceImage.height.toString();
+      updateDiagnostics();
+    }
+  });
+
+  function updateCropSizeLabel() {
+    const cw = Math.round((cropBoxRect.width / 100) * sourceImage.width);
+    const ch = Math.round((cropBoxRect.height / 100) * sourceImage.height);
+    
+    if (cropSizeBadge) {
+      cropSizeBadge.innerText = `${cw} × ${ch} px`;
+    }
+
+    widthInput.value = cw.toString();
+    heightInput.value = ch.toString();
+    updateDiagnostics();
+  }
+
+  // visual cropping box Drag & Resize Logic
+  function setupCroppingCoordinates() {
+    if (!cropBox || !cropOverlay) return;
+
+    let isDragging = false;
+    let isResizing = false;
+    let activeHandle = '';
+    let startX = 0, startY = 0;
+    let startTop = 0, startLeft = 0;
+    let startWidth = 0, startHeight = 0;
+
+    // Reset styles
+    cropBox.style.top = `${cropBoxRect.top}%`;
+    cropBox.style.left = `${cropBoxRect.left}%`;
+    cropBox.style.width = `${cropBoxRect.width}%`;
+    cropBox.style.height = `${cropBoxRect.height}%`;
+
+    const getEventCoords = (e: MouseEvent | TouchEvent) => {
+      if ('touches' in e) {
+        return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+      }
+      return { x: e.clientX, y: e.clientY };
+    };
+
+    const onStart = (e: MouseEvent | TouchEvent, type: 'drag' | 'resize', handleName = '') => {
+      e.stopPropagation();
+      e.preventDefault();
+      
+      isDragging = type === 'drag';
+      isResizing = type === 'resize';
+      activeHandle = handleName;
+
+      const coords = getEventCoords(e);
+      startX = coords.x;
+      startY = coords.y;
+
+      const overlayBounds = cropOverlay.getBoundingClientRect();
+      const boxBounds = cropBox.getBoundingClientRect();
+
+      // Store starting values in percentages relative to parent container
+      startLeft = ((boxBounds.left - overlayBounds.left) / overlayBounds.width) * 100;
+      startTop = ((boxBounds.top - overlayBounds.top) / overlayBounds.height) * 100;
+      startWidth = (boxBounds.width / overlayBounds.width) * 100;
+      startHeight = (boxBounds.height / overlayBounds.height) * 100;
+
+      document.addEventListener('mousemove', onMove);
+      document.addEventListener('touchmove', onMove, { passive: false });
+      document.addEventListener('mouseup', onEnd);
+      document.addEventListener('touchend', onEnd);
+    };
+
+    const onMove = (e: MouseEvent | TouchEvent) => {
+      e.preventDefault();
+      const coords = getEventCoords(e);
+      const deltaX = coords.x - startX;
+      const deltaY = coords.y - startY;
+
+      const overlayBounds = cropOverlay.getBoundingClientRect();
+      const deltaXPct = (deltaX / overlayBounds.width) * 100;
+      const deltaYPct = (deltaY / overlayBounds.height) * 100;
+
+      if (isDragging) {
+        let left = startLeft + deltaXPct;
+        let top = startTop + deltaYPct;
+
+        // Bounding limits
+        left = Math.max(0, Math.min(100 - startWidth, left));
+        top = Math.max(0, Math.min(100 - startHeight, top));
+
+        cropBoxRect.left = left;
+        cropBoxRect.top = top;
+      } else if (isResizing) {
+        let top = startTop;
+        let left = startLeft;
+        let width = startWidth;
+        let height = startHeight;
+
+        if (activeHandle.includes('e')) {
+          width = Math.max(10, Math.min(100 - startLeft, startWidth + deltaXPct));
+        }
+        if (activeHandle.includes('w')) {
+          const maxLeft = startLeft + startWidth - 10;
+          left = Math.max(0, Math.min(maxLeft, startLeft + deltaXPct));
+          width = startWidth + (startLeft - left);
+        }
+        if (activeHandle.includes('s')) {
+          height = Math.max(10, Math.min(100 - startTop, startHeight + deltaYPct));
+        }
+        if (activeHandle.includes('n')) {
+          const maxTop = startTop + startHeight - 10;
+          top = Math.max(0, Math.min(maxTop, startTop + deltaYPct));
+          height = startHeight + (startTop - top);
+        }
+
+        cropBoxRect.top = top;
+        cropBoxRect.left = left;
+        cropBoxRect.width = width;
+        cropBoxRect.height = height;
+      }
+
+      cropBox.style.top = `${cropBoxRect.top}%`;
+      cropBox.style.left = `${cropBoxRect.left}%`;
+      cropBox.style.width = `${cropBoxRect.width}%`;
+      cropBox.style.height = `${cropBoxRect.height}%`;
+
+      updateCropSizeLabel();
+    };
+
+    const onEnd = () => {
+      isDragging = false;
+      isResizing = false;
+      activeHandle = '';
+      
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('touchmove', onMove);
+      document.removeEventListener('mouseup', onEnd);
+      document.removeEventListener('touchend', onEnd);
+    };
+
+    // Bind crop box movement
+    cropBox.addEventListener('mousedown', (e) => onStart(e, 'drag'));
+    cropBox.addEventListener('touchstart', (e) => onStart(e, 'drag'), { passive: false });
+
+    // Bind handles resizing
+    const handles = cropBox.querySelectorAll('[data-handle]');
+    handles.forEach(handleEl => {
+      const handleName = handleEl.getAttribute('data-handle') || '';
+      
+      handleEl.addEventListener('mousedown', (e) => onStart(e as MouseEvent, 'resize', handleName));
+      handleEl.addEventListener('touchstart', (e) => onStart(e as TouchEvent, 'resize', handleName), { passive: false });
+    });
+  }
+
+  // Compile final image and download
+  downloadBtn?.addEventListener('click', async () => {
     if (!activeFile || !sourceImage.src) return;
 
-    const w = parseInt(widthInput.value) || 0;
-    const h = parseInt(heightInput.value) || 0;
+    const targetW = parseInt(widthInput.value) || 0;
+    const targetH = parseInt(heightInput.value) || 0;
 
-    if (w <= 0 || h <= 0) {
+    if (targetW <= 0 || targetH <= 0) {
       alert('Width and height must be greater than 0.');
       return;
     }
 
-    // Perform canvas resize
+    // Determine crop bounding rect relative to source dimensions
+    let sx = 0, sy = 0;
+    let sw = sourceImage.width;
+    let sh = sourceImage.height;
+
+    if (cropActive) {
+      sx = (cropBoxRect.left / 100) * sourceImage.width;
+      sy = (cropBoxRect.top / 100) * sourceImage.height;
+      sw = (cropBoxRect.width / 100) * sourceImage.width;
+      sh = (cropBoxRect.height / 100) * sourceImage.height;
+    }
+
     const canvas = document.createElement('canvas');
-    canvas.width = w;
-    canvas.height = h;
+
+    // Canvas size adjusts based on rotation
+    if (rotationAngle === 90 || rotationAngle === 270) {
+      canvas.width = targetH;
+      canvas.height = targetW;
+    } else {
+      canvas.width = targetW;
+      canvas.height = targetH;
+    }
 
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
-    ctx.drawImage(sourceImage, 0, 0, w, h);
 
-    // Mimetype config
+    // Apply Sliders/Filters
+    ctx.filter = `brightness(${brightness}%) contrast(${contrast}%) saturate(${saturation}%) grayscale(${grayscale}%) blur(${blur}px)`;
+
+    // Center origin to translate and apply flips and rotations
+    ctx.translate(canvas.width / 2, canvas.height / 2);
+    ctx.rotate((rotationAngle * Math.PI) / 180);
+    ctx.scale(flipH ? -1 : 1, flipV ? -1 : 1);
+
+    // Draw the cropped portion centered on canvas bounds
+    // The width/height drawn match targetW/targetH (re-centered)
+    ctx.drawImage(
+      sourceImage, 
+      sx, sy, sw, sh,             // source coords
+      -targetW / 2, -targetH / 2, // canvas centering offsets
+      targetW, targetH            // output scale bounds
+    );
+
+    // Format output mimetypes
     let mimeType = formatSelect.value;
     if (mimeType === 'original') mimeType = activeFile.type;
     const ext = mimeType.split('/')[1];
 
     const cleanName = activeFile.name.substring(0, activeFile.name.lastIndexOf('.')) || activeFile.name;
-    const downloadName = `${cleanName}-${w}x${h}.${ext}`;
+    const downloadName = `${cleanName}-edited.${ext}`;
 
     const dataUrl = canvas.toDataURL(mimeType);
 
@@ -283,9 +779,18 @@ import { Upload, Download, RefreshCw, Maximize2 } from 'lucide-astro';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+
+    // Save to IndexedDB
+    try {
+      const response = await fetch(dataUrl);
+      const blob = await response.blob();
+      await addProcessedFile(downloadName, mimeType, blob.size, 'image-resize', blob);
+    } catch (err) {
+      console.error('Failed to save edited image to history:', err);
+    }
   });
 
-  // Reset page
+  // Clear workspace
   resetBtn?.addEventListener('click', () => {
     activeFile = null;
     fileInput.value = '';
@@ -294,5 +799,19 @@ import { Upload, Download, RefreshCw, Maximize2 } from 'lucide-astro';
     uploadZone?.classList.remove('hidden');
     
     imgPreview.removeAttribute('src');
+    resetEditingStates();
+  });
+
+  // Check for editId on load
+  window.addEventListener('load', async () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const editId = urlParams.get('editId');
+    if (editId) {
+      const record = await getProcessedFile(parseInt(editId));
+      if (record) {
+        const file = new File([record.blob], record.name, { type: record.type });
+        handleFileSelection(file);
+      }
+    }
   });
 </script>

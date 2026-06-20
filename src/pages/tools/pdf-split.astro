@@ -121,6 +121,7 @@ import { Upload, Download, RefreshCw, FileText, Scissors } from 'lucide-astro';
 
 <script>
   import { PDFDocument } from 'pdf-lib';
+  import { addProcessedFile, getProcessedFile } from '../../utils/db.js';
 
   const uploadZone = document.getElementById('upload-zone');
   const fileInput = document.getElementById('file-input') as HTMLInputElement;
@@ -265,6 +266,13 @@ import { Upload, Download, RefreshCw, FileText, Scissors } from 'lucide-astro';
       link.click();
       document.body.removeChild(link);
 
+      // Save to IndexedDB
+      try {
+        await addProcessedFile(downloadName, 'application/pdf', blob.size, 'pdf-split', blob);
+      } catch (dbErr) {
+        console.error('Failed to save split PDF to history:', dbErr);
+      }
+
       URL.revokeObjectURL(downloadUrl);
     } catch (err) {
       console.error('Error slicing PDF file:', err);
@@ -284,6 +292,19 @@ import { Upload, Download, RefreshCw, FileText, Scissors } from 'lucide-astro';
     
     workspace?.classList.add('hidden');
     uploadZone?.classList.remove('hidden');
+  });
+
+  // Check for editId on load
+  window.addEventListener('load', async () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const editId = urlParams.get('editId');
+    if (editId) {
+      const record = await getProcessedFile(parseInt(editId));
+      if (record) {
+        const file = new File([record.blob], record.name, { type: record.type });
+        handleFile(file);
+      }
+    }
   });
 
   // Parse custom range e.g. "1-3, 5, 8-10" to array of 0-based page indices

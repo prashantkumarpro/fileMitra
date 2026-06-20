@@ -1,5 +1,5 @@
 ---
-import { Sparkles, X, Upload, Check, RefreshCw, FileText, ArrowRight, Download } from 'lucide-astro';
+import { Sparkles, X, Upload, Check, RefreshCw, FileText, ArrowRight, Download, Mic, MicOff, Volume2, VolumeX } from 'lucide-astro';
 ---
 
 <!-- Modal Backdrop -->
@@ -29,12 +29,39 @@ import { Sparkles, X, Upload, Check, RefreshCw, FileText, ArrowRight, Download }
       
       <!-- Prompt input box -->
       <div class="flex flex-col gap-1.5">
-        <label for="ai-prompt" class="font-sans font-medium text-xs text-ink select-none">What should we do?</label>
+        <div class="flex items-center justify-between select-none">
+          <label for="ai-prompt" class="font-sans font-medium text-xs text-ink select-none font-sans">What should we do?</label>
+          
+          <!-- Speech / Voice Control Toolbar -->
+          <div class="flex items-center gap-1.5">
+            <!-- Listening Button -->
+            <button id="voice-listen-btn" type="button" class="flex items-center justify-center w-6 h-6 rounded-full border border-hairline hover:border-hairline-strong bg-canvas text-body hover:text-ink transition-all active:scale-90 cursor-pointer shadow-level-1" title="Speak instruction">
+              <Mic id="icon-mic-on" class="w-3.5 h-3.5 text-mute" />
+              <MicOff id="icon-mic-off" class="w-3.5 h-3.5 text-error hidden animate-pulse" />
+            </button>
+            
+            <!-- Speaking Feedback Toggle -->
+            <button id="voice-speak-btn" type="button" class="flex items-center justify-center w-6 h-6 rounded-full border border-hairline hover:border-hairline-strong bg-canvas text-body hover:text-ink transition-all active:scale-90 cursor-pointer shadow-level-1" title="Toggle voice feedback">
+              <Volume2 id="icon-vol-on" class="w-3.5 h-3.5 text-violet" />
+              <VolumeX id="icon-vol-off" class="w-3.5 h-3.5 text-mute hidden" />
+            </button>
+          </div>
+        </div>
+
         <textarea
           id="ai-prompt"
           placeholder="Ask AI to process your files (e.g., 'Compress this image to 50%', 'Convert this PNG to WebP')"
           class="w-full bg-canvas text-ink border border-hairline focus:border-hairline-strong text-xs rounded-sm p-3 min-h-[90px] outline-none resize-none transition-all placeholder:text-mute shadow-level-1 font-sans"
         ></textarea>
+      </div>
+
+      <!-- Visual Voice Status Toast/Banner -->
+      <div id="voice-status-banner" class="hidden items-center gap-2 bg-violet-soft/20 text-violet border border-violet-soft/30 px-3 py-2.5 rounded-sm text-[11px] font-medium select-none shadow-level-2 animate-in fade-in slide-in-from-top-2 duration-200">
+        <div class="relative w-2 h-2 flex items-center justify-center">
+          <span class="absolute w-2 h-2 bg-violet rounded-full animate-ping"></span>
+          <span class="relative w-1.5 h-1.5 bg-violet rounded-full"></span>
+        </div>
+        <span id="voice-status-text">AI is listening... Speak your command</span>
       </div>
 
       <!-- Compact File Attachment Dropzone -->
@@ -142,10 +169,23 @@ import { Sparkles, X, Upload, Check, RefreshCw, FileText, ArrowRight, Download }
 
 <script>
   import { PDFDocument } from 'pdf-lib';
+  import { addProcessedFile } from '../utils/db.js';
 
   // Elements
   const modal = document.getElementById('ask-ai-modal');
   const closeBtn = document.getElementById('modal-close-btn');
+  
+  // Voice Controls Elements
+  const voiceListenBtn = document.getElementById('voice-listen-btn');
+  const iconMicOn = document.getElementById('icon-mic-on');
+  const iconMicOff = document.getElementById('icon-mic-off');
+  
+  const voiceSpeakBtn = document.getElementById('voice-speak-btn');
+  const iconVolOn = document.getElementById('icon-vol-on');
+  const iconVolOff = document.getElementById('icon-vol-off');
+  
+  const voiceStatusBanner = document.getElementById('voice-status-banner');
+  const voiceStatusText = document.getElementById('voice-status-text');
   
   const inputStage = document.getElementById('ai-input-stage');
   const processingStage = document.getElementById('ai-processing-stage');
@@ -201,6 +241,170 @@ import { Sparkles, X, Upload, Check, RefreshCw, FileText, ArrowRight, Download }
     }
   });
 
+  // Speech Synthesis & Recognition States
+  let voiceFeedbackEnabled = localStorage.getItem('voice_feedback') !== 'disabled';
+  let isListening = false;
+  // @ts-ignore
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  let recognition: any = null;
+  let voices: SpeechSynthesisVoice[] = [];
+
+  // Initialize Speech Button States
+  if (!voiceFeedbackEnabled) {
+    iconVolOn?.classList.add('hidden');
+    iconVolOff?.classList.remove('hidden');
+  }
+
+  // Load human-sounding voices from API registry
+  function loadVoices() {
+    voices = window.speechSynthesis.getVoices();
+  }
+  loadVoices();
+  if (window.speechSynthesis.onvoiceschanged !== undefined) {
+    window.speechSynthesis.onvoiceschanged = loadVoices;
+  }
+
+  function speak(text: string) {
+    if (!voiceFeedbackEnabled) return;
+    window.speechSynthesis.cancel(); // stop current speech
+    const utterance = new SpeechSynthesisUtterance(text);
+    
+    // Attempt to locate high-fidelity human English voice
+    let selectedVoice = voices.find(v => v.lang.startsWith('en') && (
+      v.name.includes('Google') || 
+      v.name.includes('Natural') || 
+      v.name.includes('Microsoft') || 
+      v.name.includes('Premium') ||
+      v.name.includes('Samantha') ||
+      v.name.includes('Daniel')
+    ));
+    
+    if (!selectedVoice) {
+      selectedVoice = voices.find(v => v.lang.startsWith('en'));
+    }
+    
+    if (selectedVoice) {
+      utterance.voice = selectedVoice;
+    }
+
+    utterance.rate = 1.05;
+    utterance.pitch = 1.05; // Friendly pitch
+    window.speechSynthesis.speak(utterance);
+  }
+
+  // Toggle Voice Feedback Speaker
+  voiceSpeakBtn?.addEventListener('click', () => {
+    voiceFeedbackEnabled = !voiceFeedbackEnabled;
+    if (voiceFeedbackEnabled) {
+      localStorage.setItem('voice_feedback', 'enabled');
+      iconVolOn?.classList.remove('hidden');
+      iconVolOff?.classList.add('hidden');
+      speak("Voice feedback enabled.");
+    } else {
+      localStorage.setItem('voice_feedback', 'disabled');
+      iconVolOn?.classList.add('hidden');
+      iconVolOff?.classList.remove('hidden');
+      window.speechSynthesis.cancel();
+    }
+  });
+
+  // Speech Recognition setups
+  if (SpeechRecognition) {
+    recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.onstart = () => {
+      isListening = true;
+      iconMicOn?.classList.add('hidden');
+      iconMicOff?.classList.remove('hidden');
+      
+      if (voiceStatusBanner) {
+        voiceStatusBanner.classList.remove('hidden');
+        voiceStatusBanner.classList.add('flex');
+      }
+      if (voiceStatusText) {
+        voiceStatusText.innerText = "AI is listening... Speak your command now.";
+      }
+      speak("Listening for commands...");
+    };
+
+    recognition.onresult = (event: any) => {
+      const transcript = event.results[0][0].transcript;
+      if (promptInput) {
+        promptInput.value = transcript;
+      }
+      
+      if (voiceStatusText) {
+        voiceStatusText.innerText = `Recognized: "${transcript}"`;
+      }
+      speak(`Received command: ${transcript}`);
+
+      // Check for automatic execution triggers
+      const lower = transcript.toLowerCase();
+      if (lower.includes('execute') || lower.includes('run') || lower.includes('do it') || lower.includes('process')) {
+        if (voiceStatusText) {
+          voiceStatusText.innerText = `Executing command: "${transcript}"...`;
+        }
+        speak("Executing command now.");
+        setTimeout(() => {
+          submitBtn?.click();
+        }, 1000);
+      }
+    };
+
+    recognition.onerror = (event: any) => {
+      console.error(event.error);
+      iconMicOn?.classList.remove('hidden');
+      iconMicOff?.classList.add('hidden');
+      isListening = false;
+      
+      if (voiceStatusText) {
+        if (event.error === 'not-allowed') {
+          voiceStatusText.innerText = "Error: Microphone access denied.";
+          speak("Microphone access denied.");
+        } else {
+          voiceStatusText.innerText = `Error: Speech recognition failed (${event.error}).`;
+          speak("Speech recognition failed.");
+        }
+      }
+
+      setTimeout(() => {
+        voiceStatusBanner?.classList.add('hidden');
+        voiceStatusBanner?.classList.remove('flex');
+      }, 3000);
+    };
+
+    recognition.onend = () => {
+      isListening = false;
+      iconMicOn?.classList.remove('hidden');
+      iconMicOff?.classList.add('hidden');
+      
+      const prompt = (promptInput?.value || '').toLowerCase();
+      const willExecute = prompt.includes('execute') || prompt.includes('run') || prompt.includes('do it') || prompt.includes('process');
+      if (!willExecute) {
+        setTimeout(() => {
+          if (!isListening) {
+            voiceStatusBanner?.classList.add('hidden');
+            voiceStatusBanner?.classList.remove('flex');
+          }
+        }, 2500);
+      }
+    };
+
+    voiceListenBtn?.addEventListener('click', () => {
+      if (isListening) {
+        recognition.stop();
+      } else {
+        recognition.start();
+      }
+    });
+  } else {
+    if (voiceListenBtn) voiceListenBtn.style.display = 'none';
+  }
+
   function openModal() {
     if (!modal) return;
     modal.classList.remove('hidden');
@@ -212,6 +416,9 @@ import { Sparkles, X, Upload, Check, RefreshCw, FileText, ArrowRight, Download }
     processingStage?.classList.add('hidden');
     outputStage?.classList.add('hidden');
     resetAttachedFile();
+
+    // Welcome speech
+    speak("Ask File Mitra AI. Attach a file and speak or write a command.");
   }
 
   function closeModal() {
@@ -364,8 +571,16 @@ import { Sparkles, X, Upload, Check, RefreshCw, FileText, ArrowRight, Download }
     resetStepsUI();
 
     try {
+      // Show voice status banner when executing
+      if (voiceStatusBanner) {
+        voiceStatusBanner.classList.remove('hidden');
+        voiceStatusBanner.classList.add('flex');
+      }
+
       // Step 1: Parse instructions
       setStepActive(step1, true);
+      speak("Analyzing instructions");
+      if (voiceStatusText) voiceStatusText.innerText = "Analyzing instructions...";
       if (processingStatus) processingStatus.innerText = 'Analyzing instructions...';
       if (processingDetails) processingDetails.innerText = `Tokenizing prompt query: "${prompt}"`;
       
@@ -399,6 +614,8 @@ import { Sparkles, X, Upload, Check, RefreshCw, FileText, ArrowRight, Download }
 
       // Step 2: Load buffer
       setStepActive(step2, true);
+      speak("Loading target file buffer");
+      if (voiceStatusText) voiceStatusText.innerText = "Loading target file buffer...";
       if (processingStatus) processingStatus.innerText = 'Loading target buffer...';
       if (processingDetails) {
         if (activeFiles.length === 1) {
@@ -412,6 +629,8 @@ import { Sparkles, X, Upload, Check, RefreshCw, FileText, ArrowRight, Download }
 
       // Step 3: Run processing execution
       setStepActive(step3, true);
+      speak("Executing file operations");
+      if (voiceStatusText) voiceStatusText.innerText = "Executing file operations...";
       if (processingStatus) processingStatus.innerText = 'Executing file operations...';
       if (processingDetails) processingDetails.innerText = 'Running client-side pipeline in memory...';
 
@@ -638,6 +857,8 @@ import { Sparkles, X, Upload, Check, RefreshCw, FileText, ArrowRight, Download }
 
       // Step 4: Compile output document
       setStepActive(step4, true);
+      speak("Compiling output document");
+      if (voiceStatusText) voiceStatusText.innerText = "Compiling output document...";
       if (processingStatus) processingStatus.innerText = 'Compiling output...';
       if (processingDetails) processingDetails.innerText = 'Structuring document binary streams...';
       await sleep(600);
@@ -649,6 +870,13 @@ import { Sparkles, X, Upload, Check, RefreshCw, FileText, ArrowRight, Download }
       processingStage?.classList.remove('flex');
       outputStage?.classList.remove('hidden');
       outputStage?.classList.add('flex');
+
+      speak("File processed successfully. Output is ready.");
+      if (voiceStatusText) voiceStatusText.innerText = "File processed successfully!";
+      setTimeout(() => {
+        voiceStatusBanner?.classList.add('hidden');
+        voiceStatusBanner?.classList.remove('flex');
+      }, 4000);
 
       if (outputNameText) outputNameText.innerText = resultName;
       if (outputCommandText) outputCommandText.innerText = `"${prompt}"`;
@@ -689,8 +917,8 @@ import { Sparkles, X, Upload, Check, RefreshCw, FileText, ArrowRight, Download }
   }
 
   // Trigger Download
-  downloadBtn?.addEventListener('click', () => {
-    if (!resultUrl) return;
+  downloadBtn?.addEventListener('click', async () => {
+    if (!resultUrl || !resultBlob) return;
     
     const link = document.createElement('a');
     link.href = resultUrl;
@@ -698,6 +926,13 @@ import { Sparkles, X, Upload, Check, RefreshCw, FileText, ArrowRight, Download }
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+
+    // Save to IndexedDB
+    try {
+      await addProcessedFile(resultName, resultBlob.type, resultBlob.size, 'ask-ai', resultBlob);
+    } catch (err) {
+      console.error('Failed to save AI output to history:', err);
+    }
   });
 
   // Try again

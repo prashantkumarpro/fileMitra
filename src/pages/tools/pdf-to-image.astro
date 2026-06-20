@@ -90,6 +90,8 @@ import { Upload, Download, RefreshCw, Layers, FileImage } from 'lucide-astro';
 </ToolLayout>
 
 <script>
+  import { addProcessedFile, getProcessedFile } from '../../utils/db.js';
+
   // Ensure PDF.js globals resolve
   // @ts-ignore
   const pdfjsLib = window['pdfjs-dist/build/pdf'];
@@ -222,7 +224,7 @@ import { Upload, Download, RefreshCw, Layers, FileImage } from 'lucide-astro';
     }
   }
 
-  function downloadPage(index: number) {
+  async function downloadPage(index: number) {
     if (!activeFile || index < 0 || index >= pageImages.length) return;
     
     const cleanName = activeFile.name.substring(0, activeFile.name.lastIndexOf('.')) || activeFile.name;
@@ -234,6 +236,15 @@ import { Upload, Download, RefreshCw, Layers, FileImage } from 'lucide-astro';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+
+    // Save to IndexedDB
+    try {
+      const response = await fetch(pageImages[index]);
+      const blob = await response.blob();
+      await addProcessedFile(downloadName, 'image/png', blob.size, 'pdf-to-image', blob);
+    } catch (err) {
+      console.error('Failed to save extracted page image to history:', err);
+    }
   }
 
   resetBtn?.addEventListener('click', () => {
@@ -243,6 +254,23 @@ import { Upload, Download, RefreshCw, Layers, FileImage } from 'lucide-astro';
     
     workspace?.classList.add('hidden');
     uploadZone?.classList.remove('hidden');
+  });
+
+  // Check for editId on load
+  window.addEventListener('load', async () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const editId = urlParams.get('editId');
+    if (editId) {
+      const record = await getProcessedFile(parseInt(editId));
+      if (record) {
+        if (record.type.startsWith('image/')) {
+          window.location.href = `/tools/image-resize?editId=${editId}`;
+        } else {
+          const file = new File([record.blob], record.name, { type: record.type });
+          handleFile(file);
+        }
+      }
+    }
   });
 
   function formatBytes(bytes: number, decimals = 2) {

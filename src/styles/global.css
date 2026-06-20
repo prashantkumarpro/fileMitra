@@ -4,33 +4,34 @@
   --font-sans: "Inter", system-ui, -apple-system, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
 
-  /* Brand Colors */
-  --color-primary: #171717;
-  --color-on-primary: #ffffff;
-  --color-ink: #171717;
-  --color-body: #4d4d4d;
-  --color-mute: #888888;
-  --color-hairline: #ebebeb;
-  --color-hairline-strong: #a1a1a1;
-  --color-canvas: #ffffff;
-  --color-canvas-soft: #fafafa;
-  --color-canvas-soft-2: #f5f5f5;
-  --color-link: #0070f3;
-  --color-link-deep: #0761d1;
-  --color-link-bg-soft: #d3e5ff;
-  --color-success: #0070f3;
-  --color-error: #ee0000;
-  --color-error-soft: #f7d4d6;
-  --color-error-deep: #c50000;
-  --color-warning: #f5a623;
-  --color-warning-soft: #ffefcf;
-  --color-warning-deep: #ab570a;
+  /* Brand Colors configured to change dynamically based on theme */
+  --color-primary: var(--primary);
+  --color-on-primary: var(--on-primary);
+  --color-ink: var(--ink);
+  --color-body: var(--body);
+  --color-mute: var(--mute);
+  --color-hairline: var(--hairline);
+  --color-hairline-strong: var(--hairline-strong);
+  --color-canvas: var(--canvas);
+  --color-canvas-soft: var(--canvas-soft);
+  --color-canvas-soft-2: var(--canvas-soft-2);
+  --color-link: var(--link);
+  --color-link-deep: var(--link-deep);
+  --color-link-bg-soft: var(--link-bg-soft);
+  --color-success: var(--success);
+  --color-error: var(--error);
+  --color-error-soft: var(--error-soft);
+  --color-error-deep: var(--error-deep);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-warning-deep: var(--warning-deep);
+  
   --color-violet: #7928ca;
-  --color-violet-soft: #d8ccf1;
-  --color-violet-deep: #4c2889;
+  --color-violet-soft: var(--violet-soft-val);
+  --color-violet-deep: var(--violet-deep-val);
   --color-cyan: #50e3c2;
-  --color-cyan-soft: #aaffec;
-  --color-cyan-deep: #29bc9b;
+  --color-cyan-soft: var(--cyan-soft-val);
+  --color-cyan-deep: var(--cyan-deep-val);
   --color-highlight-pink: #ff0080;
   --color-highlight-magenta: #eb367f;
 
@@ -50,6 +51,74 @@
   --radius-xl: 16px;
   --radius-pill-sm: 64px;
   --radius-pill: 100px;
+}
+
+:root {
+  --primary: #171717;
+  --on-primary: #ffffff;
+  --ink: #171717;
+  --body: #4d4d4d;
+  --mute: #888888;
+  --hairline: #ebebeb;
+  --hairline-strong: #a1a1a1;
+  --canvas: #ffffff;
+  --canvas-soft: #fafafa;
+  --canvas-soft-2: #f5f5f5;
+  --link: #0070f3;
+  --link-deep: #0761d1;
+  --link-bg-soft: #d3e5ff;
+  --success: #0070f3;
+  --error: #ee0000;
+  --error-soft: #f7d4d6;
+  --error-deep: #c50000;
+  --warning: #f5a623;
+  --warning-soft: #ffefcf;
+  --warning-deep: #ab570a;
+  
+  --violet-soft-val: #d8ccf1;
+  --violet-deep-val: #4c2889;
+  --cyan-soft-val: #aaffec;
+  --cyan-deep-val: #29bc9b;
+
+  --shadow-l1: 0 0 0 1px rgba(0, 0, 0, 0.05) inset;
+  --shadow-l2: 0px 1px 1px rgba(0, 0, 0, 0.02), 0px 2px 2px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.08) inset;
+  --shadow-l3: 0px 2px 2px rgba(0, 0, 0, 0.04), 0px 8px 8px -8px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.08) inset;
+  --shadow-l4: 0px 2px 2px rgba(0, 0, 0, 0.04), 0px 8px 16px -4px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.08) inset;
+  --shadow-l5: 0px 1px 1px rgba(0, 0, 0, 0.02), 0px 8px 16px -4px rgba(0, 0, 0, 0.04), 0px 24px 32px -8px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(0, 0, 0, 0.08) inset;
+}
+
+.dark {
+  --primary: #ffffff;
+  --on-primary: #000000;
+  --ink: #ededed;
+  --body: #a0a0a0;
+  --mute: #666666;
+  --hairline: #222222;
+  --hairline-strong: #444444;
+  --canvas: #0a0a0a;
+  --canvas-soft: #000000;
+  --canvas-soft-2: #141414;
+  --link: #0070f3;
+  --link-deep: #0761d1;
+  --link-bg-soft: #0a2540;
+  --success: #0070f3;
+  --error: #ff3333;
+  --error-soft: #3c0c0e;
+  --error-deep: #ff6666;
+  --warning: #f5a623;
+  --warning-soft: #302008;
+  --warning-deep: #ffbd2e;
+  
+  --violet-soft-val: #321d51;
+  --violet-deep-val: #a78bfa;
+  --cyan-soft-val: #064e3b;
+  --cyan-deep-val: #34d399;
+
+  --shadow-l1: 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+  --shadow-l2: 0px 1px 1px rgba(0, 0, 0, 0.2), 0px 2px 2px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+  --shadow-l3: 0px 2px 2px rgba(0, 0, 0, 0.4), 0px 8px 8px -8px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+  --shadow-l4: 0px 2px 2px rgba(0, 0, 0, 0.4), 0px 8px 16px -4px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+  --shadow-l5: 0px 1px 1px rgba(0, 0, 0, 0.2), 0px 8px 16px -4px rgba(0, 0, 0, 0.4), 0px 24px 32px -8px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.12) inset;
 }
 
 /* Custom UI Utilities from DESIGN.md */
@@ -134,21 +203,21 @@
   line-height: 20px;
 }
 
-/* Stacked Elevation Shadows from DESIGN.md */
+/* Stacked Elevation Shadows from DESIGN.md (dynamic values) */
 @utility shadow-level-1 {
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05) inset;
+  box-shadow: var(--shadow-l1);
 }
 @utility shadow-level-2 {
-  box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.02), 0px 2px 2px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.08) inset;
+  box-shadow: var(--shadow-l2);
 }
 @utility shadow-level-3 {
-  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.04), 0px 8px 8px -8px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.08) inset;
+  box-shadow: var(--shadow-l3);
 }
 @utility shadow-level-4 {
-  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.04), 0px 8px 16px -4px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.08) inset;
+  box-shadow: var(--shadow-l4);
 }
 @utility shadow-level-5 {
-  box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.02), 0px 8px 16px -4px rgba(0, 0, 0, 0.04), 0px 24px 32px -8px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(0, 0, 0, 0.08) inset;
+  box-shadow: var(--shadow-l5);
 }
 
 /* Custom Mesh Gradient Backdrop */
@@ -161,9 +230,58 @@
   opacity: 0.7;
 }
 
+.dark .mesh-gradient-bg {
+  background: radial-gradient(at 0% 0%, rgba(80, 227, 194, 0.15) 0px, transparent 50%),
+              radial-gradient(at 50% 0%, rgba(0, 112, 243, 0.15) 0px, transparent 50%),
+              radial-gradient(at 100% 0%, rgba(121, 40, 202, 0.15) 0px, transparent 50%),
+              radial-gradient(at 50% 50%, rgba(245, 166, 35, 0.1) 0px, transparent 50%);
+  opacity: 0.55;
+}
+
 .mesh-gradient-text {
   background: linear-gradient(135deg, var(--color-gradient-develop-start) 0%, var(--color-gradient-preview-start) 50%, var(--color-gradient-ship-start) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+/* Premium transition control for theme switching */
+.theme-transition-active,
+.theme-transition-active *,
+.theme-transition-active ::before,
+.theme-transition-active ::after {
+  transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 300ms cubic-bezier(0.4, 0, 0.2, 1),
+              color 300ms cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* Smooth mobile bottom sheet transition keyframes */
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 280ms cubic-bezier(0.32, 0.94, 0.6, 1) forwards;
+}
+
+/* Tool card load fade-in sequence */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 450ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }

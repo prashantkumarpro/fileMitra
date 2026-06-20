@@ -1,5 +1,5 @@
 ---
-import { Sparkles, Menu, X } from 'lucide-astro';
+import { Sparkles, Menu, X, Sun, Moon } from 'lucide-astro';
 ---
 
 <header class="sticky top-0 z-50 bg-canvas/80 backdrop-blur-md border-b border-hairline h-16 px-6 lg:px-8 flex items-center justify-between">
@@ -40,6 +40,12 @@ import { Sparkles, Menu, X } from 'lucide-astro';
 
   <!-- Right: CTAs -->
   <div id="nav-user-area" class="hidden md:flex items-center gap-2">
+    <!-- Theme Toggler -->
+    <button class="theme-toggle-btn w-7 h-7 rounded-sm border border-hairline hover:border-hairline-strong text-body hover:text-ink transition-all flex items-center justify-center cursor-pointer shadow-level-1 mr-1" aria-label="Toggle theme">
+      <Sun class="w-3.5 h-3.5 hidden dark:block animate-in fade-in zoom-in duration-200" />
+      <Moon class="w-3.5 h-3.5 block dark:hidden animate-in fade-in zoom-in duration-200" />
+    </button>
+
     <!-- Always visible Ask AI trigger -->
     <a href="javascript:void(0)" id="ask-ai-trigger" class="flex items-center gap-1.5 bg-canvas text-ink border border-hairline hover:border-hairline-strong text-xs font-semibold px-3 h-7 rounded-sm transition-all shadow-level-1 mr-1">
       <Sparkles class="w-3.5 h-3.5 text-violet" />
@@ -68,11 +74,20 @@ import { Sparkles, Menu, X } from 'lucide-astro';
     </div>
   </div>
 
-  <!-- Mobile Nav Toggle -->
-  <button id="mobile-menu-btn" class="md:hidden p-1.5 text-body hover:text-ink rounded-md hover:bg-canvas-soft transition-colors" aria-label="Toggle menu">
-    <Menu id="menu-icon" class="w-5 h-5" />
-    <X id="close-icon" class="w-5 h-5 hidden" />
-  </button>
+  <!-- Mobile Header Right Actions -->
+  <div class="flex items-center gap-1.5 md:hidden">
+    <!-- Mobile Theme Toggler -->
+    <button class="theme-toggle-btn w-8 h-8 rounded-sm border border-hairline hover:border-hairline-strong text-body hover:text-ink transition-all flex items-center justify-center cursor-pointer shadow-level-1" aria-label="Toggle theme">
+      <Sun class="w-4 h-4 hidden dark:block animate-in fade-in zoom-in duration-200" />
+      <Moon class="w-4 h-4 block dark:hidden animate-in fade-in zoom-in duration-200" />
+    </button>
+
+    <!-- Mobile Nav Toggle -->
+    <button id="mobile-menu-btn" class="p-1.5 text-body hover:text-ink rounded-md hover:bg-canvas-soft transition-colors" aria-label="Toggle menu">
+      <Menu id="menu-icon" class="w-5 h-5" />
+      <X id="close-icon" class="w-5 h-5 hidden" />
+    </button>
+  </div>
 </header>
 
 <!-- Mobile Navigation Drawer -->
@@ -211,5 +226,39 @@ import { Sparkles, Menu, X } from 'lucide-astro';
   document.getElementById('mobile-logout-btn')?.addEventListener('click', () => {
     localStorage.removeItem('filemitra_user');
     window.location.reload();
+  });
+
+  // Theme Toggle Event Logic
+  const themeToggleBtns = document.querySelectorAll('.theme-toggle-btn');
+  
+  function toggleTheme() {
+    document.documentElement.classList.add('theme-transition-active');
+    
+    const isDark = document.documentElement.classList.contains('dark');
+    if (isDark) {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+      updateThemeColorMeta('light');
+    } else {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+      updateThemeColorMeta('dark');
+    }
+    
+    setTimeout(() => {
+      document.documentElement.classList.remove('theme-transition-active');
+    }, 300);
+  }
+
+  function updateThemeColorMeta(theme) {
+    const meta = document.querySelector('meta[name="theme-color"]');
+    const color = theme === 'dark' ? '#000000' : '#fafafa';
+    if (meta) {
+      meta.setAttribute('content', color);
+    }
+  }
+
+  themeToggleBtns.forEach(btn => {
+    btn.addEventListener('click', toggleTheme);
   });
 </script>
