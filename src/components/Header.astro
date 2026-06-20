@@ -28,47 +28,51 @@ import { Sparkles, Menu, X, Sun, Moon } from 'lucide-astro';
     </a>
 
     <!-- Desktop Nav Links -->
-    <nav class="hidden md:flex items-center gap-1">
-      <a href="/#tools" class="text-body hover:text-ink text-sm px-3 py-1.5 rounded-full transition-colors">
+    <nav class="hidden md:flex items-center gap-1.5 ml-4 border-l border-hairline pl-4">
+      <a href="/#tools" class="text-body hover:text-ink text-xs font-medium px-2.5 py-1.5 rounded-sm hover:bg-canvas-soft-2 transition-colors">
         Tools
       </a>
-      <a href="/#pricing" class="text-body hover:text-ink text-sm px-3 py-1.5 rounded-full transition-colors">
+      <a href="/#pricing" class="text-body hover:text-ink text-xs font-medium px-2.5 py-1.5 rounded-sm hover:bg-canvas-soft-2 transition-colors">
         Pricing
       </a>
     </nav>
   </div>
 
   <!-- Right: CTAs -->
-  <div id="nav-user-area" class="hidden md:flex items-center gap-2">
+  <div id="nav-user-area" class="hidden md:flex items-center gap-3">
     <!-- Theme Toggler -->
-    <button class="theme-toggle-btn w-7 h-7 rounded-sm border border-hairline hover:border-hairline-strong text-body hover:text-ink transition-all flex items-center justify-center cursor-pointer shadow-level-1 mr-1" aria-label="Toggle theme">
+    <button class="theme-toggle-btn w-7 h-7 rounded-sm border border-hairline hover:border-hairline-strong text-body hover:text-ink transition-all flex items-center justify-center cursor-pointer shadow-level-1" aria-label="Toggle theme">
       <Sun class="w-3.5 h-3.5 hidden dark:block animate-in fade-in zoom-in duration-200" />
       <Moon class="w-3.5 h-3.5 block dark:hidden animate-in fade-in zoom-in duration-200" />
     </button>
 
     <!-- Always visible Ask AI trigger -->
-    <a href="javascript:void(0)" id="ask-ai-trigger" class="flex items-center gap-1.5 bg-canvas text-ink border border-hairline hover:border-hairline-strong text-xs font-semibold px-3 h-7 rounded-sm transition-all shadow-level-1 mr-1">
-      <Sparkles class="w-3.5 h-3.5 text-violet" />
+    <a href="javascript:void(0)" id="ask-ai-trigger" class="flex items-center gap-1.5 bg-canvas text-ink border border-hairline hover:border-hairline-strong text-xs font-semibold px-3 h-7 rounded-sm transition-all shadow-level-1">
+      <Sparkles class="w-3.5 h-3.5 text-violet animate-pulse" />
       Ask AI
     </a>
 
+    <div class="h-4 w-px bg-hairline"></div>
+
     <!-- Logged out state -->
     <div id="nav-logged-out" class="flex items-center gap-2">
-      <a href="/auth?tab=login" class="text-ink hover:bg-canvas-soft text-xs font-semibold px-3 h-7 flex items-center justify-center rounded-sm transition-all">
+      <a href="/auth?tab=login" class="text-ink hover:bg-canvas-soft text-xs font-semibold px-3 h-7 flex items-center justify-center rounded-sm transition-all border border-transparent hover:border-hairline">
         Log In
       </a>
-      <a href="/auth?tab=signup" class="bg-primary text-on-primary hover:bg-primary/90 text-xs font-semibold px-3 h-7 flex items-center justify-center rounded-sm transition-all">
+      <a href="/auth?tab=signup" class="bg-primary text-on-primary hover:bg-primary/90 text-xs font-semibold px-3 h-7 flex items-center justify-center rounded-sm transition-all shadow-level-1">
         Sign Up
       </a>
     </div>
 
     <!-- Logged in state (hidden by default) -->
-    <div id="nav-logged-in" class="hidden items-center gap-3">
-      <span id="user-display-email" class="font-mono text-xs text-body select-none"></span>
-      <div id="user-avatar-char" class="w-6 h-6 rounded-full bg-primary text-on-primary text-[10px] font-bold flex items-center justify-center select-none shadow-level-1">
-        U
+    <div id="nav-logged-in" class="hidden items-center gap-2">
+      <div class="flex items-center gap-2 bg-canvas-soft border border-hairline pl-2.5 pr-1.5 py-0.5 rounded-full select-none max-w-[200px]">
+        <span id="user-display-email" class="text-[11px] font-medium text-body truncate max-w-[130px] font-sans"></span>
+        <div id="user-avatar-char" class="w-5.5 h-5.5 rounded-full bg-gradient-to-tr from-violet to-highlight-pink text-white text-[10px] font-bold flex items-center justify-center shadow-level-1 select-none">
+          U
+        </div>
       </div>
-      <button id="logout-btn" class="text-xs text-mute hover:text-error font-semibold px-2 h-7 rounded-sm transition-colors cursor-pointer select-none">
+      <button id="logout-btn" class="text-xs text-mute hover:text-error hover:bg-error-soft/10 font-semibold px-2.5 h-7 rounded-sm transition-colors cursor-pointer select-none border border-transparent hover:border-error-soft">
         Log Out
       </button>
     </div>

@@ -1,5 +1,5 @@
 ---
-import { Sparkles, X, Upload, Check, RefreshCw, FileText, ArrowRight, Download, Mic, MicOff, Volume2, VolumeX } from 'lucide-astro';
+import { Sparkles, X, Upload, Check, RefreshCw, FileText, ArrowRight, Download, Mic, MicOff, Volume2, VolumeX, Layers, Expand, Search, Settings } from 'lucide-astro';
 ---
 
 <!-- Modal Backdrop -->
@@ -89,18 +89,77 @@ import { Sparkles, X, Upload, Check, RefreshCw, FileText, ArrowRight, Download, 
       </div>
 
       <!-- Suggested prompts layout list -->
-      <div class="flex flex-col gap-1.5 select-none">
-        <span class="font-mono text-[9px] text-mute uppercase font-semibold">Try prompt templates</span>
-        <div class="flex flex-wrap gap-1.5">
-          <button class="ai-suggestion-chip text-[10px] font-medium text-body bg-canvas-soft border border-hairline hover:border-hairline-strong hover:bg-canvas-soft-2 px-2.5 py-1 rounded-full transition-all">
-            "Compress this image to balanced quality"
+      <div class="flex flex-col gap-2.5 select-none">
+        <div class="flex items-center justify-between px-1">
+          <span class="font-mono text-[9px] text-mute uppercase font-semibold tracking-wider">Suggested Voice Commands</span>
+          <span class="text-[8.5px] text-violet font-semibold animate-pulse">💡 Click to try one</span>
+        </div>
+        <div class="flex flex-col gap-2">
+          
+          <button class="ai-suggestion-chip flex items-center justify-between p-2.5 bg-canvas-soft hover:bg-canvas border border-hairline hover:border-hairline-strong rounded-md transition-all text-left group cursor-pointer active:scale-[0.99] shadow-level-1 w-full">
+            <div class="flex items-center gap-3">
+              <span class="p-1.5 bg-amber-500/10 text-amber-600 rounded-sm">
+                <Layers class="w-4 h-4" />
+              </span>
+              <div class="flex flex-col">
+                <span class="text-xs font-semibold text-ink">Compress Image</span>
+                <span class="text-[10px] text-body mt-0.5">Reduce file size on local engine</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-[10.5px] font-mono text-mute italic bg-canvas-soft-2 px-2.5 py-1 rounded-sm border border-hairline group-hover:text-violet group-hover:border-violet-soft/30 transition-colors">"Compress to 50%"</span>
+            </div>
+            <span class="hidden">Compress this image by 50%</span>
           </button>
-          <button class="ai-suggestion-chip text-[10px] font-medium text-body bg-canvas-soft border border-hairline hover:border-hairline-strong hover:bg-canvas-soft-2 px-2.5 py-1 rounded-full transition-all">
-            "Convert this image to WebP"
+
+          <button class="ai-suggestion-chip flex items-center justify-between p-2.5 bg-canvas-soft hover:bg-canvas border border-hairline hover:border-hairline-strong rounded-md transition-all text-left group cursor-pointer active:scale-[0.99] shadow-level-1 w-full">
+            <div class="flex items-center gap-3">
+              <span class="p-1.5 bg-purple-500/10 text-purple-600 rounded-sm">
+                <RefreshCw class="w-4 h-4" />
+              </span>
+              <div class="flex flex-col">
+                <span class="text-xs font-semibold text-ink">Convert Format</span>
+                <span class="text-[10px] text-body mt-0.5">Save as optimized web format</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-[10.5px] font-mono text-mute italic bg-canvas-soft-2 px-2.5 py-1 rounded-sm border border-hairline group-hover:text-violet group-hover:border-violet-soft/30 transition-colors">"Convert to WebP"</span>
+            </div>
+            <span class="hidden">Convert this image to WebP format</span>
           </button>
-          <button class="ai-suggestion-chip text-[10px] font-medium text-body bg-canvas-soft border border-hairline hover:border-hairline-strong hover:bg-canvas-soft-2 px-2.5 py-1 rounded-full transition-all">
-            "Resize image to 800px width"
+
+          <button class="ai-suggestion-chip flex items-center justify-between p-2.5 bg-canvas-soft hover:bg-canvas border border-hairline hover:border-hairline-strong rounded-md transition-all text-left group cursor-pointer active:scale-[0.99] shadow-level-1 w-full">
+            <div class="flex items-center gap-3">
+              <span class="p-1.5 bg-blue-500/10 text-blue-600 rounded-sm">
+                <Expand class="w-4 h-4" />
+              </span>
+              <div class="flex flex-col">
+                <span class="text-xs font-semibold text-ink">Resize Image</span>
+                <span class="text-[10px] text-body mt-0.5">Scale to custom dimensions</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-[10.5px] font-mono text-mute italic bg-canvas-soft-2 px-2.5 py-1 rounded-sm border border-hairline group-hover:text-violet group-hover:border-violet-soft/30 transition-colors">"Resize width to 800px"</span>
+            </div>
+            <span class="hidden">Resize image width to 800px</span>
           </button>
+
+          <button class="ai-suggestion-chip flex items-center justify-between p-2.5 bg-canvas-soft hover:bg-canvas border border-hairline hover:border-hairline-strong rounded-md transition-all text-left group cursor-pointer active:scale-[0.99] shadow-level-1 w-full">
+            <div class="flex items-center gap-3">
+              <span class="p-1.5 bg-pink-500/10 text-pink-600 rounded-sm">
+                <Sparkles class="w-4 h-4" />
+              </span>
+              <div class="flex flex-col">
+                <span class="text-xs font-semibold text-ink">Remove Background</span>
+                <span class="text-[10px] text-body mt-0.5">Erase backgrounds automatically</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-[10.5px] font-mono text-mute italic bg-canvas-soft-2 px-2.5 py-1 rounded-sm border border-hairline group-hover:text-violet group-hover:border-violet-soft/30 transition-colors">"Remove background"</span>
+            </div>
+            <span class="hidden">Remove background from this image</span>
+          </button>
+
         </div>
       </div>
 
@@ -119,45 +178,104 @@ import { Sparkles, X, Upload, Check, RefreshCw, FileText, ArrowRight, Download, 
         <h3 id="processing-status" class="font-sans font-semibold text-sm text-ink">Analyzing instructions...</h3>
         <p id="processing-details" class="text-mute text-xs font-mono">Initializing processing canvas...</p>
       </div>
-      <!-- Step progress indicators -->
-      <div class="w-full max-w-xs flex flex-col gap-2.5 border-t border-hairline pt-4 text-left font-mono text-[10px] text-mute select-none">
-        <div id="step-1" class="flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-hairline"></div> Parse input instructions</div>
-        <div id="step-2" class="flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-hairline"></div> Load target buffer to memory</div>
-        <div id="step-3" class="flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-hairline"></div> Run graphic resize & compression</div>
-        <div id="step-4" class="flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-hairline"></div> Compile output document</div>
+      
+      <!-- Graphical Step progress indicators (Horizontal) -->
+      <div class="w-full border-t border-hairline pt-5 flex items-center justify-around select-none">
+        
+        <!-- Step 1: Parse -->
+        <div id="step-1" class="flex flex-col items-center gap-1.5 text-mute opacity-50 transition-all duration-300">
+          <div class="w-8 h-8 rounded-full border border-hairline flex items-center justify-center bg-canvas shadow-level-1 text-ink" id="step-1-dot">
+            <Search class="w-3.5 h-3.5" />
+          </div>
+          <span class="text-[9px] font-bold font-sans">Parse</span>
+        </div>
+
+        <div class="h-px flex-1 bg-hairline max-w-[24px] mb-4"></div>
+
+        <!-- Step 2: Load -->
+        <div id="step-2" class="flex flex-col items-center gap-1.5 text-mute opacity-50 transition-all duration-300">
+          <div class="w-8 h-8 rounded-full border border-hairline flex items-center justify-center bg-canvas shadow-level-1 text-ink" id="step-2-dot">
+            <Upload class="w-3.5 h-3.5" />
+          </div>
+          <span class="text-[9px] font-bold font-sans">Load</span>
+        </div>
+
+        <div class="h-px flex-1 bg-hairline max-w-[24px] mb-4"></div>
+
+        <!-- Step 3: Run -->
+        <div id="step-3" class="flex flex-col items-center gap-1.5 text-mute opacity-50 transition-all duration-300">
+          <div class="w-8 h-8 rounded-full border border-hairline flex items-center justify-center bg-canvas shadow-level-1 text-ink" id="step-3-dot">
+            <Settings class="w-3.5 h-3.5" />
+          </div>
+          <span class="text-[9px] font-bold font-sans">Process</span>
+        </div>
+
+        <div class="h-px flex-1 bg-hairline max-w-[24px] mb-4"></div>
+
+        <!-- Step 4: Compile -->
+        <div id="step-4" class="flex flex-col items-center gap-1.5 text-mute opacity-50 transition-all duration-300">
+          <div class="w-8 h-8 rounded-full border border-hairline flex items-center justify-center bg-canvas shadow-level-1 text-ink" id="step-4-dot">
+            <FileText class="w-3.5 h-3.5" />
+          </div>
+          <span class="text-[9px] font-bold font-sans">Compile</span>
+        </div>
+
       </div>
     </div>
 
     <!-- Output Download Stage (Hidden by default) -->
-    <div id="ai-output-stage" class="hidden flex-col gap-5 text-center">
-      <div class="flex flex-col items-center justify-center p-4 bg-emerald-50 border border-emerald-200 rounded-sm gap-2 select-none">
-        <span class="p-2 bg-emerald-500 text-on-primary rounded-full">
-          <Check class="w-5 h-5" />
+    <div id="ai-output-stage" class="hidden flex-col gap-4 text-center">
+      
+      <!-- Compact success banner -->
+      <div class="flex items-center gap-2.5 p-3 bg-emerald-50 border border-emerald-200 rounded-sm text-left select-none">
+        <span class="p-1.5 bg-emerald-500 text-on-primary rounded-full flex-shrink-0">
+          <Check class="w-3.5 h-3.5" />
         </span>
-        <h3 class="font-sans font-bold text-sm text-ink">File Processed Successfully!</h3>
-        <p class="text-body text-xs max-w-xs leading-normal">
-          AI successfully analyzed your prompt instructions and executed local operations on your file buffer.
-        </p>
+        <div class="flex flex-col">
+          <h3 class="font-sans font-bold text-xs text-ink">File Processed Successfully!</h3>
+          <p class="text-[10px] text-body">Executed client-side browser pipeline.</p>
+        </div>
       </div>
 
-      <div class="bg-canvas-soft border border-hairline rounded-sm p-4 flex flex-col gap-2.5 text-left text-xs text-body">
-        <span class="font-mono text-[10px] text-mute uppercase font-semibold select-none">Output Diagnostics</span>
+      <!-- Visual Preview Area of Output -->
+      <div class="border border-hairline bg-canvas-soft-2 rounded-md p-3 flex flex-col items-center justify-center min-h-[160px] relative select-none">
+        
+        <!-- Image Preview Frame (Rendered if image) -->
+        <div id="ai-output-image-preview-container" class="hidden w-full h-full max-h-[180px] items-center justify-center">
+          <img id="ai-output-image-preview" src="" class="max-h-[180px] max-w-full object-contain rounded-sm border border-hairline bg-white shadow-level-2 pointer-events-none select-none" />
+        </div>
+
+        <!-- Document Preview Frame (Rendered if PDF) -->
+        <div id="ai-output-pdf-preview-container" class="hidden flex-col items-center gap-2 text-rose-500">
+          <svg viewBox="0 0 24 24" class="w-12 h-12 fill-rose-500/10 stroke-rose-500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+          </svg>
+          <span class="font-mono text-[9px] text-mute uppercase font-semibold">PDF Document</span>
+        </div>
+
+      </div>
+
+      <!-- Compact diagnostic details -->
+      <div class="bg-canvas-soft border border-hairline rounded-sm p-3.5 flex flex-col gap-2 text-left text-xs text-body select-none">
         <div class="flex justify-between">
-          <span>Output Name:</span>
-          <span id="output-name" class="font-mono text-ink max-w-[200px] truncate">image-compressed.webp</span>
+          <span class="text-mute">Output Name:</span>
+          <span id="output-name" class="font-mono text-ink max-w-[220px] truncate font-semibold">image-compressed.webp</span>
         </div>
         <div class="flex justify-between">
-          <span>Command Executed:</span>
-          <span id="output-command" class="font-mono text-ink italic">"Compress to balanced quality"</span>
+          <span class="text-mute">Command:</span>
+          <span id="output-command" class="font-mono text-ink italic truncate max-w-[220px]">"Compress to balanced quality"</span>
         </div>
       </div>
 
       <div class="flex flex-col gap-2">
-        <button id="ai-download-btn" class="bg-primary text-on-primary hover:bg-primary/95 text-xs font-semibold h-10 rounded-pill flex items-center justify-center gap-1.5 transition-all shadow-level-3">
+        <button id="ai-download-btn" class="bg-primary text-on-primary hover:bg-primary/95 text-xs font-semibold h-10 rounded-pill flex items-center justify-center gap-1.5 transition-all shadow-level-3 cursor-pointer">
           <Download class="w-4 h-4" />
           Download AI Result
         </button>
-        <button id="ai-again-btn" class="bg-canvas border border-hairline hover:bg-canvas-soft text-ink text-xs font-semibold h-10 rounded-pill flex items-center justify-center gap-1.5 transition-all shadow-level-1">
+        <button id="ai-again-btn" class="bg-canvas border border-hairline hover:bg-canvas-soft text-ink text-xs font-semibold h-10 rounded-pill flex items-center justify-center gap-1.5 transition-all shadow-level-1 cursor-pointer">
           <RefreshCw class="w-3.5 h-3.5" />
           Process Another File
         </button>
@@ -269,10 +387,13 @@ import { Sparkles, X, Upload, Check, RefreshCw, FileText, ArrowRight, Download, 
     window.speechSynthesis.cancel(); // stop current speech
     const utterance = new SpeechSynthesisUtterance(text);
     
+    // Refresh voices list in case they loaded dynamically after initial boot
+    const currentVoices = window.speechSynthesis.getVoices();
+    
     // Attempt to locate high-fidelity human English voice
-    let selectedVoice = voices.find(v => v.lang.startsWith('en') && (
-      v.name.includes('Google') || 
+    let selectedVoice = currentVoices.find(v => v.lang.startsWith('en') && (
       v.name.includes('Natural') || 
+      v.name.includes('Google') || 
       v.name.includes('Microsoft') || 
       v.name.includes('Premium') ||
       v.name.includes('Samantha') ||
@@ -280,15 +401,15 @@ import { Sparkles, X, Upload, Check, RefreshCw, FileText, ArrowRight, Download, 
     ));
     
     if (!selectedVoice) {
-      selectedVoice = voices.find(v => v.lang.startsWith('en'));
+      selectedVoice = currentVoices.find(v => v.lang.startsWith('en'));
     }
     
     if (selectedVoice) {
       utterance.voice = selectedVoice;
     }
 
-    utterance.rate = 1.05;
-    utterance.pitch = 1.05; // Friendly pitch
+    utterance.rate = 0.95; // Slightly slower, much more natural and human-like
+    utterance.pitch = 1.0;  // Standard natural pitch
     window.speechSynthesis.speak(utterance);
   }
 
@@ -418,7 +539,7 @@ import { Sparkles, X, Upload, Check, RefreshCw, FileText, ArrowRight, Download, 
     resetAttachedFile();
 
     // Welcome speech
-    speak("Ask File Mitra AI. Attach a file and speak or write a command.");
+    speak("Hi there! I'm FileMitra AI. Please attach a file and type or speak your command.");
   }
 
   function closeModal() {
@@ -436,9 +557,11 @@ import { Sparkles, X, Upload, Check, RefreshCw, FileText, ArrowRight, Download, 
   // Chip populate prompt
   suggestionChips.forEach(chip => {
     chip.addEventListener('click', (e) => {
-      const text = (e.target as HTMLButtonElement).innerText;
+      const target = e.currentTarget as HTMLElement;
+      const hiddenSpan = target.querySelector('.hidden');
+      const text = hiddenSpan ? hiddenSpan.textContent || '' : target.innerText;
       if (promptInput) {
-        promptInput.value = text.replace(/"/g, '');
+        promptInput.value = text.trim();
       }
     });
   });
@@ -579,28 +702,33 @@ import { Sparkles, X, Upload, Check, RefreshCw, FileText, ArrowRight, Download, 
 
       // Step 1: Parse instructions
       setStepActive(step1, true);
-      speak("Analyzing instructions");
-      if (voiceStatusText) voiceStatusText.innerText = "Analyzing instructions...";
+      speak("Let's look at your command first.");
+      if (voiceStatusText) voiceStatusText.innerText = "Let's look at your command first...";
       if (processingStatus) processingStatus.innerText = 'Analyzing instructions...';
       if (processingDetails) processingDetails.innerText = `Tokenizing prompt query: "${prompt}"`;
       
-      // Parse targets
+      // Parse targets - size in KB
       const targetSizeMatch = prompt.match(/(\d+)\s*(?:kb|kilobytes)/i);
       const targetKb = targetSizeMatch ? parseFloat(targetSizeMatch[1]) : 0;
 
-      const dimMatch = prompt.match(/(\d+)\s*x\s*(\d+)/i);
-      const wMatch = prompt.match(/(?:width\s*|resize\s*to\s*)(\d+)/i) || prompt.match(/(\d+)\s*px\s*width/i) || prompt.match(/(\d+)\s*width/i);
-      const hMatch = prompt.match(/(?:height\s*|resize\s*to\s*)(\d+)/i) || prompt.match(/(\d+)\s*px\s*height/i) || prompt.match(/(\d+)\s*height/i);
-
+      // Parse dimensions robustly
+      const digits = prompt.match(/\d+/g);
       let targetWidth = 0;
       let targetHeight = 0;
-      if (dimMatch) {
-        targetWidth = parseInt(dimMatch[1]);
-        targetHeight = parseInt(dimMatch[2]);
-      } else if (wMatch) {
-        targetWidth = parseInt(wMatch[1]);
-      } else if (hMatch) {
-        targetHeight = parseInt(hMatch[1]);
+      
+      if (digits && digits.length >= 2 && prompt.includes('x')) {
+        targetWidth = parseInt(digits[0]);
+        targetHeight = parseInt(digits[1]);
+      } else if (digits && digits.length === 1) {
+        const val = parseInt(digits[0]);
+        // Avoid matching percent values as dimensions
+        if (!prompt.includes(val + '%') && !prompt.includes(val + ' %')) {
+          if (prompt.includes('height') || prompt.includes('tall')) {
+            targetHeight = val;
+          } else {
+            targetWidth = val;
+          }
+        }
       }
 
       let convertFormat = '';
@@ -614,8 +742,8 @@ import { Sparkles, X, Upload, Check, RefreshCw, FileText, ArrowRight, Download, 
 
       // Step 2: Load buffer
       setStepActive(step2, true);
-      speak("Loading target file buffer");
-      if (voiceStatusText) voiceStatusText.innerText = "Loading target file buffer...";
+      speak("Now, loading your file into my memory.");
+      if (voiceStatusText) voiceStatusText.innerText = "Now, loading your file into my memory...";
       if (processingStatus) processingStatus.innerText = 'Loading target buffer...';
       if (processingDetails) {
         if (activeFiles.length === 1) {
@@ -629,8 +757,8 @@ import { Sparkles, X, Upload, Check, RefreshCw, FileText, ArrowRight, Download, 
 
       // Step 3: Run processing execution
       setStepActive(step3, true);
-      speak("Executing file operations");
-      if (voiceStatusText) voiceStatusText.innerText = "Executing file operations...";
+      speak("Alright, I'm working on the file details.");
+      if (voiceStatusText) voiceStatusText.innerText = "Alright, I'm working on the file details...";
       if (processingStatus) processingStatus.innerText = 'Executing file operations...';
       if (processingDetails) processingDetails.innerText = 'Running client-side pipeline in memory...';
 
@@ -766,14 +894,18 @@ import { Sparkles, X, Upload, Check, RefreshCw, FileText, ArrowRight, Download, 
           resultName = `${cleanName}-page-${targetPageNum}.${ext}`;
         }
       }
-      // 5. Single Image Canvas pipeline (Compress / Resize / Convert Format)
+      // 5. Single Image Canvas pipeline (Compress / Resize / Convert Format / Remove BG)
       else if (activeFiles.length === 1 && activeFiles[0].type.startsWith('image/')) {
         const imgItem = sourceImages.find(item => item.name === activeFiles[0].name);
         const imgEl = imgItem ? imgItem.img : null;
         if (!imgEl) throw new Error("Image buffer not fully loaded in workspace.");
 
+        const isBgRemoval = prompt.includes('background') || prompt.includes('bg') || prompt.includes('cutout');
+
         let mimeType = convertFormat || activeFiles[0].type;
-        if (!['image/jpeg', 'image/png', 'image/webp'].includes(mimeType)) {
+        if (isBgRemoval) {
+          mimeType = 'image/png';
+        } else if (!['image/jpeg', 'image/png', 'image/webp'].includes(mimeType)) {
           mimeType = 'image/jpeg';
         }
         const ext = mimeType.split('/')[1] === 'jpeg' ? 'jpg' : mimeType.split('/')[1];
@@ -798,12 +930,44 @@ import { Sparkles, X, Upload, Check, RefreshCw, FileText, ArrowRight, Download, 
         canvas.width = w;
         canvas.height = h;
         const ctx = canvas.getContext('2d');
-        ctx?.drawImage(imgEl, 0, 0, w, h);
+        if (!ctx) throw new Error("Failed to create canvas context.");
+        
+        ctx.drawImage(imgEl, 0, 0, w, h);
+
+        // Client-side automatic background removal
+        if (isBgRemoval) {
+          const imgData = ctx.getImageData(0, 0, w, h);
+          const data = imgData.data;
+          
+          // Sample corner pixel (top-left) as background color
+          const rKey = data[0];
+          const gKey = data[1];
+          const bKey = data[2];
+          
+          const tolerance = 45;
+          
+          for (let i = 0; i < data.length; i += 4) {
+            const r = data[i];
+            const g = data[i+1];
+            const b = data[i+2];
+            
+            const dist = Math.sqrt(
+              Math.pow(r - rKey, 2) +
+              Math.pow(g - gKey, 2) +
+              Math.pow(b - bKey, 2)
+            );
+            
+            if (dist < tolerance) {
+              data[i+3] = 0; // Make transparent
+            }
+          }
+          ctx.putImageData(imgData, 0, 0);
+        }
 
         const qualityMimeTypes = ['image/jpeg', 'image/webp'];
         const supportsQuality = qualityMimeTypes.includes(mimeType);
 
-        if (supportsQuality && targetKb > 0) {
+        if (!isBgRemoval && supportsQuality && targetKb > 0) {
           // Binary Search compression
           const targetBytes = targetKb * 1024;
           let minQ = 0.01;
@@ -829,7 +993,10 @@ import { Sparkles, X, Upload, Check, RefreshCw, FileText, ArrowRight, Download, 
         } else {
           // Default output
           let q = 0.85;
-          if (prompt.includes('compress') || prompt.includes('quality')) {
+          const percentMatch = prompt.match(/(\d+)\s*%/);
+          if (percentMatch) {
+            q = parseInt(percentMatch[1]) / 100;
+          } else if (prompt.includes('compress') || prompt.includes('quality')) {
             q = 0.4;
             if (prompt.includes('balanced')) q = 0.7;
             if (prompt.includes('high')) q = 0.95;
@@ -839,7 +1006,7 @@ import { Sparkles, X, Upload, Check, RefreshCw, FileText, ArrowRight, Download, 
 
         if (resultBlob) {
           resultUrl = URL.createObjectURL(resultBlob);
-          resultName = `${cleanName}-processed.${ext}`;
+          resultName = isBgRemoval ? `${cleanName}-transparent.png` : `${cleanName}-processed.${ext}`;
         }
       } else {
         // Fallback catch-all mock file copy
@@ -857,8 +1024,8 @@ import { Sparkles, X, Upload, Check, RefreshCw, FileText, ArrowRight, Download, 
 
       // Step 4: Compile output document
       setStepActive(step4, true);
-      speak("Compiling output document");
-      if (voiceStatusText) voiceStatusText.innerText = "Compiling output document...";
+      speak("Finishing up, packaging your file.");
+      if (voiceStatusText) voiceStatusText.innerText = "Finishing up, packaging your file...";
       if (processingStatus) processingStatus.innerText = 'Compiling output...';
       if (processingDetails) processingDetails.innerText = 'Structuring document binary streams...';
       await sleep(600);
@@ -871,7 +1038,7 @@ import { Sparkles, X, Upload, Check, RefreshCw, FileText, ArrowRight, Download, 
       outputStage?.classList.remove('hidden');
       outputStage?.classList.add('flex');
 
-      speak("File processed successfully. Output is ready.");
+      speak("Done! Your file is ready. Let's download it.");
       if (voiceStatusText) voiceStatusText.innerText = "File processed successfully!";
       setTimeout(() => {
         voiceStatusBanner?.classList.add('hidden');
@@ -880,6 +1047,25 @@ import { Sparkles, X, Upload, Check, RefreshCw, FileText, ArrowRight, Download, 
 
       if (outputNameText) outputNameText.innerText = resultName;
       if (outputCommandText) outputCommandText.innerText = `"${prompt}"`;
+
+      // Update success visual preview cards
+      const isImage = resultBlob.type.startsWith('image/');
+      const imgPreviewContainer = document.getElementById('ai-output-image-preview-container');
+      const imgPreview = document.getElementById('ai-output-image-preview') as HTMLImageElement;
+      const pdfPreviewContainer = document.getElementById('ai-output-pdf-preview-container');
+
+      if (isImage && imgPreview && imgPreviewContainer && pdfPreviewContainer) {
+        imgPreview.src = resultUrl;
+        imgPreviewContainer.classList.remove('hidden');
+        imgPreviewContainer.classList.add('flex');
+        pdfPreviewContainer.classList.add('hidden');
+        pdfPreviewContainer.classList.remove('flex');
+      } else if (imgPreviewContainer && pdfPreviewContainer) {
+        imgPreviewContainer.classList.add('hidden');
+        imgPreviewContainer.classList.remove('flex');
+        pdfPreviewContainer.classList.remove('hidden');
+        pdfPreviewContainer.classList.add('flex');
+      }
 
     } catch (err: any) {
       console.error(err);
@@ -891,29 +1077,47 @@ import { Sparkles, X, Upload, Check, RefreshCw, FileText, ArrowRight, Download, 
 
   // Visual highlights
   function resetStepsUI() {
-    [step1, step2, step3, step4].forEach(step => {
+    [step1, step2, step3, step4].forEach((step, idx) => {
       if (step) {
-        step.className = 'flex items-center gap-2 text-mute opacity-50';
-        const dot = step.firstElementChild as HTMLElement;
-        if (dot) dot.className = 'w-1.5 h-1.5 rounded-full bg-hairline';
+        step.className = 'flex flex-col items-center gap-1.5 text-mute opacity-50 transition-all duration-300';
+        const dot = document.getElementById(`step-${idx + 1}-dot`);
+        if (dot) {
+          dot.className = 'w-8 h-8 rounded-full border border-hairline flex items-center justify-center bg-canvas shadow-level-1 text-ink';
+          
+          // Restore original icons
+          const icons = [
+            `<svg viewBox="0 0 24 24" class="w-3.5 h-3.5 fill-none stroke-current" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>`, // Search
+            `<svg viewBox="0 0 24 24" class="w-3.5 h-3.5 fill-none stroke-current" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>`, // Upload
+            `<svg viewBox="0 0 24 24" class="w-3.5 h-3.5 fill-none stroke-current" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>`, // Settings
+            `<svg viewBox="0 0 24 24" class="w-3.5 h-3.5 fill-none stroke-current" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>` // FileText
+          ];
+          dot.innerHTML = icons[idx] || '';
+        }
       }
     });
   }
 
   function setStepActive(step: HTMLElement | null, active: boolean) {
     if (!step) return;
+    const idx = step.id;
     if (active) {
-      step.className = 'flex items-center gap-2 text-ink font-semibold opacity-100';
-      const dot = step.firstElementChild as HTMLElement;
-      if (dot) dot.className = 'w-1.5 h-1.5 rounded-full bg-violet animate-pulse';
+      step.className = 'flex flex-col items-center gap-1.5 text-violet font-semibold opacity-100 transition-all duration-300 scale-105';
+      const dot = document.getElementById(`${idx}-dot`);
+      if (dot) {
+        dot.className = 'w-8 h-8 rounded-full border border-violet bg-violet-soft/30 flex items-center justify-center text-violet animate-pulse shadow-level-2';
+      }
     }
   }
 
   function setStepDone(step: HTMLElement | null) {
     if (!step) return;
-    step.className = 'flex items-center gap-2 text-emerald-500 opacity-100 font-medium';
-    const dot = step.firstElementChild as HTMLElement;
-    if (dot) dot.className = 'w-1.5 h-1.5 rounded-full bg-emerald-500';
+    const idx = step.id;
+    step.className = 'flex flex-col items-center gap-1.5 text-emerald-500 font-medium opacity-100 transition-all duration-300';
+    const dot = document.getElementById(`${idx}-dot`);
+    if (dot) {
+      dot.className = 'w-8 h-8 rounded-full border border-emerald-500 bg-emerald-500 text-on-primary flex items-center justify-center shadow-level-2 scale-100';
+      dot.innerHTML = `<svg viewBox="0 0 24 24" class="w-4 h-4 fill-none stroke-current" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+    }
   }
 
   // Trigger Download

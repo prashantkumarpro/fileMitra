@@ -1,6 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { Image, FileText, Settings, ArrowRight, Check, Search } from 'lucide-astro';
+import { Image, FileText, Settings, ArrowRight, Check, Search, Sparkles, Layers, Expand, RefreshCw, Scissors, FileImage, Compass, Shield } from 'lucide-astro';
 
 const tools = [
   {
@@ -68,76 +68,284 @@ const tools = [
     tags: ['ChromaKey', 'Passport'],
   },
 ];
+
+const tagStyles = {
+  'Popular': 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20',
+  'Lossless': 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20',
+  'Canvas': 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20',
+  'Crop': 'bg-teal-500/10 text-teal-600 dark:text-teal-400 border border-teal-500/20',
+  'Offline': 'bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20',
+  'Privacy': 'bg-violet-500/10 text-violet-600 dark:text-violet-400 border border-violet-500/20',
+  'New': 'bg-pink-500/10 text-pink-600 dark:text-pink-400 border border-pink-500/20',
+  'Fast': 'bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/20',
+  'ChromaKey': 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20',
+  'Passport': 'bg-fuchsia-500/10 text-fuchsia-600 dark:text-fuchsia-400 border border-fuchsia-500/20'
+};
 ---
 
 <Layout>
-  <!-- Hero Section -->
-  <section class="relative overflow-hidden bg-canvas py-12 md:py-24 border-b border-hairline">
+  <!-- Dashboard Welcome & Stats Widget Row -->
+  <section class="relative overflow-hidden bg-canvas border-b border-hairline py-8 md:py-12">
     <!-- Atmospheric Mesh Gradient Backdrop -->
     <div class="absolute inset-0 z-0 flex items-center justify-center overflow-hidden">
-      <div class="w-[800px] h-[400px] rounded-full mesh-gradient-bg opacity-45 pointer-events-none"></div>
+      <div class="w-[800px] h-[300px] rounded-full mesh-gradient-bg opacity-35 pointer-events-none"></div>
     </div>
 
-    <div class="relative z-10 max-w-[1200px] mx-auto px-6 flex flex-col items-center text-center">
-      <!-- Announcement Pill -->
-      <a href="javascript:void(0)" id="ask-ai-trigger" class="inline-flex items-center gap-2 bg-canvas-soft border border-hairline hover:border-hairline-strong px-3 py-1 rounded-full text-xs text-body hover:text-ink transition-colors mb-6 shadow-level-1 select-none">
-        <span class="bg-primary text-on-primary text-[10px] font-semibold px-2 py-0.5 rounded-full uppercase tracking-wider scale-95">New</span>
-        <span>Introducing on-device AI File Assistant.</span>
-        <ArrowRight class="w-3 h-3 text-mute" />
-      </a>
+    <div class="relative z-10 max-w-[1200px] mx-auto px-6 w-full flex flex-col gap-8">
+      
+      <!-- Greeting and Quick Info -->
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-full bg-primary text-on-primary font-bold flex items-center justify-center text-lg shadow-level-2 select-none" id="dashboard-user-avatar">
+            G
+          </div>
+          <div class="flex flex-col">
+            <h1 class="text-xl font-bold text-ink font-sans tracking-tight leading-tight select-none">
+              Hello, <span id="dashboard-user-name">Guest</span>!
+            </h1>
+            <p class="text-xs text-body font-sans select-none">
+              Manage your local browser files and tools.
+            </p>
+          </div>
+        </div>
+        
+        <!-- Quick Action Trigger Badges (Airtel-Thanks widget header style) -->
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="inline-flex items-center gap-1.5 bg-canvas border border-hairline px-2.5 py-1 rounded-full text-[10px] font-semibold text-body shadow-level-1 select-none">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            Privacy Shield: Local Engine
+          </span>
+          <span class="inline-flex items-center gap-1.5 bg-canvas border border-hairline px-2.5 py-1 rounded-full text-[10px] font-semibold text-body shadow-level-1 select-none" id="user-tier-badge">
+            Plan: Hobby (Free)
+          </span>
+        </div>
+      </div>
 
-      <!-- Headline (sentence-case, period-terminated) -->
-      <h1 class="display-xl text-ink font-sans max-w-[800px] tracking-tight mb-6">
-        Process images and PDFs directly in your browser.
-      </h1>
+      <!-- Custom PWA Install Banner -->
+      <div id="pwa-install-banner" class="hidden bg-canvas border border-violet-soft/30 dark:border-violet-deep/30 rounded-md p-5 flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-level-2 relative overflow-hidden select-none animate-fade-in z-20">
+        <!-- Background light gradient spotlight -->
+        <div class="absolute inset-0 bg-gradient-to-r from-violet/5 via-highlight-pink/5 to-transparent pointer-events-none"></div>
+        
+        <div class="flex items-center gap-4 z-10">
+          <div class="p-3 bg-violet/10 text-violet rounded-sm border border-violet/20 flex-shrink-0">
+            <Sparkles class="w-6 h-6 animate-pulse" />
+          </div>
+          <div class="flex flex-col">
+            <h3 class="text-sm font-semibold text-ink font-sans tracking-tight">Install FileMitra App</h3>
+            <p class="text-xs text-body font-sans mt-0.5">Add to home screen for absolute privacy, offline processing, and a standalone app interface.</p>
+          </div>
+        </div>
+        
+        <div class="flex items-center gap-3 z-10 w-full sm:w-auto justify-end">
+          <button id="pwa-install-btn" class="bg-primary text-on-primary hover:bg-primary/95 text-xs font-semibold px-4 h-9 rounded-pill flex items-center justify-center shadow-level-2 transition-all active:scale-95 cursor-pointer whitespace-nowrap">
+            Install
+          </button>
+          <button id="pwa-close-btn" class="text-body hover:text-ink text-xs font-semibold px-3 h-9 rounded-pill border border-hairline hover:bg-canvas-soft-2 transition-colors cursor-pointer whitespace-nowrap">
+            Maybe Later
+          </button>
+        </div>
+      </div>
 
-      <!-- Subtitle -->
-      <p class="body-lg text-body max-w-[650px] mb-8 font-sans">
-        FileMitra runs everything client-side. No uploads to server, no privacy leaks, and instant processing at visual quality.
-      </p>
+      <!-- Quick Actions / Live Stats Cards Row (3 Cards Dashboard) -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        <!-- Stat Widget 1: Local Library Usage -->
+        <div class="bg-canvas border border-hairline rounded-md p-5 flex items-center justify-between hover:shadow-level-2 transition-all duration-200 shadow-level-1 relative overflow-hidden group select-none">
+          <div class="flex flex-col gap-1.5 z-10">
+            <span class="font-mono text-[9px] text-mute uppercase font-semibold tracking-wider">Local Workspaces</span>
+            <div class="flex items-baseline gap-1">
+              <span class="text-2xl font-bold text-ink font-sans leading-none" id="stats-files-count">0</span>
+              <span class="text-mute text-xs">files cached</span>
+            </div>
+            <span class="text-[10px] text-body mt-1">Stored offline on your browser engine</span>
+          </div>
+          <div class="p-3 bg-canvas-soft-2 rounded-sm border border-hairline text-ink group-hover:bg-primary group-hover:text-on-primary transition-colors duration-300 z-10">
+            <Compass class="w-5 h-5" />
+          </div>
+        </div>
 
-      <!-- CTAs -->
-      <div class="flex items-center gap-4">
-        <a href="#tools" class="bg-primary text-on-primary hover:bg-primary/95 shadow-level-3 h-12 px-6 rounded-pill flex items-center justify-center text-sm font-semibold transition-all active:scale-95">
-          Explore Tools
+        <!-- Stat Widget 2: Security & Local Engine -->
+        <div class="bg-canvas border border-hairline rounded-md p-5 flex items-center justify-between hover:shadow-level-2 transition-all duration-200 shadow-level-1 relative overflow-hidden group select-none">
+          <div class="flex flex-col gap-1.5 z-10">
+            <span class="font-mono text-[9px] text-mute uppercase font-semibold tracking-wider">Security shield</span>
+            <div class="flex items-baseline gap-1">
+              <span class="text-2xl font-bold text-ink font-sans leading-none">100%</span>
+              <span class="text-mute text-xs">On-Device</span>
+            </div>
+            <span class="text-[10px] text-body mt-1">Zero server uploads, full privacy</span>
+          </div>
+          <div class="p-3 bg-canvas-soft-2 rounded-sm border border-hairline text-ink group-hover:bg-primary group-hover:text-on-primary transition-colors duration-300 z-10">
+            <Shield class="w-5 h-5" />
+          </div>
+        </div>
+
+        <!-- Stat Widget 3: AI File Assistant shortcut -->
+        <a href="javascript:void(0)" id="stats-ai-card" class="bg-canvas border border-hairline rounded-md p-5 flex items-center justify-between hover:shadow-level-3 hover:border-violet-soft transition-all duration-200 shadow-level-1 relative overflow-hidden group cursor-pointer">
+          <div class="absolute inset-0 bg-gradient-to-br from-violet/5 via-highlight-pink/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          
+          <div class="flex flex-col gap-1.5 z-10">
+            <span class="font-mono text-[9px] text-mute uppercase font-semibold tracking-wider text-violet">AI Smart Engine</span>
+            <div class="flex items-baseline gap-1">
+              <span class="text-lg font-bold text-ink font-sans leading-none group-hover:text-violet-deep transition-colors">Ask AI Assistant</span>
+            </div>
+            <span class="text-[10px] text-body mt-1">Instruct AI to convert, edit or compress</span>
+          </div>
+          <div class="p-3 bg-canvas-soft-2 rounded-sm border border-hairline text-violet group-hover:bg-violet group-hover:text-white transition-colors duration-300 z-10">
+            <Sparkles class="w-5 h-5 animate-pulse" />
+          </div>
         </a>
-        <a href="/auth?tab=signup" class="bg-canvas text-ink border border-hairline hover:border-hairline-strong shadow-level-2 h-12 px-6 rounded-pill flex items-center justify-center text-sm font-semibold transition-all active:scale-95">
-          Get Pro Account
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Quick Actions Grid (Airtel Thanks app quick circular shortcut style) -->
+  <section class="py-10 px-6 bg-canvas border-b border-hairline select-none">
+    <div class="max-w-[1200px] mx-auto flex flex-col gap-6">
+      <div class="flex flex-col gap-1">
+        <span class="font-mono text-[10px] tracking-wider text-mute uppercase font-semibold select-none">
+          Quick Workspace Shortcuts
+        </span>
+        <h2 class="text-sm font-semibold text-ink font-sans tracking-tight">
+          Select a tool to launch browser engine
+        </h2>
+      </div>
+
+      <!-- Quick circular/grid buttons (4 cols on mobile, 8 cols on desktop) -->
+      <div class="grid grid-cols-4 md:grid-cols-8 gap-3 sm:gap-4 md:gap-6">
+        
+        <!-- Shortcut 1: BG Remover -->
+        <a href="/tools/bg-remover" class="flex flex-col items-center text-center group cursor-pointer">
+          <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-pink-500/10 text-pink-600 border border-pink-500/20 flex items-center justify-center shadow-level-1 group-hover:shadow-level-2 group-hover:scale-105 active:scale-95 transition-all duration-200">
+            <Sparkles class="w-5.5 h-5.5" />
+          </div>
+          <span class="text-[11px] sm:text-xs font-semibold text-body group-hover:text-ink mt-2 truncate max-w-full">BG Remover</span>
         </a>
+
+        <!-- Shortcut 2: Compress Image -->
+        <a href="/tools/image-compress" class="flex flex-col items-center text-center group cursor-pointer">
+          <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-amber-500/10 text-amber-600 border border-amber-500/20 flex items-center justify-center shadow-level-1 group-hover:shadow-level-2 group-hover:scale-105 active:scale-95 transition-all duration-200">
+            <Layers class="w-5.5 h-5.5" />
+          </div>
+          <span class="text-[11px] sm:text-xs font-semibold text-body group-hover:text-ink mt-2 truncate max-w-full">Compress</span>
+        </a>
+
+        <!-- Shortcut 3: Resize Image -->
+        <a href="/tools/image-resize" class="flex flex-col items-center text-center group cursor-pointer">
+          <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-blue-500/10 text-blue-600 border border-blue-500/20 flex items-center justify-center shadow-level-1 group-hover:shadow-level-2 group-hover:scale-105 active:scale-95 transition-all duration-200">
+            <Expand class="w-5.5 h-5.5" />
+          </div>
+          <span class="text-[11px] sm:text-xs font-semibold text-body group-hover:text-ink mt-2 truncate max-w-full">Resize</span>
+        </a>
+
+        <!-- Shortcut 4: Convert Format -->
+        <a href="/tools/image-convert" class="flex flex-col items-center text-center group cursor-pointer">
+          <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-purple-500/10 text-purple-600 border border-purple-500/20 flex items-center justify-center shadow-level-1 group-hover:shadow-level-2 group-hover:scale-105 active:scale-95 transition-all duration-200">
+            <RefreshCw class="w-5.5 h-5.5" />
+          </div>
+          <span class="text-[11px] sm:text-xs font-semibold text-body group-hover:text-ink mt-2 truncate max-w-full">Convert</span>
+        </a>
+
+        <!-- Shortcut 5: Merge PDFs -->
+        <a href="/tools/pdf-merge" class="flex flex-col items-center text-center group cursor-pointer">
+          <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-indigo-500/10 text-indigo-600 border border-indigo-500/20 flex items-center justify-center shadow-level-1 group-hover:shadow-level-2 group-hover:scale-105 active:scale-95 transition-all duration-200">
+            <Compass class="w-5.5 h-5.5" />
+          </div>
+          <span class="text-[11px] sm:text-xs font-semibold text-body group-hover:text-ink mt-2 truncate max-w-full">Merge PDF</span>
+        </a>
+
+        <!-- Shortcut 6: Split PDF -->
+        <a href="/tools/pdf-split" class="flex flex-col items-center text-center group cursor-pointer">
+          <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-rose-500/10 text-rose-600 border border-rose-500/20 flex items-center justify-center shadow-level-1 group-hover:shadow-level-2 group-hover:scale-105 active:scale-95 transition-all duration-200">
+            <Scissors class="w-5.5 h-5.5" />
+          </div>
+          <span class="text-[11px] sm:text-xs font-semibold text-body group-hover:text-ink mt-2 truncate max-w-full">Split PDF</span>
+        </a>
+
+        <!-- Shortcut 7: PDF to Image -->
+        <a href="/tools/pdf-to-image" class="flex flex-col items-center text-center group cursor-pointer">
+          <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-teal-500/10 text-teal-600 border border-teal-500/20 flex items-center justify-center shadow-level-1 group-hover:shadow-level-2 group-hover:scale-105 active:scale-95 transition-all duration-200">
+            <FileImage class="w-5.5 h-5.5" />
+          </div>
+          <span class="text-[11px] sm:text-xs font-semibold text-body group-hover:text-ink mt-2 truncate max-w-full">PDF to Image</span>
+        </a>
+
+        <!-- Shortcut 8: Image to PDF -->
+        <a href="/tools/image-to-pdf" class="flex flex-col items-center text-center group cursor-pointer">
+          <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 flex items-center justify-center shadow-level-1 group-hover:shadow-level-2 group-hover:scale-105 active:scale-95 transition-all duration-200">
+            <FileText class="w-5.5 h-5.5" />
+          </div>
+          <span class="text-[11px] sm:text-xs font-semibold text-body group-hover:text-ink mt-2 truncate max-w-full">Image to PDF</span>
+        </a>
+
       </div>
     </div>
   </section>
 
-  <!-- Logo Strip (Hidden on Mobile) -->
-  <section class="hidden md:block bg-canvas border-b border-hairline py-8 px-6 overflow-hidden">
-    <div class="max-w-[1200px] mx-auto flex flex-col items-center gap-4">
-      <p class="font-mono text-[10px] tracking-widest text-mute uppercase font-semibold select-none">
-        Trusted by developers at leading platforms
-      </p>
-      <div class="flex flex-wrap items-center justify-center gap-12 opacity-40 grayscale select-none">
-        <!-- Mock SVGs representing standard tech brands -->
-        <span class="font-sans font-bold text-lg text-ink tracking-tight flex items-center gap-1">
-          <svg viewBox="0 0 100 100" class="w-5 h-5 fill-ink"><polygon points="50,15 90,85 10,85"/></svg>
-          VERCEL
-        </span>
-        <span class="font-sans font-bold text-lg text-ink tracking-tight flex items-center gap-1">
-          <svg viewBox="0 0 100 100" class="w-5 h-5 fill-ink"><circle cx="50" cy="50" r="35"/></svg>
-          SUPABASE
-        </span>
-        <span class="font-sans font-bold text-lg text-ink tracking-tight flex items-center gap-1">
-          <svg viewBox="0 0 100 100" class="w-5 h-5 fill-ink"><rect x="20" y="20" width="60" height="60" rx="10"/></svg>
-          STRIPE
-        </span>
-        <span class="font-sans font-bold text-lg text-ink tracking-tight flex items-center gap-1">
-          <svg viewBox="0 0 100 100" class="w-5 h-5 fill-ink"><polygon points="10,10 90,50 10,90 30,50"/></svg>
-          RAILWAY
-        </span>
+  <!-- Featured Showcase: Interactive Before/After Split comparison card (Airtel Thanks Style Hero Banner) -->
+  <section class="py-12 px-6 bg-canvas-soft border-b border-hairline">
+    <div class="max-w-[1200px] mx-auto">
+      
+      <!-- Promo Banner container with Vercel design mesh background -->
+      <div class="relative bg-canvas border border-hairline rounded-lg p-6 md:p-10 shadow-level-4 overflow-hidden grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <!-- Background light gradient spotlight -->
+        <div class="absolute inset-0 bg-gradient-to-tr from-pink-500/5 via-violet/5 to-transparent pointer-events-none"></div>
+
+        <!-- Left Side: Copy Info -->
+        <div class="lg:col-span-5 flex flex-col gap-4 z-10">
+          <span class="bg-pink-500/10 text-pink-600 text-[10px] font-mono font-semibold px-2.5 py-0.5 rounded-full uppercase tracking-wider self-start border border-pink-500/25">
+            Featured Utility
+          </span>
+          <h2 class="display-lg text-ink font-sans tracking-tight leading-tight select-none">
+            Isolate subjects in seconds.
+          </h2>
+          <p class="text-body text-sm leading-relaxed">
+            Erase backgrounds from your portrait photos cleanly. Create instant passport-sized photos with dynamic solid colored backgrounds in a single tap. 
+          </p>
+          <ul class="flex flex-col gap-2 font-sans text-xs text-body">
+            <li class="flex items-center gap-2"><Check class="w-4 h-4 text-emerald-500" /> Auto edge detection on local CPU</li>
+            <li class="flex items-center gap-2"><Check class="w-4 h-4 text-emerald-500" /> Interactive passport size generator</li>
+          </ul>
+          <div class="flex items-center gap-4 mt-2">
+            <a href="/tools/bg-remover" class="bg-primary text-on-primary hover:bg-primary/95 text-xs font-semibold px-5 h-10 rounded-pill flex items-center justify-center shadow-level-2 transition-all active:scale-95">
+              Remove Background
+            </a>
+            <a href="#tools" class="text-body hover:text-ink text-xs font-semibold flex items-center gap-1.5 transition-colors">
+              Other Utilities
+              <ArrowRight class="w-3.5 h-3.5" />
+            </a>
+          </div>
+        </div>
+
+        <!-- Right Side: Interactive Mockup Comparison Slider -->
+        <div class="lg:col-span-7 flex justify-center z-10 w-full">
+          <!-- Interactive slider frame -->
+          <div class="relative w-full max-w-lg h-[260px] sm:h-[320px] rounded-md border border-hairline overflow-hidden shadow-level-3 select-none bg-canvas-soft-2 group/slider" id="compare-slider-container">
+            
+            <!-- Before Image Layer (Original Photo on Left Side of Mockup) -->
+            <!-- We will display the generated side-by-side demonstration image -->
+            <img 
+              src="/assets/images/bg-remover-demo.png" 
+              alt="Background Remover Demo" 
+              class="w-full h-full object-cover pointer-events-none select-none"
+            />
+            
+            <!-- Laser scanning line visual effect -->
+            <div class="absolute inset-y-0 left-0 w-1 bg-gradient-to-r from-transparent via-pink-500 to-transparent shadow-[0_0_8px_rgba(236,72,153,0.8)] animate-scan pointer-events-none"></div>
+
+            <!-- Labels -->
+            <span class="absolute bottom-3 left-3 bg-primary/70 backdrop-blur-xs text-white text-[9px] font-mono uppercase px-2 py-0.5 rounded-sm">Original</span>
+            <span class="absolute bottom-3 right-3 bg-emerald-500/70 backdrop-blur-xs text-white text-[9px] font-mono uppercase px-2 py-0.5 rounded-sm">Isolated</span>
+          </div>
+        </div>
+
       </div>
     </div>
   </section>
 
   <!-- Tools Grid Section -->
-  <section id="tools" class="py-20 px-6 bg-canvas-soft border-b border-hairline">
+  <section id="tools" class="py-16 px-6 bg-canvas-soft border-b border-hairline">
     <div class="max-w-[1200px] mx-auto flex flex-col gap-10">
       
       <!-- Headline & Filter Controls -->
@@ -185,31 +393,43 @@ const tools = [
             data-category={tool.category}
             data-name={tool.name.toLowerCase()}
             data-desc={tool.desc.toLowerCase()}
-            class="tool-card group bg-canvas border border-hairline rounded-md p-6 hover:shadow-level-3 hover:-translate-y-0.5 active:scale-[0.99] transition-all duration-200 flex flex-col justify-between opacity-0 animate-fade-in-up"
+            class={`tool-card group bg-canvas border border-hairline rounded-md p-6 hover:shadow-level-3 hover:-translate-y-0.5 active:scale-[0.99] transition-all duration-300 flex flex-col justify-between opacity-0 animate-fade-in-up ${
+              tool.category === 'image' ? 'hover:border-amber-500/35 hover:shadow-amber-500/[0.02]' : 'hover:border-rose-500/35 hover:shadow-rose-500/[0.02]'
+            }`}
             style={`animation-delay: ${index * 60}ms; animation-fill-mode: forwards;`}
           >
             <div>
               <div class="flex items-center justify-between mb-4">
-                <span class="p-2.5 rounded-sm bg-canvas-soft-2 text-ink border border-hairline group-hover:bg-primary group-hover:text-on-primary transition-colors duration-200">
+                <span class={`p-2.5 rounded-sm border transition-all duration-300 flex items-center justify-center ${
+                  tool.category === 'image'
+                    ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/15 group-hover:bg-amber-500 group-hover:text-on-primary group-hover:border-amber-500'
+                    : 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/15 group-hover:bg-rose-500 group-hover:text-on-primary group-hover:border-rose-500'
+                }`}>
                   {tool.category === 'image' ? <Image class="w-5 h-5" /> : <FileText class="w-5 h-5" />}
                 </span>
-                <div class="flex items-center gap-1.5">
+                <div class="flex items-center gap-1.5 select-none">
                   {tool.tags.map(tag => (
-                    <span class="font-mono text-[9px] tracking-wider text-body uppercase bg-canvas-soft-2 px-2 py-0.5 rounded-full border border-hairline">
+                    <span class={`font-mono text-[9px] tracking-wider uppercase px-2 py-0.5 rounded-full font-semibold ${
+                      tagStyles[tag] || 'bg-canvas-soft-2 text-body border border-hairline'
+                    }`}>
                       {tag}
                     </span>
                   ))}
                 </div>
               </div>
               <h3 class="display-sm text-ink mb-2">{tool.name}</h3>
-              <p class="text-body text-sm mb-6 leading-relaxed">{tool.desc}</p>
+              <p class="text-body text-sm mb-6 leading-relaxed select-none">{tool.desc}</p>
             </div>
             <a
               href={tool.href}
-              class="w-full flex items-center justify-between font-semibold text-sm border-t border-hairline pt-4 text-ink group-hover:text-link group-hover:border-hairline-strong transition-all duration-200"
+              class={`w-full flex items-center justify-between font-semibold text-xs border-t border-hairline pt-4 text-ink transition-all duration-300 ${
+                tool.category === 'image' 
+                  ? 'group-hover:text-amber-600 dark:group-hover:text-amber-400 group-hover:border-amber-500/25' 
+                  : 'group-hover:text-rose-600 dark:group-hover:text-rose-400 group-hover:border-rose-500/25'
+              }`}
             >
               Open Tool
-              <ArrowRight class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
+              <ArrowRight class="w-4 h-4 transform group-hover:translate-x-1.5 transition-transform duration-300" />
             </a>
           </div>
         ))}
@@ -353,7 +573,7 @@ const tools = [
           <div>
             <div class="flex items-center justify-between mb-2">
               <h3 class="display-sm text-on-primary">Pro</h3>
-              <span class="bg-canvas text-primary text-[9px] font-mono font-semibold px-2 py-0.5 rounded-full uppercase tracking-wider">Popular</span>
+              <span class="bg-canvas text-primary text-[9px] font-mono font-semibold px-2.5 py-0.5 rounded-full uppercase tracking-wider">Popular</span>
             </div>
             <p class="text-mute text-xs mb-6">For power users and media professionals.</p>
             <div class="flex items-baseline gap-1 mb-6">
@@ -395,6 +615,129 @@ const tools = [
       
     </div>
   </section>
+
+  <!-- Interactive Slider Animation Styles -->
+  <style>
+    @keyframes scan {
+      0% { left: 0%; }
+      50% { left: 100%; }
+      100% { left: 0%; }
+    }
+    .animate-scan {
+      animation: scan 5s ease-in-out infinite;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in {
+      animation: fadeIn 350ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+  </style>
+
+  <!-- Greeting Script -->
+  <script>
+    function updateDashboardGreeting() {
+      const userStr = localStorage.getItem('filemitra_user');
+      const nameEl = document.getElementById('dashboard-user-name');
+      const avatarEl = document.getElementById('dashboard-user-avatar');
+      const tierBadge = document.getElementById('user-tier-badge');
+
+      if (userStr) {
+        try {
+          const user = JSON.parse(userStr);
+          const email = user.email || 'user@example.com';
+          const name = user.name || email.split('@')[0];
+          const initial = name.substring(0, 1).toUpperCase();
+
+          if (nameEl) nameEl.innerText = name;
+          if (avatarEl) {
+            avatarEl.innerText = initial;
+            avatarEl.classList.remove('bg-primary');
+            avatarEl.classList.add('bg-gradient-to-tr', 'from-violet', 'to-highlight-pink', 'text-white');
+          }
+          if (tierBadge) {
+            if (email.toLowerCase().includes('pro')) {
+              tierBadge.innerText = 'Plan: Pro (Active)';
+              tierBadge.classList.remove('bg-canvas');
+              tierBadge.classList.add('bg-primary', 'text-on-primary');
+            } else {
+              tierBadge.innerText = 'Plan: Hobby (Free)';
+            }
+          }
+        } catch (err) {
+          console.error('Error updating dashboard greeting:', err);
+        }
+      }
+    }
+
+    // Bind AI card click to launch ask AI
+    document.getElementById('stats-ai-card')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      const trigger = document.getElementById('ask-ai-trigger');
+      trigger?.click();
+    });
+
+    // PWA Custom Installation Prompt
+    (function() {
+      let deferredPrompt;
+      const installBanner = document.getElementById('pwa-install-banner');
+      const installBtn = document.getElementById('pwa-install-btn');
+      const closeBtn = document.getElementById('pwa-close-btn');
+
+      const isDismissed = sessionStorage.getItem('pwa-install-dismissed');
+
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator['standalone'];
+        if (!isDismissed && !isStandalone && installBanner) {
+          installBanner.classList.remove('hidden');
+          installBanner.classList.add('flex');
+        }
+      });
+
+      if (installBtn) {
+        installBtn.addEventListener('click', async () => {
+          if (!deferredPrompt) return;
+          installBtn.setAttribute('disabled', 'true');
+          
+          deferredPrompt.prompt();
+          const { outcome } = await deferredPrompt.userChoice;
+          console.log('[PWA] User prompt outcome:', outcome);
+          
+          deferredPrompt = null;
+          installBtn.removeAttribute('disabled');
+          
+          if (installBanner) {
+            installBanner.classList.add('hidden');
+            installBanner.classList.remove('flex');
+          }
+        });
+      }
+
+      if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+          if (installBanner) {
+            installBanner.classList.add('hidden');
+            installBanner.classList.remove('flex');
+          }
+          sessionStorage.setItem('pwa-install-dismissed', 'true');
+        });
+      }
+
+      window.addEventListener('appinstalled', () => {
+        console.log('[PWA] App installed successfully');
+        if (installBanner) {
+          installBanner.classList.add('hidden');
+          installBanner.classList.remove('flex');
+        }
+      });
+    })();
+
+    window.addEventListener('load', updateDashboardGreeting);
+    window.addEventListener('focus', updateDashboardGreeting);
+  </script>
 </Layout>
 
 <script>
@@ -467,6 +810,12 @@ const tools = [
   async function loadRecentFiles() {
     const files = await getAllProcessedFiles();
     
+    // Update stats files count in dashboard
+    const statsFilesCount = document.getElementById('stats-files-count');
+    if (statsFilesCount) {
+      statsFilesCount.innerText = files.length.toString();
+    }
+
     if (files.length === 0) {
       recentSection?.classList.add('hidden');
       return;

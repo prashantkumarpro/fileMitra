@@ -32,10 +32,30 @@ import { Upload, Download, RefreshCw, Layers, FileImage, Sparkles, Compass, Chec
     <div id="workspace" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-6 items-start animate-in fade-in duration-200">
       
       <!-- Side panel: Configurations (1 column) -->
-      <div class="flex flex-col gap-6 lg:col-span-1 max-h-[85vh] overflow-y-auto pr-1">
+      <div class="flex flex-col gap-4 lg:col-span-1 max-h-[85vh] overflow-y-auto pr-1">
         
-        <!-- Background Removal Controls -->
-        <div class="bg-canvas border border-hairline rounded-md p-5 shadow-level-3 flex flex-col gap-4">
+        <!-- Sidebar Navigation Tabs -->
+        <div class="flex bg-canvas-soft-2 border border-hairline rounded-sm p-0.5 select-none shadow-level-1 gap-0.5">
+          <button id="sidebar-tab-cutout" class="sidebar-config-tab flex-grow text-center py-2 rounded-sm text-[10px] font-semibold text-ink bg-canvas shadow-level-1 transition-all active:scale-[0.97] cursor-pointer flex flex-col items-center gap-0.5" data-tab="cutout">
+            <Sparkles class="w-3.5 h-3.5 text-violet" />
+            <span>Cutout</span>
+          </button>
+          <button id="sidebar-tab-refine" class="sidebar-config-tab flex-grow text-center py-2 rounded-sm text-[10px] font-semibold text-body hover:text-ink transition-all active:scale-[0.97] cursor-pointer flex flex-col items-center gap-0.5" data-tab="refine">
+            <Sliders class="w-3.5 h-3.5" />
+            <span>Refine</span>
+          </button>
+          <button id="sidebar-tab-backdrop" class="sidebar-config-tab flex-grow text-center py-2 rounded-sm text-[10px] font-semibold text-body hover:text-ink transition-all active:scale-[0.97] cursor-pointer flex flex-col items-center gap-0.5" data-tab="backdrop">
+            <Layers class="w-3.5 h-3.5" />
+            <span>Backdrop</span>
+          </button>
+          <button id="sidebar-tab-size" class="sidebar-config-tab flex-grow text-center py-2 rounded-sm text-[10px] font-semibold text-body hover:text-ink transition-all active:scale-[0.97] cursor-pointer flex flex-col items-center gap-0.5" data-tab="size">
+            <Compass class="w-3.5 h-3.5" />
+            <span>Size/Fit</span>
+          </button>
+        </div>
+
+        <!-- 1. Background Removal Controls (Cutout Tab) -->
+        <div id="config-section-cutout" class="bg-canvas border border-hairline rounded-md p-5 shadow-level-3 flex flex-col gap-4">
           <h3 class="font-sans font-semibold text-xs text-ink pb-2.5 border-b border-hairline select-none flex items-center gap-1.5 uppercase tracking-wider">
             <Sparkles class="w-3.5 h-3.5 text-mute" />
             1. Background Removal
@@ -83,9 +103,16 @@ import { Upload, Download, RefreshCw, Layers, FileImage, Sparkles, Compass, Chec
               <input type="range" id="tolerance-slider" min="5" max="150" value="40" class="w-full h-1 bg-canvas-soft-2 rounded-lg appearance-none cursor-pointer accent-primary border border-hairline" />
             </div>
           </div>
+        </div>
 
-          <!-- Manual Eraser Brush -->
-          <div class="flex flex-col gap-2.5 pt-3.5 border-t border-hairline">
+        <!-- 2. Manual Touch-up Brush (Refine Tab) -->
+        <div id="config-section-refine" class="bg-canvas border border-hairline rounded-md p-5 shadow-level-3 flex flex-col gap-4 hidden">
+          <h3 class="font-sans font-semibold text-xs text-ink pb-2.5 border-b border-hairline select-none flex items-center gap-1.5 uppercase tracking-wider">
+            <Sliders class="w-3.5 h-3.5 text-mute" />
+            2. Brush Touch-Up
+          </h3>
+          
+          <div class="flex flex-col gap-2.5">
             <span class="text-xs font-medium text-ink select-none">Manual Touch-up Brush</span>
             
             <div class="grid grid-cols-3 gap-1.5">
@@ -113,14 +140,13 @@ import { Upload, Download, RefreshCw, Layers, FileImage, Sparkles, Compass, Chec
               <RefreshCw class="w-2.5 h-2.5" /> Clear Manual Brush Marks
             </button>
           </div>
-
         </div>
 
-        <!-- Background Replacement Panel -->
-        <div class="bg-canvas border border-hairline rounded-md p-5 shadow-level-3 flex flex-col gap-4">
+        <!-- 3. Background Replacement Panel (Backdrop Tab) -->
+        <div id="config-section-backdrop" class="bg-canvas border border-hairline rounded-md p-5 shadow-level-3 flex flex-col gap-4 hidden">
           <h3 class="font-sans font-semibold text-xs text-ink pb-2.5 border-b border-hairline select-none flex items-center gap-1.5 uppercase tracking-wider">
             <Layers class="w-3.5 h-3.5 text-mute" />
-            2. New Background
+            3. New Background
           </h3>
 
           <!-- Solid Colors Grid -->
@@ -158,14 +184,13 @@ import { Upload, Download, RefreshCw, Layers, FileImage, Sparkles, Compass, Chec
               <span>Upload Custom Backdrop</span>
             </button>
           </div>
-
         </div>
 
-        <!-- Passport Guide & Position -->
-        <div class="bg-canvas border border-hairline rounded-md p-5 shadow-level-3 flex flex-col gap-4">
+        <!-- 4. Passport Guide & Position (Size Tab) -->
+        <div id="config-section-size" class="bg-canvas border border-hairline rounded-md p-5 shadow-level-3 flex flex-col gap-4 hidden">
           <h3 class="font-sans font-semibold text-xs text-ink pb-2.5 border-b border-hairline select-none flex items-center gap-1.5 uppercase tracking-wider">
             <Compass class="w-3.5 h-3.5 text-mute" />
-            3. Passport Settings
+            4. Size & Position
           </h3>
 
           <!-- Passport Sizes -->
@@ -379,6 +404,40 @@ import { Upload, Download, RefreshCw, Layers, FileImage, Sparkles, Compass, Chec
 
   // Dropper
   let dropperActive = false;
+
+  // Sidebar Config Navigation Tabs Switcher
+  const sidebarTabs = document.querySelectorAll('.sidebar-config-tab');
+  const configSections: Record<string, HTMLElement | null> = {
+    cutout: document.getElementById('config-section-cutout'),
+    refine: document.getElementById('config-section-refine'),
+    backdrop: document.getElementById('config-section-backdrop'),
+    size: document.getElementById('config-section-size')
+  };
+
+  sidebarTabs.forEach(tab => {
+    tab.addEventListener('click', (e) => {
+      e.preventDefault();
+      const currentTab = e.currentTarget as HTMLElement;
+      const targetSectionName = currentTab.dataset.tab || 'cutout';
+
+      sidebarTabs.forEach(t => {
+        t.classList.remove('bg-canvas', 'shadow-level-1', 'text-ink');
+        t.classList.add('text-body', 'hover:text-ink');
+      });
+      currentTab.classList.add('bg-canvas', 'shadow-level-1', 'text-ink');
+      currentTab.classList.remove('text-body', 'hover:text-ink');
+
+      Object.entries(configSections).forEach(([name, element]) => {
+        if (element) {
+          if (name === targetSectionName) {
+            element.classList.remove('hidden');
+          } else {
+            element.classList.add('hidden');
+          }
+        }
+      });
+    });
+  });
 
   // Upload Actions
   uploadZone?.addEventListener('click', () => fileInput.click());
