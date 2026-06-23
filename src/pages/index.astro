@@ -4,12 +4,20 @@ import { Image, FileText, Settings, ArrowRight, Check, Search, Sparkles, Layers,
 
 const tools = [
   {
+    id: 'bg-remover',
+    name: 'Background Remover & Passport Maker',
+    desc: 'Remove backgrounds, replace them with colors/gradients, and format passport photos.',
+    category: 'image',
+    href: '/tools/bg-remover',
+    tags: ['Popular', 'Passport'],
+  },
+  {
     id: 'image-compress',
     name: 'Compress Image',
     desc: 'Reduce file sizes of JPG, PNG, and WebP images without losing quality.',
     category: 'image',
     href: '/tools/image-compress',
-    tags: ['Popular', 'Lossless'],
+    tags: ['Lossless'],
   },
   {
     id: 'image-resize',
@@ -25,47 +33,15 @@ const tools = [
     desc: 'Transform images between JPEG, PNG, WebP, and other formats instantly.',
     category: 'image',
     href: '/tools/image-convert',
-    tags: ['Offline'],
-  },
-  {
-    id: 'pdf-merge',
-    name: 'Merge PDFs',
-    desc: 'Combine multiple PDF documents into a single, organized file client-side.',
-    category: 'pdf',
-    href: '/tools/pdf-merge',
-    tags: ['PDF-Lib', 'Privacy'],
-  },
-  {
-    id: 'pdf-split',
-    name: 'Split PDF',
-    desc: 'Extract specific pages or page ranges from a PDF into a separate document.',
-    category: 'pdf',
-    href: '/tools/pdf-split',
-    tags: ['Fast'],
-  },
-  {
-    id: 'pdf-to-image',
-    name: 'PDF to Image',
-    desc: 'Convert PDF pages into high-resolution JPG or PNG image files.',
-    category: 'pdf',
-    href: '/tools/pdf-to-image',
-    tags: ['Canvas'],
+    tags: ['Offline', 'Fast'],
   },
   {
     id: 'image-to-pdf',
     name: 'Image to PDF',
     desc: 'Transform individual or multiple images into a single PDF document.',
-    category: 'pdf',
+    category: 'image',
     href: '/tools/image-to-pdf',
     tags: ['New'],
-  },
-  {
-    id: 'bg-remover',
-    name: 'Background Remover & Passport Maker',
-    desc: 'Remove image backgrounds, replace backgrounds with solid colors or gradients, and format standard passport photos.',
-    category: 'image',
-    href: '/tools/bg-remover',
-    tags: ['ChromaKey', 'Passport'],
   },
 ];
 
@@ -131,7 +107,7 @@ const tagStyles = {
             <Sparkles class="w-6 h-6 animate-pulse" />
           </div>
           <div class="flex flex-col">
-            <h3 class="text-sm font-semibold text-ink font-sans tracking-tight">Install FileMitra App</h3>
+            <h3 class="text-sm font-semibold text-ink font-sans tracking-tight">Install imageMitra App</h3>
             <p class="text-xs text-body font-sans mt-0.5">Add to home screen for absolute privacy, offline processing, and a standalone app interface.</p>
           </div>
         </div>
@@ -212,15 +188,15 @@ const tagStyles = {
         </h2>
       </div>
 
-      <!-- Quick circular/grid buttons (4 cols on mobile, 8 cols on desktop) -->
-      <div class="grid grid-cols-4 md:grid-cols-8 gap-3 sm:gap-4 md:gap-6">
+      <!-- Quick circular/grid buttons (5 cols on mobile, 5 cols on desktop) -->
+      <div class="grid grid-cols-5 md:grid-cols-5 gap-2 sm:gap-4 md:gap-6 max-w-2xl">
         
         <!-- Shortcut 1: BG Remover -->
         <a href="/tools/bg-remover" class="flex flex-col items-center text-center group cursor-pointer">
           <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-pink-500/10 text-pink-600 border border-pink-500/20 flex items-center justify-center shadow-level-1 group-hover:shadow-level-2 group-hover:scale-105 active:scale-95 transition-all duration-200">
             <Sparkles class="w-5.5 h-5.5" />
           </div>
-          <span class="text-[11px] sm:text-xs font-semibold text-body group-hover:text-ink mt-2 truncate max-w-full">BG Remover</span>
+          <span class="text-[10px] sm:text-xs font-semibold text-body group-hover:text-ink mt-2 truncate max-w-full">BG Remover</span>
         </a>
 
         <!-- Shortcut 2: Compress Image -->
@@ -228,7 +204,7 @@ const tagStyles = {
           <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-amber-500/10 text-amber-600 border border-amber-500/20 flex items-center justify-center shadow-level-1 group-hover:shadow-level-2 group-hover:scale-105 active:scale-95 transition-all duration-200">
             <Layers class="w-5.5 h-5.5" />
           </div>
-          <span class="text-[11px] sm:text-xs font-semibold text-body group-hover:text-ink mt-2 truncate max-w-full">Compress</span>
+          <span class="text-[10px] sm:text-xs font-semibold text-body group-hover:text-ink mt-2 truncate max-w-full">Compress</span>
         </a>
 
         <!-- Shortcut 3: Resize Image -->
@@ -236,7 +212,7 @@ const tagStyles = {
           <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-blue-500/10 text-blue-600 border border-blue-500/20 flex items-center justify-center shadow-level-1 group-hover:shadow-level-2 group-hover:scale-105 active:scale-95 transition-all duration-200">
             <Expand class="w-5.5 h-5.5" />
           </div>
-          <span class="text-[11px] sm:text-xs font-semibold text-body group-hover:text-ink mt-2 truncate max-w-full">Resize</span>
+          <span class="text-[10px] sm:text-xs font-semibold text-body group-hover:text-ink mt-2 truncate max-w-full">Resize</span>
         </a>
 
         <!-- Shortcut 4: Convert Format -->
@@ -244,39 +220,15 @@ const tagStyles = {
           <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-purple-500/10 text-purple-600 border border-purple-500/20 flex items-center justify-center shadow-level-1 group-hover:shadow-level-2 group-hover:scale-105 active:scale-95 transition-all duration-200">
             <RefreshCw class="w-5.5 h-5.5" />
           </div>
-          <span class="text-[11px] sm:text-xs font-semibold text-body group-hover:text-ink mt-2 truncate max-w-full">Convert</span>
+          <span class="text-[10px] sm:text-xs font-semibold text-body group-hover:text-ink mt-2 truncate max-w-full">Convert</span>
         </a>
 
-        <!-- Shortcut 5: Merge PDFs -->
-        <a href="/tools/pdf-merge" class="flex flex-col items-center text-center group cursor-pointer">
-          <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-indigo-500/10 text-indigo-600 border border-indigo-500/20 flex items-center justify-center shadow-level-1 group-hover:shadow-level-2 group-hover:scale-105 active:scale-95 transition-all duration-200">
-            <Compass class="w-5.5 h-5.5" />
-          </div>
-          <span class="text-[11px] sm:text-xs font-semibold text-body group-hover:text-ink mt-2 truncate max-w-full">Merge PDF</span>
-        </a>
-
-        <!-- Shortcut 6: Split PDF -->
-        <a href="/tools/pdf-split" class="flex flex-col items-center text-center group cursor-pointer">
-          <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-rose-500/10 text-rose-600 border border-rose-500/20 flex items-center justify-center shadow-level-1 group-hover:shadow-level-2 group-hover:scale-105 active:scale-95 transition-all duration-200">
-            <Scissors class="w-5.5 h-5.5" />
-          </div>
-          <span class="text-[11px] sm:text-xs font-semibold text-body group-hover:text-ink mt-2 truncate max-w-full">Split PDF</span>
-        </a>
-
-        <!-- Shortcut 7: PDF to Image -->
-        <a href="/tools/pdf-to-image" class="flex flex-col items-center text-center group cursor-pointer">
-          <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-teal-500/10 text-teal-600 border border-teal-500/20 flex items-center justify-center shadow-level-1 group-hover:shadow-level-2 group-hover:scale-105 active:scale-95 transition-all duration-200">
-            <FileImage class="w-5.5 h-5.5" />
-          </div>
-          <span class="text-[11px] sm:text-xs font-semibold text-body group-hover:text-ink mt-2 truncate max-w-full">PDF to Image</span>
-        </a>
-
-        <!-- Shortcut 8: Image to PDF -->
+        <!-- Shortcut 5: Image to PDF -->
         <a href="/tools/image-to-pdf" class="flex flex-col items-center text-center group cursor-pointer">
           <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 flex items-center justify-center shadow-level-1 group-hover:shadow-level-2 group-hover:scale-105 active:scale-95 transition-all duration-200">
             <FileText class="w-5.5 h-5.5" />
           </div>
-          <span class="text-[11px] sm:text-xs font-semibold text-body group-hover:text-ink mt-2 truncate max-w-full">Image to PDF</span>
+          <span class="text-[10px] sm:text-xs font-semibold text-body group-hover:text-ink mt-2 truncate max-w-full">Image to PDF</span>
         </a>
 
       </div>
@@ -349,28 +301,13 @@ const tagStyles = {
     <div class="max-w-[1200px] mx-auto flex flex-col gap-10">
       
       <!-- Headline & Filter Controls -->
-      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
-        <div class="flex flex-col gap-2">
-          <span class="font-mono text-[11px] tracking-wider text-mute uppercase font-semibold select-none">
-            Utilities Directory
-          </span>
-          <h2 class="display-lg text-ink">
-            A compute model for all workloads.
-          </h2>
-        </div>
-
-        <!-- Filter Tab Row -->
-        <div class="flex p-1 bg-canvas-soft-2 border border-hairline rounded-pill-sm gap-1 self-start select-none shadow-level-1">
-          <button data-filter="all" class="filter-tab px-4 py-1.5 rounded-pill-sm text-xs font-semibold text-ink bg-canvas shadow-level-2 transition-all active:scale-[0.97] cursor-pointer">
-            All Tools
-          </button>
-          <button data-filter="image" class="filter-tab px-4 py-1.5 rounded-pill-sm text-xs font-semibold text-body hover:text-ink transition-all active:scale-[0.97] cursor-pointer">
-            Image Tools
-          </button>
-          <button data-filter="pdf" class="filter-tab px-4 py-1.5 rounded-pill-sm text-xs font-semibold text-body hover:text-ink transition-all active:scale-[0.97] cursor-pointer">
-            PDF Tools
-          </button>
-        </div>
+      <div class="flex flex-col gap-2">
+        <span class="font-mono text-[11px] tracking-wider text-mute uppercase font-semibold select-none">
+          Utilities Directory
+        </span>
+        <h2 class="display-lg text-ink">
+          A compute model for all workloads.
+        </h2>
       </div>
 
       <!-- Search Box Input -->
@@ -488,7 +425,7 @@ const tagStyles = {
           Fast processing, built on zero server logic.
         </h2>
         <p class="text-mute text-sm max-w-md leading-relaxed">
-          Because FileMitra performs conversions, splits, and compression inside your local browser runtime via Canvas and PDF-Lib, files never hit a network server.
+          Because imageMitra performs crops, background removal, and compression inside your local browser runtime via Canvas and WebGL, files never hit a network server.
         </p>
         <ul class="flex flex-col gap-2 mt-2">
           <li class="flex items-center gap-2.5 text-xs text-mute"><Check class="w-4 h-4 text-cyan" /> 100% private: Files stay in your local memory</li>
@@ -504,22 +441,20 @@ const tagStyles = {
             <span class="w-3 h-3 rounded-full bg-[#ff5f56]"></span>
             <span class="w-3 h-3 rounded-full bg-[#ffbd2e]"></span>
             <span class="w-3 h-3 rounded-full bg-[#27c93f]"></span>
-            <span class="text-mute text-[10px] ml-2">file-compressor.js</span>
+            <span class="text-mute text-[10px] ml-2">image-compressor.js</span>
           </div>
           <span class="text-[10px] text-mute uppercase font-semibold">Local JavaScript</span>
         </div>
-        <pre class="overflow-x-auto text-[11px] leading-relaxed"><code class="text-violet-soft">import</code> &#123; PDFDocument &#125; <code class="text-violet-soft">from</code> <code class="text-cyan-soft">'pdf-lib'</code>;
-
-<code class="text-[#8a8a8a]">// Fast local client-side merge</code>
-<code class="text-violet-soft">async function</code> <code class="text-cyan-deep">mergePDFs</code>(files) &#123;
-  <code class="text-violet-soft">const</code> mergedPdf = <code class="text-violet-soft">await</code> PDFDocument.<code class="text-cyan-deep">create</code>();
-  <code class="text-violet-soft">for</code> (<code class="text-violet-soft">const</code> file <code class="text-violet-soft">of</code> files) &#123;
-    <code class="text-violet-soft">const</code> bytes = <code class="text-violet-soft">await</code> file.<code class="text-cyan-deep">arrayBuffer</code>();
-    <code class="text-violet-soft">const</code> doc = <code class="text-violet-soft">await</code> PDFDocument.<code class="text-cyan-deep">load</code>(bytes);
-    <code class="text-violet-soft">const</code> pages = <code class="text-violet-soft">await</code> mergedPdf.<code class="text-cyan-deep">copyPages</code>(doc, doc.<code class="text-cyan-deep">getPageIndices</code>());
-    pages.<code class="text-cyan-deep">forEach</code>(p => mergedPdf.<code class="text-cyan-deep">addPage</code>(p));
-  &#125;
-  <code class="text-violet-soft">return await</code> mergedPdf.<code class="text-cyan-deep">save</code>();
+        <pre class="overflow-x-auto text-[11px] leading-relaxed"><code class="text-[#8a8a8a]">// Fast local client-side image compression</code>
+<code class="text-violet-soft">async function</code> <code class="text-cyan-deep">compressImage</code>(file, quality) &#123;
+  <code class="text-violet-soft">const</code> bitmap = <code class="text-violet-soft">await</code> createImageBitmap(file);
+  <code class="text-violet-soft">const</code> canvas = document.createElement(<code class="text-cyan-soft">'canvas'</code>);
+  canvas.width = bitmap.width;
+  canvas.height = bitmap.height;
+  canvas.getContext(<code class="text-cyan-soft">'2d'</code>).drawImage(bitmap, 0, 0);
+  <code class="text-violet-soft">return new</code> Promise(res => &#123;
+    canvas.toBlob(res, <code class="text-cyan-soft">'image/webp'</code>, quality);
+  &#125;);
 &#125;</pre>
       </div>
     </div>
@@ -556,7 +491,7 @@ const tagStyles = {
             <ul class="flex flex-col gap-3 mb-8">
               <li class="flex items-center gap-2 text-xs text-body"><Check class="w-4 h-4 text-link" /> Compression quality sliders</li>
               <li class="flex items-center gap-2 text-xs text-body"><Check class="w-4 h-4 text-link" /> Canvas-based image resizing</li>
-              <li class="flex items-center gap-2 text-xs text-body"><Check class="w-4 h-4 text-link" /> PDF Merge up to 3 files</li>
+              <li class="flex items-center gap-2 text-xs text-body"><Check class="w-4 h-4 text-link" /> Compile up to 5 images to PDF</li>
               <li class="flex items-center gap-2 text-xs text-body"><Check class="w-4 h-4 text-link" /> 100% private on-device runtime</li>
             </ul>
           </div>
@@ -582,8 +517,8 @@ const tagStyles = {
             </div>
             <ul class="flex flex-col gap-3 mb-8">
               <li class="flex items-center gap-2 text-xs text-mute"><Check class="w-4 h-4 text-cyan" /> Infinite batch image scaling</li>
-              <li class="flex items-center gap-2 text-xs text-mute"><Check class="w-4 h-4 text-cyan" /> Unlimited PDF files and pages</li>
-              <li class="flex items-center gap-2 text-xs text-mute"><Check class="w-4 h-4 text-cyan" /> OCR Scan-to-Text translation</li>
+              <li class="flex items-center gap-2 text-xs text-mute"><Check class="w-4 h-4 text-cyan" /> Unlimited PDF compilation pages</li>
+              <li class="flex items-center gap-2 text-xs text-mute"><Check class="w-4 h-4 text-cyan" /> Advanced AI background removal</li>
               <li class="flex items-center gap-2 text-xs text-mute"><Check class="w-4 h-4 text-cyan" /> Custom compression profiles</li>
             </ul>
           </div>
@@ -607,7 +542,7 @@ const tagStyles = {
               <li class="flex items-center gap-2 text-xs text-body"><Check class="w-4 h-4 text-link" /> Priority support SLA</li>
             </ul>
           </div>
-          <a href="mailto:support@filemitra.com" class="bg-canvas border border-hairline hover:border-hairline-strong text-ink hover:bg-canvas-soft-2 font-semibold text-xs py-2 rounded-pill flex items-center justify-center transition-all shadow-level-1">
+          <a href="mailto:support@imagemitra.com" class="bg-canvas border border-hairline hover:border-hairline-strong text-ink hover:bg-canvas-soft-2 font-semibold text-xs py-2 rounded-pill flex items-center justify-center transition-all shadow-level-1">
             Contact Sales
           </a>
         </div>
@@ -638,7 +573,7 @@ const tagStyles = {
   <!-- Greeting Script -->
   <script>
     function updateDashboardGreeting() {
-      const userStr = localStorage.getItem('filemitra_user');
+      const userStr = localStorage.getItem('imagemitra_user');
       const nameEl = document.getElementById('dashboard-user-name');
       const avatarEl = document.getElementById('dashboard-user-avatar');
       const tierBadge = document.getElementById('user-tier-badge');
@@ -741,27 +676,23 @@ const tagStyles = {
 </Layout>
 
 <script>
-  // Simple client-side search & category filtering logic
-  const filterTabs = document.querySelectorAll('.filter-tab');
+  // Simple client-side search logic
   const toolCards = document.querySelectorAll('.tool-card');
   const searchInput = document.getElementById('search-input') as HTMLInputElement;
   const emptyState = document.getElementById('search-empty-state');
 
-  let activeCategory = 'all';
   let searchQuery = '';
 
   function updateGrid() {
     let visibleCount = 0;
     
     toolCards.forEach(card => {
-      const category = (card as HTMLElement).dataset.category || '';
       const name = (card as HTMLElement).dataset.name || '';
       const desc = (card as HTMLElement).dataset.desc || '';
       
-      const categoryMatch = activeCategory === 'all' || category === activeCategory;
       const searchMatch = searchQuery === '' || name.includes(searchQuery) || desc.includes(searchQuery);
 
-      if (categoryMatch && searchMatch) {
+      if (searchMatch) {
         card.classList.remove('hidden');
         visibleCount++;
       } else {
@@ -777,22 +708,6 @@ const tagStyles = {
       emptyState?.classList.remove('flex');
     }
   }
-
-  // Handle Tab Click
-  filterTabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      // Toggle styles
-      filterTabs.forEach(t => {
-        t.classList.remove('bg-canvas', 'shadow-level-2', 'text-ink');
-        t.classList.add('text-body', 'hover:text-ink');
-      });
-      tab.classList.add('bg-canvas', 'shadow-level-2', 'text-ink');
-      tab.classList.remove('text-body', 'hover:text-ink');
-
-      activeCategory = (tab as HTMLElement).dataset.filter || 'all';
-      updateGrid();
-    });
-  });
 
   // Handle Search Input
   searchInput?.addEventListener('input', (e) => {

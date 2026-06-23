@@ -1,14 +1,14 @@
 ---
 import ToolLayout from '../../layouts/ToolLayout.astro';
-import { Upload, Download, RefreshCw, Layers, FileImage, Sparkles, Compass, Check, Trash2, Sliders } from 'lucide-astro';
+import { Upload, Download, RefreshCw, Layers, FileImage, Sparkles, Compass, Check, Trash2, Sliders, Type, Wand2 } from 'lucide-astro';
 ---
 
 <ToolLayout
-  title="Background Remover & Passport Maker"
-  description="Remove image backgrounds client-side, replace them with solid colors or gradients, and format your portraits to standard passport size photos instantly."
+  title="Portrait & Image Design Studio"
+  description="Remove background instantly with AI, apply lighting and color adjustments, add styled text overlays, and touch up with manual brushes."
   activeTool="bg-remover"
 >
-  <div class="flex-grow flex flex-col gap-6">
+  <div class="flex-grow flex flex-col gap-6 font-sans">
     
     <!-- Drag & Drop Upload Zone -->
     <div
@@ -21,7 +21,7 @@ import { Upload, Download, RefreshCw, Layers, FileImage, Sparkles, Compass, Chec
       </span>
       <h3 class="text-ink font-semibold text-lg mb-1">Upload portrait image</h3>
       <p class="text-mute text-xs max-w-xs mb-4">
-        Supports PNG, JPEG, and WebP. Works best with solid backgrounds. processed 100% locally.
+        Supports PNG, JPEG, and WebP. Processed 100% locally.
       </p>
       <button class="bg-primary text-on-primary hover:bg-primary/95 text-xs font-semibold px-4 py-2 rounded-pill shadow-level-2 transition-all cursor-pointer">
         Select File
@@ -32,25 +32,33 @@ import { Upload, Download, RefreshCw, Layers, FileImage, Sparkles, Compass, Chec
     <div id="workspace" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-6 items-start animate-in fade-in duration-200">
       
       <!-- Side panel: Configurations (1 column) -->
-      <div class="flex flex-col gap-4 lg:col-span-1 max-h-[85vh] overflow-y-auto pr-1">
+      <div class="flex flex-col gap-4 lg:col-span-1 max-h-[85vh] overflow-y-auto pr-1 order-2 lg:order-1">
         
         <!-- Sidebar Navigation Tabs -->
-        <div class="flex bg-canvas-soft-2 border border-hairline rounded-sm p-0.5 select-none shadow-level-1 gap-0.5">
-          <button id="sidebar-tab-cutout" class="sidebar-config-tab flex-grow text-center py-2 rounded-sm text-[10px] font-semibold text-ink bg-canvas shadow-level-1 transition-all active:scale-[0.97] cursor-pointer flex flex-col items-center gap-0.5" data-tab="cutout">
+        <div class="flex overflow-x-auto scrollbar-none bg-canvas-soft-2 border border-hairline rounded-sm p-0.5 select-none shadow-level-1 gap-0.5 w-full">
+          <button id="sidebar-tab-cutout" class="sidebar-config-tab flex-1 min-w-[56px] text-center py-2 rounded-sm text-[9.5px] font-semibold text-ink bg-canvas shadow-level-1 transition-all active:scale-[0.97] cursor-pointer flex flex-col items-center gap-0.5" data-tab="cutout">
             <Sparkles class="w-3.5 h-3.5 text-violet" />
             <span>Cutout</span>
           </button>
-          <button id="sidebar-tab-refine" class="sidebar-config-tab flex-grow text-center py-2 rounded-sm text-[10px] font-semibold text-body hover:text-ink transition-all active:scale-[0.97] cursor-pointer flex flex-col items-center gap-0.5" data-tab="refine">
-            <Sliders class="w-3.5 h-3.5" />
-            <span>Refine</span>
-          </button>
-          <button id="sidebar-tab-backdrop" class="sidebar-config-tab flex-grow text-center py-2 rounded-sm text-[10px] font-semibold text-body hover:text-ink transition-all active:scale-[0.97] cursor-pointer flex flex-col items-center gap-0.5" data-tab="backdrop">
+          <button id="sidebar-tab-backdrop" class="sidebar-config-tab flex-1 min-w-[56px] text-center py-2 rounded-sm text-[9.5px] font-semibold text-body hover:text-ink transition-all active:scale-[0.97] cursor-pointer flex flex-col items-center gap-0.5" data-tab="backdrop">
             <Layers class="w-3.5 h-3.5" />
             <span>Backdrop</span>
           </button>
-          <button id="sidebar-tab-size" class="sidebar-config-tab flex-grow text-center py-2 rounded-sm text-[10px] font-semibold text-body hover:text-ink transition-all active:scale-[0.97] cursor-pointer flex flex-col items-center gap-0.5" data-tab="size">
+          <button id="sidebar-tab-refine" class="sidebar-config-tab flex-1 min-w-[56px] text-center py-2 rounded-sm text-[9.5px] font-semibold text-body hover:text-ink transition-all active:scale-[0.97] cursor-pointer flex flex-col items-center gap-0.5" data-tab="refine">
+            <Sliders class="w-3.5 h-3.5" />
+            <span>Brush</span>
+          </button>
+          <button id="sidebar-tab-adjust" class="sidebar-config-tab flex-1 min-w-[56px] text-center py-2 rounded-sm text-[9.5px] font-semibold text-body hover:text-ink transition-all active:scale-[0.97] cursor-pointer flex flex-col items-center gap-0.5" data-tab="adjust">
+            <Wand2 class="w-3.5 h-3.5" />
+            <span>Adjust</span>
+          </button>
+          <button id="sidebar-tab-text" class="sidebar-config-tab flex-1 min-w-[56px] text-center py-2 rounded-sm text-[9.5px] font-semibold text-body hover:text-ink transition-all active:scale-[0.97] cursor-pointer flex flex-col items-center gap-0.5" data-tab="text">
+            <Type class="w-3.5 h-3.5" />
+            <span>Text</span>
+          </button>
+          <button id="sidebar-tab-size" class="sidebar-config-tab flex-1 min-w-[56px] text-center py-2 rounded-sm text-[9.5px] font-semibold text-body hover:text-ink transition-all active:scale-[0.97] cursor-pointer flex flex-col items-center gap-0.5" data-tab="size">
             <Compass class="w-3.5 h-3.5" />
-            <span>Size/Fit</span>
+            <span>Crop/Size</span>
           </button>
         </div>
 
@@ -61,46 +69,14 @@ import { Upload, Download, RefreshCw, Layers, FileImage, Sparkles, Compass, Chec
             1. Background Removal
           </h3>
 
-          <!-- One-Click Auto BG Remover Options -->
           <div class="flex flex-col gap-2">
-            <button id="instant-remove-bg-btn" class="w-full bg-primary text-on-primary hover:bg-primary/95 text-xs font-semibold py-2.5 rounded-sm flex items-center justify-center gap-1.5 transition-all active:scale-[0.98] cursor-pointer shadow-level-3">
-              <Sparkles class="w-3.5 h-3.5 text-cyan" />
-              <span>Instant Auto BG Remove (Fast)</span>
-            </button>
-            <button id="ai-remove-bg-btn" class="w-full bg-canvas border border-hairline hover:border-hairline-strong text-ink hover:bg-canvas-soft text-xs font-semibold py-2.5 rounded-sm flex items-center justify-center gap-1.5 transition-all active:scale-[0.98] cursor-pointer shadow-level-1">
+            <button id="ai-remove-bg-btn" class="w-full bg-primary text-on-primary hover:bg-primary/95 text-xs font-semibold py-2.5 rounded-sm flex items-center justify-center gap-1.5 transition-all active:scale-[0.98] cursor-pointer shadow-level-3">
               <Sparkles class="w-3.5 h-3.5 text-violet animate-pulse" />
-              <span>Deep AI BG Remove (Slow / Heavy)</span>
+              <span>Remove Background with AI (Fast)</span>
             </button>
             <div id="ai-remove-loading" class="hidden flex-col items-center gap-1.5 py-3 border border-dashed border-violet-soft/30 bg-violet-soft/10 text-violet rounded-sm select-none">
               <span class="animate-spin"><RefreshCw class="w-4 h-4" /></span>
               <span id="ai-remove-loading-text" class="text-[10px] font-mono text-center px-2">AI is removing background...</span>
-            </div>
-          </div>
-
-          <!-- Color Dropper Chroma-Key -->
-          <div class="flex flex-col gap-2.5 pt-3.5 border-t border-hairline">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-medium text-ink select-none font-sans">Chroma-Key Color Drop</span>
-              <span id="chroma-status" class="text-[9px] text-mute font-mono bg-canvas-soft-2 px-1.5 py-0.5 rounded-sm select-none">Disabled</span>
-            </div>
-            
-            <div class="flex items-center gap-2">
-              <button id="dropper-btn" class="flex-grow bg-canvas border border-hairline hover:border-hairline-strong hover:bg-canvas-soft text-ink text-xs font-semibold py-2 rounded-sm flex items-center justify-center gap-1.5 transition-all active:scale-[0.98] cursor-pointer">
-                <span class="w-3 h-3 rounded-full border border-hairline-strong" id="dropper-color-preview" style="background-color: transparent;"></span>
-                <span id="dropper-text">Pick Color from Image</span>
-              </button>
-              <button id="clear-chroma-btn" class="px-2.5 bg-canvas border border-hairline hover:bg-error-soft hover:text-error hover:border-error-soft text-mute py-2 rounded-sm transition-all cursor-pointer" title="Disable color key">
-                <Trash2 class="w-3.5 h-3.5" />
-              </button>
-            </div>
-
-            <!-- Tolerance Slider -->
-            <div class="flex flex-col gap-1.5">
-              <div class="flex justify-between text-[10px] font-medium select-none">
-                <span class="text-body">Color Tolerance</span>
-                <span id="tolerance-val" class="font-mono text-mute">40</span>
-              </div>
-              <input type="range" id="tolerance-slider" min="5" max="150" value="40" class="w-full h-1 bg-canvas-soft-2 rounded-lg appearance-none cursor-pointer accent-primary border border-hairline" />
             </div>
           </div>
         </div>
@@ -139,6 +115,151 @@ import { Upload, Download, RefreshCw, Layers, FileImage, Sparkles, Compass, Chec
             <button id="clear-mask-btn" class="text-[10px] text-mute hover:text-ink font-semibold flex items-center justify-center gap-1 select-none self-end cursor-pointer">
               <RefreshCw class="w-2.5 h-2.5" /> Clear Manual Brush Marks
             </button>
+          </div>
+        </div>
+
+        <!-- 4. Adjustments & Filters Panel (Adjust Tab) -->
+        <div id="config-section-adjust" class="bg-canvas border border-hairline rounded-md p-5 shadow-level-3 flex flex-col gap-4 hidden">
+          <h3 class="font-sans font-semibold text-xs text-ink pb-2.5 border-b border-hairline select-none flex items-center gap-1.5 uppercase tracking-wider">
+            <Wand2 class="w-3.5 h-3.5 text-mute" />
+            4. Adjust & Enhance
+          </h3>
+
+          <!-- Magic Auto-Enhance Switch -->
+          <div class="flex items-center justify-between bg-canvas-soft-2 p-3 rounded-sm border border-hairline">
+            <div class="flex flex-col">
+              <span class="text-xs font-semibold text-ink">Magic Auto-Enhance</span>
+              <span class="text-[10px] text-mute">Instant portrait lighting boost</span>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer select-none">
+              <input type="checkbox" id="magic-enhance-toggle" class="sr-only peer" />
+              <div class="w-8 h-4 bg-canvas border border-hairline-strong rounded-full peer peer-focus:ring-0 peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-mute peer-checked:after:bg-primary after:border-hairline after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-primary/10 peer-checked:border-primary"></div>
+            </label>
+          </div>
+
+          <!-- Adjustments sliders -->
+          <div class="flex flex-col gap-3">
+            <!-- Brightness -->
+            <div class="flex flex-col gap-1.5">
+              <div class="flex justify-between text-[10px] font-medium select-none">
+                <span class="text-body">Brightness</span>
+                <span id="brightness-val" class="font-mono text-mute">100%</span>
+              </div>
+              <input type="range" id="brightness-slider" min="50" max="150" value="100" class="w-full h-1 bg-canvas-soft-2 rounded-lg appearance-none cursor-pointer accent-primary border border-hairline" />
+            </div>
+
+            <!-- Contrast -->
+            <div class="flex flex-col gap-1.5">
+              <div class="flex justify-between text-[10px] font-medium select-none">
+                <span class="text-body">Contrast</span>
+                <span id="contrast-val" class="font-mono text-mute">100%</span>
+              </div>
+              <input type="range" id="contrast-slider" min="50" max="150" value="100" class="w-full h-1 bg-canvas-soft-2 rounded-lg appearance-none cursor-pointer accent-primary border border-hairline" />
+            </div>
+
+            <!-- Saturation -->
+            <div class="flex flex-col gap-1.5">
+              <div class="flex justify-between text-[10px] font-medium select-none">
+                <span class="text-body">Saturation</span>
+                <span id="saturation-val" class="font-mono text-mute">100%</span>
+              </div>
+              <input type="range" id="saturation-slider" min="0" max="200" value="100" class="w-full h-1 bg-canvas-soft-2 rounded-lg appearance-none cursor-pointer accent-primary border border-hairline" />
+            </div>
+
+            <!-- Blur -->
+            <div class="flex flex-col gap-1.5">
+              <div class="flex justify-between text-[10px] font-medium select-none">
+                <span class="text-body">Blur</span>
+                <span id="blur-val" class="font-mono text-mute">0px</span>
+              </div>
+              <input type="range" id="blur-slider" min="0" max="20" value="0" class="w-full h-1 bg-canvas-soft-2 rounded-lg appearance-none cursor-pointer accent-primary border border-hairline" />
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. Text Overlays (Text Tab) -->
+        <div id="config-section-text" class="bg-canvas border border-hairline rounded-md p-5 shadow-level-3 flex flex-col gap-4 hidden">
+          <h3 class="font-sans font-semibold text-xs text-ink pb-2.5 border-b border-hairline select-none flex items-center gap-1.5 uppercase tracking-wider">
+            <Type class="w-3.5 h-3.5 text-mute" />
+            5. Text Overlays
+          </h3>
+
+          <div class="flex flex-col gap-3">
+            <button id="add-text-btn" class="w-full bg-primary text-on-primary hover:bg-primary/95 text-xs font-semibold py-2.5 rounded-sm flex items-center justify-center gap-1.5 transition-all active:scale-[0.98] cursor-pointer shadow-level-3">
+              <Type class="w-3.5 h-3.5" />
+              <span>Add Styled Text</span>
+            </button>
+
+            <!-- Text Settings Editor (shown when a text layer is selected) -->
+            <div id="text-editor-container" class="hidden flex flex-col gap-3 border-t border-hairline pt-3 mt-1">
+              <div class="flex flex-col gap-1.5">
+                <label for="text-content-input" class="font-medium text-[10px] text-ink select-none font-sans">Text Content</label>
+                <input
+                  type="text"
+                  id="text-content-input"
+                  placeholder="Enter text..."
+                  class="bg-canvas text-ink border border-hairline focus:border-hairline-strong text-xs rounded-sm px-2.5 h-8.5 outline-none transition-all shadow-level-1"
+                />
+              </div>
+
+              <div class="grid grid-cols-2 gap-3">
+                <div class="flex flex-col gap-1">
+                  <label for="text-font-family" class="font-medium text-[10px] text-ink select-none font-sans">Font Family</label>
+                  <select
+                    id="text-font-family"
+                    class="bg-canvas text-ink border border-hairline focus:border-hairline-strong text-xs rounded-sm px-2.5 h-8.5 outline-none transition-all cursor-pointer"
+                  >
+                    <option value="sans-serif">Sans-Serif</option>
+                    <option value="serif">Serif</option>
+                    <option value="'Outfit', sans-serif">Outfit</option>
+                    <option value="'Fira Mono', monospace">Fira Mono</option>
+                    <option value="'Playfair Display', serif">Playfair</option>
+                  </select>
+                </div>
+
+                <div class="flex flex-col gap-1">
+                  <label for="text-color-picker" class="font-medium text-[10px] text-ink select-none font-sans font-semibold">Color</label>
+                  <div class="flex items-center gap-1.5">
+                    <input
+                      type="color"
+                      id="text-color-picker"
+                      class="w-8 h-8 bg-transparent border-0 cursor-pointer p-0"
+                    />
+                    <input
+                      type="text"
+                      id="text-color-hex"
+                      value="#ffffff"
+                      placeholder="#ffffff"
+                      class="w-full bg-canvas text-ink border border-hairline focus:border-hairline-strong text-[10px] rounded-sm px-1.5 h-8 outline-none transition-all shadow-level-1 font-mono"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex flex-col gap-1">
+                <div class="flex justify-between text-[10px] font-medium select-none">
+                  <span class="text-body">Font Size</span>
+                  <span id="text-size-val" class="font-mono text-mute">24px</span>
+                </div>
+                <input type="range" id="text-size-slider" min="10" max="120" value="24" class="w-full h-1 bg-canvas-soft-2 rounded-lg appearance-none cursor-pointer accent-primary border border-hairline" />
+              </div>
+
+              <!-- Font Styles -->
+              <div class="flex items-center gap-2 pt-1">
+                <button id="text-bold-btn" class="flex-1 bg-canvas border border-hairline hover:border-hairline-strong hover:bg-canvas-soft text-ink text-xs font-semibold py-1.5 rounded-sm transition-all active:scale-[0.98] cursor-pointer">Bold</button>
+                <button id="text-italic-btn" class="flex-1 bg-canvas border border-hairline hover:border-hairline-strong hover:bg-canvas-soft text-ink text-xs font-semibold py-1.5 rounded-sm transition-all active:scale-[0.98] cursor-pointer font-serif italic">Italic</button>
+                <button id="delete-text-btn" class="px-2.5 bg-canvas border border-hairline hover:bg-error-soft hover:text-error hover:border-error-soft text-mute py-1.5 rounded-sm transition-all cursor-pointer" title="Delete Text">
+                  <Trash2 class="w-3.5 h-3.5" />
+                </button>
+              </div>
+              <span class="text-[9px] text-mute select-none text-center pt-1 font-sans">
+                Drag text directly on canvas to reposition
+              </span>
+            </div>
+            
+            <div id="no-text-selected-msg" class="text-[10px] text-mute text-center py-4 border border-dashed border-hairline bg-canvas-soft-2 rounded-sm select-none">
+              No text layer active. Click "Add Styled Text" or click text on canvas.
+            </div>
           </div>
         </div>
 
@@ -200,11 +321,38 @@ import { Upload, Download, RefreshCw, Layers, FileImage, Sparkles, Compass, Chec
               id="passport-size-select"
               class="w-full bg-canvas text-ink border border-hairline focus:border-hairline-strong text-xs rounded-sm px-2.5 h-8.5 outline-none transition-all cursor-pointer"
             >
+              <option value="custom" selected>No Crop (Fit Original Ratio)</option>
+              <option value="custom_dimensions">Custom Dimensions</option>
               <option value="us">US Passport (2" x 2" / 1:1)</option>
               <option value="india">India / UK / EU (3.5 x 4.5 cm / 7:9)</option>
               <option value="china">China Passport (3.3 x 4.8 cm / 11:16)</option>
-              <option value="custom">No Crop (Fit Original Ratio)</option>
             </select>
+          </div>
+
+          <!-- Custom Size Inputs -->
+          <div id="custom-size-inputs" class="hidden flex flex-col gap-2 pt-1">
+            <div class="grid grid-cols-2 gap-3">
+              <div class="flex flex-col gap-1">
+                <label for="custom-width" class="font-medium text-[10px] text-ink select-none font-sans">Width (px)</label>
+                <input
+                  type="number"
+                  id="custom-width"
+                  placeholder="e.g. 800"
+                  min="10"
+                  class="bg-canvas text-ink border border-hairline focus:border-hairline-strong text-xs rounded-sm px-2.5 h-8.5 outline-none transition-all shadow-level-1"
+                />
+              </div>
+              <div class="flex flex-col gap-1">
+                <label for="custom-height" class="font-medium text-[10px] text-ink select-none font-sans">Height (px)</label>
+                <input
+                  type="number"
+                  id="custom-height"
+                  placeholder="e.g. 600"
+                  min="10"
+                  class="bg-canvas text-ink border border-hairline focus:border-hairline-strong text-xs rounded-sm px-2.5 h-8.5 outline-none transition-all shadow-level-1"
+                />
+              </div>
+            </div>
           </div>
 
           <!-- Toggle Guides -->
@@ -269,7 +417,7 @@ import { Upload, Download, RefreshCw, Layers, FileImage, Sparkles, Compass, Chec
       </div>
 
       <!-- Main workspace: Preview canvas Studio (2 columns) -->
-      <div class="flex flex-col gap-6 lg:col-span-2">
+      <div class="flex flex-col gap-6 lg:col-span-2 order-1 lg:order-2">
         <div class="bg-canvas border border-hairline rounded-md p-6 shadow-level-3 flex flex-col gap-4">
           <div class="flex items-center justify-between select-none">
             <h3 class="font-sans font-semibold text-sm text-ink">Passport Studio Canvas</h3>
@@ -324,14 +472,7 @@ import { Upload, Download, RefreshCw, Layers, FileImage, Sparkles, Compass, Chec
   const canvasWrapper = document.getElementById('canvas-wrapper');
   const alignmentGuide = document.getElementById('alignment-guide');
 
-  const dropperBtn = document.getElementById('dropper-btn');
-  const dropperText = document.getElementById('dropper-text');
-  const dropperColorPreview = document.getElementById('dropper-color-preview');
-  const clearChromaBtn = document.getElementById('clear-chroma-btn');
-  const chromaStatus = document.getElementById('chroma-status');
-  
-  const toleranceSlider = document.getElementById('tolerance-slider') as HTMLInputElement;
-  const toleranceVal = document.getElementById('tolerance-val');
+
 
   const brushTabs = document.querySelectorAll('.brush-tab');
   const brushSizeSlider = document.getElementById('brush-size-slider') as HTMLInputElement;
@@ -360,13 +501,38 @@ import { Upload, Download, RefreshCw, Layers, FileImage, Sparkles, Compass, Chec
   const dropperIndicator = document.getElementById('dropper-indicator');
   const brushIndicator = document.getElementById('brush-indicator');
 
+  // Adjustments & Enhance Elements
+  const magicEnhanceToggle = document.getElementById('magic-enhance-toggle') as HTMLInputElement;
+  const brightnessSlider = document.getElementById('brightness-slider') as HTMLInputElement;
+  const brightnessVal = document.getElementById('brightness-val');
+  const contrastSlider = document.getElementById('contrast-slider') as HTMLInputElement;
+  const contrastVal = document.getElementById('contrast-val');
+  const saturationSlider = document.getElementById('saturation-slider') as HTMLInputElement;
+  const saturationVal = document.getElementById('saturation-val');
+  const blurSlider = document.getElementById('blur-slider') as HTMLInputElement;
+  const blurVal = document.getElementById('blur-val');
+
+  // Text Overlay Elements
+  const addTextBtn = document.getElementById('add-text-btn');
+  const textEditorContainer = document.getElementById('text-editor-container');
+  const noTextSelectedMsg = document.getElementById('no-text-selected-msg');
+  const textContentInput = document.getElementById('text-content-input') as HTMLInputElement;
+  const textFontFamily = document.getElementById('text-font-family') as HTMLSelectElement;
+  const textColorPicker = document.getElementById('text-color-picker') as HTMLInputElement;
+  const textColorHex = document.getElementById('text-color-hex') as HTMLInputElement;
+  const textSizeSlider = document.getElementById('text-size-slider') as HTMLInputElement;
+  const textSizeVal = document.getElementById('text-size-val');
+  const textBoldBtn = document.getElementById('text-bold-btn');
+  const textItalicBtn = document.getElementById('text-italic-btn');
+  const deleteTextBtn = document.getElementById('delete-text-btn');
+
   // Portrait States
   let activeFile: File | null = null;
   let sourceImage = new Image();
 
   // Foreground states
-  let foregroundImage: HTMLImageElement = sourceImage;
-  let aiImage: HTMLImageElement | null = null;
+  let foregroundImage: HTMLImageElement | HTMLCanvasElement = sourceImage;
+  let aiImage: HTMLImageElement | HTMLCanvasElement | null = null;
   let removeBackground: any = null;
 
   // Background state
@@ -374,16 +540,41 @@ import { Upload, Download, RefreshCw, Layers, FileImage, Sparkles, Compass, Chec
   let bgGradient = ''; // empty means solid color
   let bgImageElement: HTMLImageElement | null = null;
 
-  // Chroma key state
+  // Chroma key state (Kept internally for compatibility, color pickers removed)
   let chromaKeyEnabled = false;
   let keyColor: { r: number; g: number; b: number } | null = null;
-  let tolerance = 40;
+  let tolerance = 55;
 
   // Brush states
   let activeBrushMode: 'none' | 'erase' | 'restore' = 'none';
   let brushSize = 30;
   let isDrawing = false;
   let lastPoint: { x: number; y: number } | null = null;
+
+  // Adjustments states
+  let brightness = 100;
+  let contrast = 100;
+  let saturation = 100;
+  let blur = 0;
+  let magicEnhance = false;
+
+  // Text Overlay state
+  interface TextLayer {
+    id: string;
+    text: string;
+    x: number; // relative coordinate 0 to 1
+    y: number; // relative coordinate 0 to 1
+    color: string;
+    fontSize: number;
+    fontFamily: string;
+    isBold: boolean;
+    isItalic: boolean;
+  }
+
+  let textLayers: TextLayer[] = [];
+  let activeTextLayerId: string | null = null;
+  let isDraggingText = false;
+  let dragOffset = { x: 0, y: 0 };
 
   // Offscreen mask canvases (matching original portrait dimension)
   let eraseCanvas = document.createElement('canvas');
@@ -402,7 +593,7 @@ import { Upload, Download, RefreshCw, Layers, FileImage, Sparkles, Compass, Chec
   let offsetX = 0;
   let offsetY = 0;
 
-  // Dropper
+  // Dropper (Kept internally, inactive)
   let dropperActive = false;
 
   // Sidebar Config Navigation Tabs Switcher
@@ -411,6 +602,8 @@ import { Upload, Download, RefreshCw, Layers, FileImage, Sparkles, Compass, Chec
     cutout: document.getElementById('config-section-cutout'),
     refine: document.getElementById('config-section-refine'),
     backdrop: document.getElementById('config-section-backdrop'),
+    adjust: document.getElementById('config-section-adjust'),
+    text: document.getElementById('config-section-text'),
     size: document.getElementById('config-section-size')
   };
 
@@ -464,6 +657,8 @@ import { Upload, Download, RefreshCw, Layers, FileImage, Sparkles, Compass, Chec
     }
   });
 
+
+
   bgFileInput?.addEventListener('change', () => {
     if (bgFileInput.files && bgFileInput.files.length > 0) {
       const reader = new FileReader();
@@ -503,6 +698,11 @@ import { Upload, Download, RefreshCw, Layers, FileImage, Sparkles, Compass, Chec
         const w = sourceImage.width;
         const h = sourceImage.height;
 
+        const customWidthInput = document.getElementById('custom-width') as HTMLInputElement;
+        const customHeightInput = document.getElementById('custom-height') as HTMLInputElement;
+        if (customWidthInput) customWidthInput.value = w.toString();
+        if (customHeightInput) customHeightInput.value = h.toString();
+
         eraseCanvas.width = w;
         eraseCanvas.height = h;
         eraseCtx?.clearRect(0, 0, w, h);
@@ -519,12 +719,11 @@ import { Upload, Download, RefreshCw, Layers, FileImage, Sparkles, Compass, Chec
         restoreBufferCanvas.height = h;
         restoreBufferCtx?.clearRect(0, 0, w, h);
 
-        // Reset positions based on sizes
-        resetPositionState();
         resetRemovalState();
 
         processForeground();
         updateCanvasDimensions();
+        resetPositionState();
       };
       sourceImage.src = e.target?.result as string;
     };
@@ -532,23 +731,35 @@ import { Upload, Download, RefreshCw, Layers, FileImage, Sparkles, Compass, Chec
   }
 
   function resetPositionState() {
-    zoom = 1.0;
     offsetX = 0;
     offsetY = 0;
 
-    if (zoomSlider) zoomSlider.value = '1.0';
-    if (zoomVal) zoomVal.innerText = '1.0x';
+    // Calculate dynamic fit zoom based on active canvas size
+    const wCanvas = studioCanvas.width || 600;
+    const hCanvas = studioCanvas.height || 600;
+    const wImg = sourceImage.width || 600;
+    const hImg = sourceImage.height || 600;
+    
+    const fitZoom = Math.min(wCanvas / wImg, hCanvas / hImg);
+    zoom = fitZoom;
+
+    if (zoomSlider) {
+      zoomSlider.min = (fitZoom * 0.1).toFixed(4);
+      zoomSlider.max = (fitZoom * 8.0).toFixed(4);
+      zoomSlider.step = (fitZoom * 0.01).toFixed(4);
+      zoomSlider.value = fitZoom.toFixed(4);
+    }
+    if (zoomVal) zoomVal.innerText = `${fitZoom.toFixed(2)}x`;
     
     if (offsetXSlider) {
       offsetXSlider.value = '0';
-      // Adjust min/max based on image sizes roughly
-      offsetXSlider.min = `-${Math.round(sourceImage.width / 2)}`;
-      offsetXSlider.max = `${Math.round(sourceImage.width / 2)}`;
+      offsetXSlider.min = `-${Math.round(wImg / 2)}`;
+      offsetXSlider.max = `${Math.round(wImg / 2)}`;
     }
     if (offsetYSlider) {
       offsetYSlider.value = '0';
-      offsetYSlider.min = `-${Math.round(sourceImage.height / 2)}`;
-      offsetYSlider.max = `${Math.round(sourceImage.height / 2)}`;
+      offsetYSlider.min = `-${Math.round(hImg / 2)}`;
+      offsetYSlider.max = `${Math.round(hImg / 2)}`;
     }
     
     if (offsetXVal) offsetXVal.innerText = '0px';
@@ -558,22 +769,44 @@ import { Upload, Download, RefreshCw, Layers, FileImage, Sparkles, Compass, Chec
   function resetRemovalState() {
     foregroundImage = sourceImage;
     aiImage = null;
-    lastActionWasInstant = false;
 
-    chromaKeyEnabled = false;
-    keyColor = null;
-    tolerance = 40;
     activeBrushMode = 'none';
 
-    if (toleranceSlider) toleranceSlider.value = '40';
-    if (toleranceVal) toleranceVal.innerText = '40';
+    // Reset adjustments
+    brightness = 100;
+    contrast = 100;
+    saturation = 100;
+    blur = 0;
+    magicEnhance = false;
 
-    if (dropperColorPreview) dropperColorPreview.style.backgroundColor = 'transparent';
-    if (dropperText) dropperText.innerText = 'Pick Color from Image';
-    if (chromaStatus) {
-      chromaStatus.innerText = 'Disabled';
-      chromaStatus.className = 'text-[9px] text-mute font-mono bg-canvas-soft-2 px-1.5 py-0.5 rounded-sm select-none';
+    if (brightnessSlider) {
+      brightnessSlider.value = '100';
+      brightnessSlider.disabled = false;
+      brightnessSlider.classList.remove('opacity-50', 'cursor-not-allowed');
     }
+    if (contrastSlider) {
+      contrastSlider.value = '100';
+      contrastSlider.disabled = false;
+      contrastSlider.classList.remove('opacity-50', 'cursor-not-allowed');
+    }
+    if (saturationSlider) {
+      saturationSlider.value = '100';
+      saturationSlider.disabled = false;
+      saturationSlider.classList.remove('opacity-50', 'cursor-not-allowed');
+    }
+    if (blurSlider) blurSlider.value = '0';
+    if (magicEnhanceToggle) magicEnhanceToggle.checked = false;
+
+    if (brightnessVal) brightnessVal.innerText = '100%';
+    if (contrastVal) contrastVal.innerText = '100%';
+    if (saturationVal) saturationVal.innerText = '100%';
+    if (blurVal) blurVal.innerText = '0px';
+
+    // Reset text layers
+    textLayers = [];
+    activeTextLayerId = null;
+    isDraggingText = false;
+    updateTextEditorUI();
 
     // Reset brush button styles
     brushTabs.forEach(tab => {
@@ -586,8 +819,6 @@ import { Upload, Download, RefreshCw, Layers, FileImage, Sparkles, Compass, Chec
     eraseCtx?.clearRect(0, 0, eraseCanvas.width, eraseCanvas.height);
     restoreCtx?.clearRect(0, 0, restoreCanvas.width, restoreCanvas.height);
 
-    dropperActive = false;
-    dropperIndicator?.classList.add('hidden');
     brushIndicator?.classList.add('hidden');
   }
 
@@ -601,35 +832,7 @@ import { Upload, Download, RefreshCw, Layers, FileImage, Sparkles, Compass, Chec
     tempCtx.clearRect(0, 0, w, h);
     tempCtx.drawImage(foregroundImage, 0, 0);
 
-    // 1. Chroma-Key removal
-    if (chromaKeyEnabled && keyColor) {
-      const imgData = tempCtx.getImageData(0, 0, w, h);
-      const data = imgData.data;
-      const kr = keyColor.r;
-      const kg = keyColor.g;
-      const kb = keyColor.b;
-      const tol = tolerance;
-
-      for (let i = 0; i < data.length; i += 4) {
-        const r = data[i];
-        const g = data[i + 1];
-        const b = data[i + 2];
-
-        // Euclidean color distance
-        const dist = Math.sqrt(
-          (r - kr) * (r - kr) +
-          (g - kg) * (g - kg) +
-          (b - kb) * (b - kb)
-        );
-
-        if (dist <= tol) {
-          data[i + 3] = 0; // Transparent
-        }
-      }
-      tempCtx.putImageData(imgData, 0, 0);
-    }
-
-    // 2. Restore Brush mask (source-in masking)
+    // 1. Restore Brush mask (source-in masking)
     if (restoreBufferCtx && restoreCtx) {
       restoreBufferCtx.clearRect(0, 0, w, h);
       restoreBufferCtx.save();
@@ -645,7 +848,7 @@ import { Upload, Download, RefreshCw, Layers, FileImage, Sparkles, Compass, Chec
       tempCtx.restore();
     }
 
-    // 3. Erase Brush mask (destination-out masking)
+    // 2. Erase Brush mask (destination-out masking)
     if (eraseCtx) {
       tempCtx.save();
       tempCtx.globalCompositeOperation = 'destination-out';
@@ -658,15 +861,26 @@ import { Upload, Download, RefreshCw, Layers, FileImage, Sparkles, Compass, Chec
     const sizeMode = sizeSelect.value;
     let w = 600, h = 600;
 
-    if (sizeMode === 'us') {
-      w = 600; h = 600; // 1:1 ratio
-    } else if (sizeMode === 'india') {
-      w = 413; h = 531; // ~7:9 ratio (3.5x4.5cm)
-    } else if (sizeMode === 'china') {
-      w = 390; h = 567; // ~11:16 ratio (3.3x4.8cm)
-    } else if (sizeMode === 'custom') {
-      w = sourceImage.width;
-      h = sourceImage.height;
+    const customSizeInputs = document.getElementById('custom-size-inputs');
+    const customWidthInput = document.getElementById('custom-width') as HTMLInputElement;
+    const customHeightInput = document.getElementById('custom-height') as HTMLInputElement;
+
+    if (sizeMode === 'custom_dimensions') {
+      customSizeInputs?.classList.remove('hidden');
+      w = parseInt(customWidthInput?.value) || sourceImage.width || 600;
+      h = parseInt(customHeightInput?.value) || sourceImage.height || 600;
+    } else {
+      customSizeInputs?.classList.add('hidden');
+      if (sizeMode === 'us') {
+        w = 600; h = 600; // 1:1 ratio
+      } else if (sizeMode === 'india') {
+        w = 413; h = 531; // ~7:9 ratio (3.5x4.5cm)
+      } else if (sizeMode === 'china') {
+        w = 390; h = 567; // ~11:16 ratio (3.3x4.8cm)
+      } else if (sizeMode === 'custom') {
+        w = sourceImage.width || 600;
+        h = sourceImage.height || 600;
+      }
     }
 
     studioCanvas.width = w;
@@ -755,8 +969,71 @@ import { Upload, Download, RefreshCw, Layers, FileImage, Sparkles, Compass, Chec
     const dx = -sourceImage.width / 2;
     const dy = -sourceImage.height / 2;
 
+    // Apply adjustments filters
+    let adjB = brightness;
+    let adjC = contrast;
+    let adjS = saturation;
+    let adjBl = blur;
+
+    if (magicEnhance) {
+      adjB = Math.round(adjB * 1.04);
+      adjC = Math.round(adjC * 1.12);
+      adjS = Math.round(adjS * 1.15);
+    }
+
+    ctx.filter = `brightness(${adjB}%) contrast(${adjC}%) saturate(${adjS}%) blur(${adjBl}px)`;
     ctx.drawImage(tempCanvas, dx, dy, sourceImage.width, sourceImage.height);
+    ctx.filter = 'none';
     ctx.restore();
+
+    // 3. Draw Text Layers
+    textLayers.forEach(layer => {
+      ctx.save();
+      
+      let fontStyle = '';
+      if (layer.isItalic) fontStyle += 'italic ';
+      if (layer.isBold) fontStyle += 'bold ';
+      
+      ctx.font = `${fontStyle}${layer.fontSize}px ${layer.fontFamily}`;
+      ctx.fillStyle = layer.color;
+      ctx.textBaseline = 'middle';
+      ctx.textAlign = 'center';
+      
+      // Draw shadow for text legibility
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.4)';
+      ctx.shadowBlur = 4;
+      ctx.shadowOffsetX = 2;
+      ctx.shadowOffsetY = 2;
+      
+      const tx = layer.x * w;
+      const ty = layer.y * h;
+      
+      ctx.fillText(layer.text, tx, ty);
+      
+      // Draw bounding box if active text layer
+      if (layer.id === activeTextLayerId) {
+        ctx.shadowColor = 'transparent';
+        ctx.shadowBlur = 0;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 0;
+        
+        ctx.strokeStyle = '#0070f3';
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([4, 4]);
+        
+        const textWidth = ctx.measureText(layer.text).width;
+        const textHeight = layer.fontSize;
+        
+        ctx.strokeRect(
+          tx - textWidth / 2 - 8,
+          ty - textHeight / 2 - 6,
+          textWidth + 16,
+          textHeight + 12
+        );
+      }
+      
+      ctx.restore();
+    });
   }
 
   // Inverse coordinates calculation: converts canvas point to portrait image coords
@@ -778,230 +1055,20 @@ import { Upload, Download, RefreshCw, Layers, FileImage, Sparkles, Compass, Chec
     return { x: ix, y: iy };
   }
 
-  // AI & Instant Background Remover
-  const instantRemoveBgBtn = document.getElementById('instant-remove-bg-btn');
+  // AI Background Remover
   const aiRemoveBgBtn = document.getElementById('ai-remove-bg-btn');
   const aiRemoveLoading = document.getElementById('ai-remove-loading');
   const aiRemoveLoadingText = document.getElementById('ai-remove-loading-text');
 
-  let lastActionWasInstant = false;
-
-  // BFS Boundary-Seeded Flood Fill Algorithm
-  function autoRemoveBackgroundFloodFill() {
-    if (!sourceImage.src || !tempCanvas || !tempCtx) return;
-
-    const w = sourceImage.width;
-    const h = sourceImage.height;
-
-    // Create a local canvas to process original image pixels
-    const processCanvas = document.createElement('canvas');
-    processCanvas.width = w;
-    processCanvas.height = h;
-    const processCtx = processCanvas.getContext('2d');
-    if (!processCtx) return;
-
-    processCtx.drawImage(sourceImage, 0, 0);
-    const imgData = processCtx.getImageData(0, 0, w, h);
-    const data = imgData.data;
-
-    // Spatial 6-point sampling with median filter for robust background color reference
-    const sampleCoords = [
-      { x: Math.min(5, w - 1), y: Math.min(5, h - 1) },
-      { x: Math.max(0, w - 6), y: Math.min(5, h - 1) },
-      { x: Math.min(5, w - 1), y: Math.min(Math.floor(h / 4), h - 1) },
-      { x: Math.max(0, w - 6), y: Math.min(Math.floor(h / 4), h - 1) },
-      { x: Math.min(5, w - 1), y: Math.min(Math.floor(h / 2), h - 1) },
-      { x: Math.max(0, w - 6), y: Math.min(Math.floor(h / 2), h - 1) }
-    ];
-
-    const rValues = [];
-    const gValues = [];
-    const bValues = [];
-
-    for (const coord of sampleCoords) {
-      const idx = (coord.y * w + coord.x) * 4;
-      rValues.push(data[idx]);
-      gValues.push(data[idx + 1]);
-      bValues.push(data[idx + 2]);
-    }
-
-    rValues.sort((a, b) => a - b);
-    gValues.sort((a, b) => a - b);
-    bValues.sort((a, b) => a - b);
-
-    // Take average of the two middle values (median)
-    const refR = Math.round((rValues[2] + rValues[3]) / 2);
-    const refG = Math.round((gValues[2] + gValues[3]) / 2);
-    const refB = Math.round((bValues[2] + bValues[3]) / 2);
-
-    // BFS Queue Pre-allocation
-    const totalPixels = w * h;
-    const queue = new Int32Array(totalPixels);
-    const visited = new Uint8Array(totalPixels);
-    let head = 0;
-    let tail = 0;
-
-    // Tolerance check function
-    const tolSq = tolerance * tolerance;
-    function matchesBg(idx: number) {
-      const r = data[idx * 4];
-      const g = data[idx * 4 + 1];
-      const b = data[idx * 4 + 2];
-      const dr = r - refR;
-      const dg = g - refG;
-      const db = b - refB;
-      return (dr * dr + dg * dg + db * db) <= tolSq;
-    }
-
-    // Seed the borders: Top, Left, and Right (skipping the bottom 50% to prevent flooding clothing)
-    for (let x = 0; x < w; x++) {
-      const idx = x; // y = 0
-      if (matchesBg(idx)) {
-        visited[idx] = 1;
-        queue[tail++] = idx;
-      }
-    }
-    const scanHeight = Math.floor(h * 0.5); // Scan only upper 50% to avoid shoulders/clothing
-    for (let y = 1; y < scanHeight; y++) {
-      const idxL = y * w; // x = 0
-      if (visited[idxL] === 0 && matchesBg(idxL)) {
-        visited[idxL] = 1;
-        queue[tail++] = idxL;
-      }
-      const idxR = y * w + (w - 1); // x = w - 1
-      if (visited[idxR] === 0 && matchesBg(idxR)) {
-        visited[idxR] = 1;
-        queue[tail++] = idxR;
-      }
-    }
-
-    // BFS traversal
-    const dirsX = [-1, 1, 0, 0];
-    const dirsY = [0, 0, -1, 1];
-
-    while (head < tail) {
-      const currIdx = queue[head++];
-      const cx = currIdx % w;
-      const cy = (currIdx / w) | 0;
-
-      data[currIdx * 4 + 3] = 0;
-
-      for (let i = 0; i < 4; i++) {
-        const nx = cx + dirsX[i];
-        const ny = cy + dirsY[i];
-
-        if (nx >= 0 && nx < w && ny >= 0 && ny < h) {
-          const nidx = ny * w + nx;
-          if (visited[nidx] === 0) {
-            if (matchesBg(nidx)) {
-              visited[nidx] = 1;
-              queue[tail++] = nidx;
-            }
-          }
-        }
-      }
-    }
-
-    // Edge Smoothing / Antialiasing (3x3 alpha averaging pass along border pixels)
-    // We average the actual alpha channel values (respecting existing transparent brush marks/masks)
-    const smoothAlpha = new Uint8Array(totalPixels);
-    for (let i = 0; i < totalPixels; i++) {
-      smoothAlpha[i] = data[i * 4 + 3];
-    }
-
-    for (let y = 1; y < h - 1; y++) {
-      for (let x = 1; x < w - 1; x++) {
-        const idx = y * w + x;
-        if (visited[idx] === 0) {
-          let hasBgNeighbor = false;
-          if (visited[idx - 1] === 1 || visited[idx + 1] === 1 || visited[idx - w] === 1 || visited[idx + w] === 1) {
-            hasBgNeighbor = true;
-          }
-
-          if (hasBgNeighbor) {
-            let sumAlpha = 0;
-            let count = 0;
-            for (let dy = -1; dy <= 1; dy++) {
-              for (let dx = -1; dx <= 1; dx++) {
-                const nidx = (y + dy) * w + (x + dx);
-                sumAlpha += data[nidx * 4 + 3];
-                count++;
-              }
-            }
-            smoothAlpha[idx] = Math.round(sumAlpha / count);
-          }
-        }
-      }
-    }
-
-    for (let i = 0; i < totalPixels; i++) {
-      data[i * 4 + 3] = smoothAlpha[i];
-    }
-
-    processCtx.putImageData(imgData, 0, 0);
-
-    const dataUrl = processCanvas.toDataURL('image/png');
-    const img = new Image();
-    img.onload = () => {
-      aiImage = img;
-      foregroundImage = aiImage;
-
-      // Disable Chroma-Key since the background is already gone
-      chromaKeyEnabled = false;
-      keyColor = null;
-      if (dropperColorPreview) dropperColorPreview.style.backgroundColor = 'transparent';
-      if (dropperText) dropperText.innerText = 'Pick Color from Image';
-      if (chromaStatus) {
-        chromaStatus.innerText = 'Disabled';
-        chromaStatus.className = 'text-[9px] text-mute font-mono bg-canvas-soft-2 px-1.5 py-0.5 rounded-sm select-none';
-      }
-
-      processForeground();
-      renderCanvas();
-
-      aiRemoveLoading?.classList.add('hidden');
-      instantRemoveBgBtn?.classList.remove('hidden');
-      aiRemoveBgBtn?.classList.remove('hidden');
-    };
-    img.src = dataUrl;
-  }
-
-  // Bind Instant BG Remover
-  instantRemoveBgBtn?.addEventListener('click', () => {
-    if (!activeFile) return;
-
-    instantRemoveBgBtn.classList.add('hidden');
-    aiRemoveBgBtn?.classList.add('hidden');
-    aiRemoveLoading?.classList.remove('hidden');
-    aiRemoveLoading?.classList.add('flex');
-    if (aiRemoveLoadingText) aiRemoveLoadingText.innerText = "Running instant background removal...";
-
-    setTimeout(() => {
-      try {
-        lastActionWasInstant = true;
-        autoRemoveBackgroundFloodFill();
-      } catch (err) {
-        console.error("Instant background removal failed:", err);
-        alert("Instant background removal failed. Try using Chroma-Key or Deep AI.");
-        aiRemoveLoading?.classList.add('hidden');
-        instantRemoveBgBtn?.classList.remove('hidden');
-        aiRemoveBgBtn?.classList.remove('hidden');
-      }
-    }, 50);
-  });
-
-  // AI Background Remover
   aiRemoveBgBtn?.addEventListener('click', async () => {
     if (!activeFile) return;
 
-    instantRemoveBgBtn?.classList.add('hidden');
     aiRemoveBgBtn.classList.add('hidden');
     aiRemoveLoading?.classList.remove('hidden');
     aiRemoveLoading?.classList.add('flex');
     if (aiRemoveLoadingText) aiRemoveLoadingText.innerText = "Initializing AI model...";
 
     try {
-      lastActionWasInstant = false;
       if (!removeBackground) {
         const module = await import('https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.7.0/+esm');
         removeBackground = module.removeBackground;
@@ -1010,11 +1077,13 @@ import { Upload, Download, RefreshCw, Layers, FileImage, Sparkles, Compass, Chec
       if (aiRemoveLoadingText) aiRemoveLoadingText.innerText = "Running AI background removal...";
 
       const config = {
+        model: 'small', // Use 7.5MB model instead of 44MB medium model for lightning speed
         progress: (key: string, current: number, total: number) => {
           const percent = Math.round((current / total) * 100);
-          const cleanKey = key.replace(/_/g, ' ').replace('.onnx', '').replace('.wasm', '');
+          const filename = key.split('/').pop() || key;
+          const cleanKey = filename.replace(/_/g, ' ').replace('.onnx', '').replace('.wasm', '');
           if (aiRemoveLoadingText) {
-            aiRemoveLoadingText.innerText = `Downloading ${cleanKey}... ${percent}%`;
+            aiRemoveLoadingText.innerText = `Loading AI model (${cleanKey})... ${percent}%`;
           }
         }
       };
@@ -1030,74 +1099,256 @@ import { Upload, Download, RefreshCw, Layers, FileImage, Sparkles, Compass, Chec
         aiImage = img;
         foregroundImage = aiImage;
         
-        // Disable Chroma-Key since the background is already gone
-        chromaKeyEnabled = false;
-        keyColor = null;
-        if (dropperColorPreview) dropperColorPreview.style.backgroundColor = 'transparent';
-        if (dropperText) dropperText.innerText = 'Pick Color from Image';
-        if (chromaStatus) {
-          chromaStatus.innerText = 'Disabled';
-          chromaStatus.className = 'text-[9px] text-mute font-mono bg-canvas-soft-2 px-1.5 py-0.5 rounded-sm select-none';
-        }
-
         processForeground();
         renderCanvas();
 
         aiRemoveLoading?.classList.add('hidden');
-        instantRemoveBgBtn?.classList.remove('hidden');
-        aiRemoveBgBtn.classList.remove('hidden');
+        aiRemoveBgBtn?.classList.remove('hidden');
+      };
+      img.onerror = (err) => {
+        console.error("Failed to load background-removed image:", err);
+        alert("Failed to load processed image. Please try again.");
+        aiRemoveLoading?.classList.add('hidden');
+        aiRemoveBgBtn?.classList.remove('hidden');
       };
       img.src = resultUrl;
 
     } catch (err) {
       console.error("AI Background removal failed:", err);
-      alert("AI background removal failed. You can still use the Manual Brush or Chroma-Key.");
+      alert("AI background removal failed. You can still use the Manual Brush to touch up.");
       aiRemoveLoading?.classList.add('hidden');
-      instantRemoveBgBtn?.classList.remove('hidden');
       aiRemoveBgBtn.classList.remove('hidden');
     }
   });
 
-  // Dropper Activation
-  dropperBtn?.addEventListener('click', () => {
-    dropperActive = true;
-    dropperIndicator?.classList.remove('hidden');
-    brushIndicator?.classList.add('hidden');
-    activeBrushMode = 'none';
+  // 1. Adjustments Controls Event Listeners
+  magicEnhanceToggle?.addEventListener('change', () => {
+    magicEnhance = magicEnhanceToggle.checked;
     
-    // Highlight None Tab
-    brushTabs.forEach(t => t.classList.remove('bg-primary', 'text-on-primary'));
-    document.querySelector('[data-brush="none"]')?.classList.add('bg-primary', 'text-on-primary');
-  });
+    // Toggle sliders disabled visual state
+    [brightnessSlider, contrastSlider, saturationSlider].forEach(slider => {
+      if (slider) {
+        slider.disabled = magicEnhance;
+        if (magicEnhance) {
+          slider.classList.add('opacity-50', 'cursor-not-allowed');
+        } else {
+          slider.classList.remove('opacity-50', 'cursor-not-allowed');
+        }
+      }
+    });
 
-  clearChromaBtn?.addEventListener('click', () => {
-    chromaKeyEnabled = false;
-    keyColor = null;
-    
-    if (dropperColorPreview) dropperColorPreview.style.backgroundColor = 'transparent';
-    if (dropperText) dropperText.innerText = 'Pick Color from Image';
-    if (chromaStatus) {
-      chromaStatus.innerText = 'Disabled';
-      chromaStatus.className = 'text-[9px] text-mute font-mono bg-canvas-soft-2 px-1.5 py-0.5 rounded-sm select-none';
-    }
-
-    processForeground();
     renderCanvas();
   });
 
-  let floodFillTimeout: any = null;
-  // Tolerance slider changes
-  toleranceSlider?.addEventListener('input', () => {
-    tolerance = parseInt(toleranceSlider.value);
-    if (toleranceVal) toleranceVal.innerText = tolerance.toString();
-    if (chromaKeyEnabled) {
-      processForeground();
+  brightnessSlider?.addEventListener('input', () => {
+    brightness = parseInt(brightnessSlider.value);
+    if (brightnessVal) brightnessVal.innerText = `${brightness}%`;
+    renderCanvas();
+  });
+
+  contrastSlider?.addEventListener('input', () => {
+    contrast = parseInt(contrastSlider.value);
+    if (contrastVal) contrastVal.innerText = `${contrast}%`;
+    renderCanvas();
+  });
+
+  saturationSlider?.addEventListener('input', () => {
+    saturation = parseInt(saturationSlider.value);
+    if (saturationVal) saturationVal.innerText = `${saturation}%`;
+    renderCanvas();
+  });
+
+  blurSlider?.addEventListener('input', () => {
+    blur = parseInt(blurSlider.value);
+    if (blurVal) blurVal.innerText = `${blur}px`;
+    renderCanvas();
+  });
+
+  // 2. Text Layer Editor Event Listeners & Drag Handling Helpers
+  function findTextLayerAt(clientX: number, clientY: number) {
+    const rect = studioCanvas.getBoundingClientRect();
+    const pixelX = ((clientX - rect.left) / rect.width) * studioCanvas.width;
+    const pixelY = ((clientY - rect.top) / rect.height) * studioCanvas.height;
+
+    const ctx = studioCanvas.getContext('2d');
+    if (!ctx) return null;
+
+    for (let i = textLayers.length - 1; i >= 0; i--) {
+      const layer = textLayers[i];
+      ctx.save();
+      
+      let fontStyle = '';
+      if (layer.isItalic) fontStyle += 'italic ';
+      if (layer.isBold) fontStyle += 'bold ';
+      ctx.font = `${fontStyle}${layer.fontSize}px ${layer.fontFamily}`;
+      
+      const textWidth = ctx.measureText(layer.text).width;
+      const textHeight = layer.fontSize;
+      
+      const tx = layer.x * studioCanvas.width;
+      const ty = layer.y * studioCanvas.height;
+      
+      const minX = tx - textWidth / 2 - 12;
+      const maxX = tx + textWidth / 2 + 12;
+      const minY = ty - textHeight / 2 - 10;
+      const maxY = ty + textHeight / 2 + 10;
+      
+      ctx.restore();
+
+      if (pixelX >= minX && pixelX <= maxX && pixelY >= minY && pixelY <= maxY) {
+        return layer;
+      }
+    }
+    return null;
+  }
+
+  function updateTextEditorUI() {
+    const activeLayer = textLayers.find(l => l.id === activeTextLayerId);
+    if (activeLayer) {
+      textEditorContainer?.classList.remove('hidden');
+      noTextSelectedMsg?.classList.add('hidden');
+
+      if (textContentInput) textContentInput.value = activeLayer.text;
+      if (textFontFamily) textFontFamily.value = activeLayer.fontFamily;
+      if (textColorPicker) textColorPicker.value = activeLayer.color;
+      if (textColorHex) textColorHex.value = activeLayer.color;
+      if (textSizeSlider) textSizeSlider.value = activeLayer.fontSize.toString();
+      if (textSizeVal) textSizeVal.innerText = `${activeLayer.fontSize}px`;
+
+      // Bold & Italic button styles
+      if (activeLayer.isBold) {
+        textBoldBtn?.classList.add('bg-primary', 'text-on-primary', 'border-hairline-strong');
+        textBoldBtn?.classList.remove('text-ink', 'hover:bg-canvas-soft');
+      } else {
+        textBoldBtn?.classList.remove('bg-primary', 'text-on-primary', 'border-hairline-strong');
+        textBoldBtn?.classList.add('text-ink', 'hover:bg-canvas-soft');
+      }
+
+      if (activeLayer.isItalic) {
+        textItalicBtn?.classList.add('bg-primary', 'text-on-primary', 'border-hairline-strong');
+        textItalicBtn?.classList.remove('text-ink', 'hover:bg-canvas-soft');
+      } else {
+        textItalicBtn?.classList.remove('bg-primary', 'text-on-primary', 'border-hairline-strong');
+        textItalicBtn?.classList.add('text-ink', 'hover:bg-canvas-soft');
+      }
+    } else {
+      textEditorContainer?.classList.add('hidden');
+      noTextSelectedMsg?.classList.remove('hidden');
+    }
+  }
+
+  addTextBtn?.addEventListener('click', () => {
+    const newId = 'text_' + Date.now();
+    const newLayer: TextLayer = {
+      id: newId,
+      text: 'Double click to edit text',
+      x: 0.5,
+      y: 0.5,
+      color: '#ffffff',
+      fontSize: 24,
+      fontFamily: "'Outfit', sans-serif",
+      isBold: false,
+      isItalic: false
+    };
+
+    textLayers.push(newLayer);
+    activeTextLayerId = newId;
+
+    updateTextEditorUI();
+    renderCanvas();
+
+    if (textContentInput) {
+      textContentInput.value = newLayer.text;
+      textContentInput.focus();
+      textContentInput.select();
+    }
+  });
+
+  textContentInput?.addEventListener('input', () => {
+    if (activeTextLayerId) {
+      const activeLayer = textLayers.find(l => l.id === activeTextLayerId);
+      if (activeLayer) {
+        activeLayer.text = textContentInput.value;
+        renderCanvas();
+      }
+    }
+  });
+
+  textFontFamily?.addEventListener('change', () => {
+    if (activeTextLayerId) {
+      const activeLayer = textLayers.find(l => l.id === activeTextLayerId);
+      if (activeLayer) {
+        activeLayer.fontFamily = textFontFamily.value;
+        renderCanvas();
+      }
+    }
+  });
+
+  textColorPicker?.addEventListener('input', () => {
+    if (activeTextLayerId) {
+      const activeLayer = textLayers.find(l => l.id === activeTextLayerId);
+      if (activeLayer) {
+        activeLayer.color = textColorPicker.value;
+        if (textColorHex) textColorHex.value = activeLayer.color;
+        renderCanvas();
+      }
+    }
+  });
+
+  textColorHex?.addEventListener('input', () => {
+    if (activeTextLayerId) {
+      const activeLayer = textLayers.find(l => l.id === activeTextLayerId);
+      if (activeLayer) {
+        const hex = textColorHex.value;
+        if (/^#[0-9A-F]{6}$/i.test(hex)) {
+          activeLayer.color = hex;
+          if (textColorPicker) textColorPicker.value = hex;
+          renderCanvas();
+        }
+      }
+    }
+  });
+
+  textSizeSlider?.addEventListener('input', () => {
+    if (activeTextLayerId) {
+      const activeLayer = textLayers.find(l => l.id === activeTextLayerId);
+      if (activeLayer) {
+        const size = parseInt(textSizeSlider.value);
+        activeLayer.fontSize = size;
+        if (textSizeVal) textSizeVal.innerText = `${size}px`;
+        renderCanvas();
+      }
+    }
+  });
+
+  textBoldBtn?.addEventListener('click', () => {
+    if (activeTextLayerId) {
+      const activeLayer = textLayers.find(l => l.id === activeTextLayerId);
+      if (activeLayer) {
+        activeLayer.isBold = !activeLayer.isBold;
+        updateTextEditorUI();
+        renderCanvas();
+      }
+    }
+  });
+
+  textItalicBtn?.addEventListener('click', () => {
+    if (activeTextLayerId) {
+      const activeLayer = textLayers.find(l => l.id === activeTextLayerId);
+      if (activeLayer) {
+        activeLayer.isItalic = !activeLayer.isItalic;
+        updateTextEditorUI();
+        renderCanvas();
+      }
+    }
+  });
+
+  deleteTextBtn?.addEventListener('click', () => {
+    if (activeTextLayerId) {
+      textLayers = textLayers.filter(l => l.id !== activeTextLayerId);
+      activeTextLayerId = null;
+      updateTextEditorUI();
       renderCanvas();
-    } else if (lastActionWasInstant) {
-      clearTimeout(floodFillTimeout);
-      floodFillTimeout = setTimeout(() => {
-        autoRemoveBackgroundFloodFill();
-      }, 50);
     }
   });
 
@@ -1113,11 +1364,12 @@ import { Upload, Download, RefreshCw, Layers, FileImage, Sparkles, Compass, Chec
 
       activeBrushMode = (tab as HTMLElement).dataset.brush as any || 'none';
       
-      dropperActive = false;
-      dropperIndicator?.classList.add('hidden');
-      
       if (activeBrushMode !== 'none') {
         brushIndicator?.classList.remove('hidden');
+        // Deselect text layer if brush is active to prevent overlapping drag actions
+        activeTextLayerId = null;
+        updateTextEditorUI();
+        renderCanvas();
       } else {
         brushIndicator?.classList.add('hidden');
       }
@@ -1136,40 +1388,35 @@ import { Upload, Download, RefreshCw, Layers, FileImage, Sparkles, Compass, Chec
     renderCanvas();
   });
 
-  // Canvas Mouse & Touch Drawing Handlers
+  // Canvas Mouse & Touch Drawing & Text Dragging Handlers
   const drawStart = (clientX: number, clientY: number) => {
-    if (dropperActive) {
-      const rect = studioCanvas.getBoundingClientRect();
-      const pixelX = ((clientX - rect.left) / rect.width) * studioCanvas.width;
-      const pixelY = ((clientY - rect.top) / rect.height) * studioCanvas.height;
+    if (activeBrushMode === 'none') {
+      const textAtPoint = findTextLayerAt(clientX, clientY);
+      if (textAtPoint) {
+        activeTextLayerId = textAtPoint.id;
+        isDraggingText = true;
 
-      // Extract pixel color from the final canvas
-      const ctx = studioCanvas.getContext('2d');
-      if (ctx) {
-        const pix = ctx.getImageData(pixelX, pixelY, 1, 1).data;
-        keyColor = { r: pix[0], g: pix[1], b: pix[2] };
-        chromaKeyEnabled = true;
-        lastActionWasInstant = false;
+        const rect = studioCanvas.getBoundingClientRect();
+        const pixelX = ((clientX - rect.left) / rect.width) * studioCanvas.width;
+        const pixelY = ((clientY - rect.top) / rect.height) * studioCanvas.height;
 
-        if (dropperColorPreview) {
-          dropperColorPreview.style.backgroundColor = `rgb(${pix[0]}, ${pix[1]}, ${pix[2]})`;
-        }
-        if (dropperText) dropperText.innerText = `Key color: RGB(${pix[0]}, ${pix[1]}, ${pix[2]})`;
-        if (chromaStatus) {
-          chromaStatus.innerText = 'Active';
-          chromaStatus.className = 'text-[9px] text-emerald-500 font-bold bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded-sm select-none';
-        }
+        const tx = textAtPoint.x * studioCanvas.width;
+        const ty = textAtPoint.y * studioCanvas.height;
 
-        dropperActive = false;
-        dropperIndicator?.classList.add('hidden');
+        dragOffset = {
+          x: pixelX - tx,
+          y: pixelY - ty
+        };
 
-        processForeground();
+        updateTextEditorUI();
+        renderCanvas();
+      } else {
+        activeTextLayerId = null;
+        updateTextEditorUI();
         renderCanvas();
       }
       return;
     }
-
-    if (activeBrushMode === 'none') return;
 
     isDrawing = true;
     const coords = getOriginalCoords(clientX, clientY);
@@ -1179,6 +1426,24 @@ import { Upload, Download, RefreshCw, Layers, FileImage, Sparkles, Compass, Chec
   };
 
   const drawMove = (clientX: number, clientY: number) => {
+    if (isDraggingText && activeTextLayerId) {
+      const rect = studioCanvas.getBoundingClientRect();
+      const pixelX = ((clientX - rect.left) / rect.width) * studioCanvas.width;
+      const pixelY = ((clientY - rect.top) / rect.height) * studioCanvas.height;
+
+      const activeLayer = textLayers.find(l => l.id === activeTextLayerId);
+      if (activeLayer) {
+        const newTx = pixelX - dragOffset.x;
+        const newTy = pixelY - dragOffset.y;
+
+        activeLayer.x = Math.max(0, Math.min(1, newTx / studioCanvas.width));
+        activeLayer.y = Math.max(0, Math.min(1, newTy / studioCanvas.height));
+
+        renderCanvas();
+      }
+      return;
+    }
+
     if (!isDrawing || !lastPoint) return;
     const coords = getOriginalCoords(clientX, clientY);
 
@@ -1188,6 +1453,7 @@ import { Upload, Download, RefreshCw, Layers, FileImage, Sparkles, Compass, Chec
 
   const drawEnd = () => {
     isDrawing = false;
+    isDraggingText = false;
     lastPoint = null;
   };
 
@@ -1251,7 +1517,7 @@ import { Upload, Download, RefreshCw, Layers, FileImage, Sparkles, Compass, Chec
   // Mouse Listener Bindings
   studioCanvas?.addEventListener('mousedown', (e) => drawStart(e.clientX, e.clientY));
   document.addEventListener('mousemove', (e) => {
-    if (isDrawing) drawMove(e.clientX, e.clientY);
+    if (isDrawing || isDraggingText) drawMove(e.clientX, e.clientY);
   });
   document.addEventListener('mouseup', drawEnd);
 
@@ -1262,7 +1528,7 @@ import { Upload, Download, RefreshCw, Layers, FileImage, Sparkles, Compass, Chec
     }
   }, { passive: true });
   document.addEventListener('touchmove', (e) => {
-    if (isDrawing && e.touches.length > 0) {
+    if ((isDrawing || isDraggingText) && e.touches.length > 0) {
       drawMove(e.touches[0].clientX, e.touches[0].clientY);
     }
   }, { passive: true });
@@ -1304,7 +1570,23 @@ import { Upload, Download, RefreshCw, Layers, FileImage, Sparkles, Compass, Chec
   });
 
   // Size Presets Selector
-  sizeSelect?.addEventListener('change', updateCanvasDimensions);
+  sizeSelect?.addEventListener('change', () => {
+    updateCanvasDimensions();
+    resetPositionState();
+    renderCanvas();
+  });
+
+  const customWidthInput = document.getElementById('custom-width') as HTMLInputElement;
+  const customHeightInput = document.getElementById('custom-height') as HTMLInputElement;
+
+  customWidthInput?.addEventListener('input', () => {
+    updateCanvasDimensions();
+    resetPositionState();
+  });
+  customHeightInput?.addEventListener('input', () => {
+    updateCanvasDimensions();
+    resetPositionState();
+  });
 
   // Alignment Guide Toggle
   guideToggle?.addEventListener('change', () => {
@@ -1426,8 +1708,48 @@ import { Upload, Download, RefreshCw, Layers, FileImage, Sparkles, Compass, Chec
     const dx = -sourceImage.width / 2;
     const dy = -sourceImage.height / 2;
 
+    // Apply adjustments filters
+    let adjB = brightness;
+    let adjC = contrast;
+    let adjS = saturation;
+    let adjBl = blur;
+
+    if (magicEnhance) {
+      adjB = Math.round(adjB * 1.04);
+      adjC = Math.round(adjC * 1.12);
+      adjS = Math.round(adjS * 1.15);
+    }
+
+    outCtx.filter = `brightness(${adjB}%) contrast(${adjC}%) saturate(${adjS}%) blur(${adjBl}px)`;
     outCtx.drawImage(tempCanvas, dx, dy, sourceImage.width, sourceImage.height);
+    outCtx.filter = 'none';
     outCtx.restore();
+
+    // 3. Draw Text Layers (without the active bounding box selection guide)
+    textLayers.forEach(layer => {
+      outCtx.save();
+      
+      let fontStyle = '';
+      if (layer.isItalic) fontStyle += 'italic ';
+      if (layer.isBold) fontStyle += 'bold ';
+      
+      outCtx.font = `${fontStyle}${layer.fontSize}px ${layer.fontFamily}`;
+      outCtx.fillStyle = layer.color;
+      outCtx.textBaseline = 'middle';
+      outCtx.textAlign = 'center';
+      
+      // Draw shadow for text legibility
+      outCtx.shadowColor = 'rgba(0, 0, 0, 0.4)';
+      outCtx.shadowBlur = 4;
+      outCtx.shadowOffsetX = 2;
+      outCtx.shadowOffsetY = 2;
+      
+      const tx = layer.x * w;
+      const ty = layer.y * h;
+      
+      outCtx.fillText(layer.text, tx, ty);
+      outCtx.restore();
+    });
 
     // Export & download
     const mimeType = 'image/png';

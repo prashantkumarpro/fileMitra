@@ -1,4 +1,4 @@
-const CACHE_NAME = "filemitra-v1";
+const CACHE_NAME = "imagemitra-v1";
 const PRECACHE_URLS = [
   "/",
   "/tools/bg-remover",
@@ -6,9 +6,6 @@ const PRECACHE_URLS = [
   "/tools/image-convert",
   "/tools/image-resize",
   "/tools/image-to-pdf",
-  "/tools/pdf-merge",
-  "/tools/pdf-split",
-  "/tools/pdf-to-image",
   "/favicon.svg",
   "/manifest.json",
   "/icon-192.png",

@@ -32,7 +32,7 @@ import { Upload, Download, RefreshCw, FileText, ArrowUp, ArrowDown, Trash2 } fro
     <div id="workspace" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-6 items-start animate-in fade-in duration-200">
       
       <!-- Left side: Image Queue List (2 columns) -->
-      <div class="flex flex-col gap-4 lg:col-span-2">
+      <div class="flex flex-col gap-4 lg:col-span-2 order-1 lg:order-2">
         <div class="bg-canvas border border-hairline rounded-md p-6 shadow-level-3">
           <div class="flex items-center justify-between border-b border-hairline pb-4 mb-4 select-none">
             <h3 class="font-sans font-semibold text-sm text-ink">Image Slides Queue</h3>
@@ -52,7 +52,7 @@ import { Upload, Download, RefreshCw, FileText, ArrowUp, ArrowDown, Trash2 } fro
       </div>
 
       <!-- Right side: Formatting / Settings & Compile (1 column) -->
-      <div class="flex flex-col gap-6 lg:col-span-1">
+      <div class="flex flex-col gap-6 lg:col-span-1 order-2 lg:order-1">
         <div class="bg-canvas border border-hairline rounded-md p-6 shadow-level-3 flex flex-col gap-6">
           <h3 class="font-sans font-semibold text-sm text-ink pb-3 border-b border-hairline select-none flex items-center gap-1.5">
             <FileText class="w-4 h-4 text-mute" />
@@ -416,7 +416,11 @@ import { Upload, Download, RefreshCw, FileText, ArrowUp, ArrowDown, Trash2 } fro
     const urlParams = new URLSearchParams(window.location.search);
     const editId = urlParams.get('editId');
     if (editId) {
-      window.location.href = `/tools/pdf-split?editId=${editId}`;
+      const record = await getProcessedFile(parseInt(editId));
+      if (record) {
+        const file = new File([record.blob], record.name, { type: record.type });
+        handleFiles([file]);
+      }
     }
   });
 

@@ -12,8 +12,8 @@ interface Props {
 }
 
 const { 
-	title = "FileMitra - Premium Image & PDF Processing Tools", 
-	description = "Compress, resize, and convert images, or merge, split, and extract PDFs client-side in seconds with absolute privacy." 
+	title = "imageMitra - Premium Image Processing Tools", 
+	description = "Compress, resize, remove background, convert images, or compile images to PDF client-side in seconds with absolute privacy." 
 } = Astro.props;
 ---
 
@@ -29,7 +29,7 @@ const {
 		<link rel="manifest" href="/manifest.json" />
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<meta name="apple-mobile-web-app-status-bar-style" content="default" />
-		<meta name="apple-mobile-web-app-title" content="FileMitra" />
+		<meta name="apple-mobile-web-app-title" content="imageMitra" />
 		<link rel="apple-touch-icon" href="/icon-192.png" />
 		
 		<!-- Theme Initialization Script to Prevent White Flash -->
@@ -73,10 +73,10 @@ const {
 		<meta name="description" content={description} />
 		<meta name="robots" content="index, follow" />
 		
-		<!-- Google Fonts for Inter and JetBrains Mono -->
+		<!-- Google Fonts for Inter, JetBrains Mono, Outfit, Playfair Display, and Fira Mono -->
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;500;700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Outfit:wght@100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
 	</head>
 	<body class="bg-canvas-soft text-ink font-sans min-h-screen flex flex-col antialiased selection:bg-primary selection:text-on-primary pb-16 md:pb-0">
 		<Header />

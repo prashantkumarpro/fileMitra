@@ -1,4 +1,4 @@
-const DB_NAME = 'FileMitraDB';
+const DB_NAME = 'ImageMitraDB';
 const DB_VERSION = 1;
 const STORE_NAME = 'processed_files';
 

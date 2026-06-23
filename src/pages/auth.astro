@@ -3,7 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import { Sparkles, ArrowLeft, Eye, EyeOff } from 'lucide-astro';
 ---
 
-<Layout title="Sign In - FileMitra" description="Access your FileMitra account to unlock premium tools and integrations.">
+<Layout title="Sign In - imageMitra" description="Access your imageMitra account to unlock premium tools and integrations.">
   <div class="flex-grow flex items-center justify-center py-16 px-4 relative overflow-hidden bg-canvas-soft">
     <!-- Spot shadow design background -->
     <div class="absolute inset-0 z-0 flex items-center justify-center overflow-hidden">
@@ -22,7 +22,7 @@ import { Sparkles, ArrowLeft, Eye, EyeOff } from 'lucide-astro';
       <!-- Title / Brand -->
       <div class="flex flex-col gap-1.5 text-center mt-2">
         <div class="flex items-center justify-center gap-2">
-          <!-- FileMitra Custom Isometric Folded Document Logo -->
+          <!-- imageMitra Custom Isometric Folded Document Logo -->
           <svg viewBox="0 0 100 100" class="w-5.5 h-5.5" aria-hidden="true">
             <polygon points="20,35 50,15 50,85 20,65" fill="url(#auth-brand-grad-1)" />
             <polygon points="80,35 50,15 50,85 80,65" fill="url(#auth-brand-grad-2)" />
@@ -38,7 +38,7 @@ import { Sparkles, ArrowLeft, Eye, EyeOff } from 'lucide-astro';
               </linearGradient>
             </defs>
           </svg>
-          <span class="font-sans font-bold text-sm tracking-tight select-none">FileMitra Platform</span>
+          <span class="font-sans font-bold text-sm tracking-tight select-none">imageMitra Platform</span>
         </div>
         <h2 id="auth-title" class="display-sm text-ink mt-2">Welcome back.</h2>
         <p id="auth-subtitle" class="text-body text-xs">Enter your details below to sign in to your dashboard.</p>
@@ -108,7 +108,7 @@ import { Sparkles, ArrowLeft, Eye, EyeOff } from 'lucide-astro';
 
         <!-- Terms agreement notice -->
         <p class="text-[10px] text-mute text-center leading-normal px-2 mt-1 select-none">
-          By continuing, you agree to FileMitra's <a href="#" class="text-body hover:text-ink underline">Terms of Service</a> and <a href="#" class="text-body hover:text-ink underline">Privacy Policy</a>.
+          By continuing, you agree to imageMitra's <a href="#" class="text-body hover:text-ink underline">Terms of Service</a> and <a href="#" class="text-body hover:text-ink underline">Privacy Policy</a>.
         </p>
 
       </form>
@@ -161,7 +161,7 @@ import { Sparkles, ArrowLeft, Eye, EyeOff } from 'lucide-astro';
       tabLogin?.classList.add('text-body', 'hover:text-ink');
 
       if (authTitle) authTitle.innerText = "Create an account.";
-      if (authSubtitle) authSubtitle.innerText = "Get started with FileMitra to unlock high-capacity compression.";
+      if (authSubtitle) authSubtitle.innerText = "Get started with imageMitra to unlock high-capacity compression.";
       fieldName?.classList.remove('hidden');
       forgotPassword?.classList.add('hidden');
       if (submitBtn) submitBtn.innerText = "Sign Up";
@@ -214,7 +214,7 @@ import { Sparkles, ArrowLeft, Eye, EyeOff } from 'lucide-astro';
     const name = nameInput?.value || email.split('@')[0];
     
     // Save user session to localStorage
-    localStorage.setItem('filemitra_user', JSON.stringify({ email, name }));
+    localStorage.setItem('imagemitra_user', JSON.stringify({ email, name }));
     
     // Redirect to home dashboard
     window.location.href = '/';

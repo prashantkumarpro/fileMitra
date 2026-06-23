@@ -19,7 +19,7 @@ import { Sparkles, X, Upload, Check, RefreshCw, FileText, ArrowRight, Download, 
         <Sparkles class="w-5 h-5 text-violet animate-pulse" />
       </span>
       <div class="flex flex-col">
-        <h2 class="font-sans font-semibold text-sm text-ink leading-tight">Ask FileMitra AI</h2>
+        <h2 class="font-sans font-semibold text-sm text-ink leading-tight">Ask imageMitra AI</h2>
         <span class="font-mono text-[9px] text-mute uppercase">On-device client processing agent</span>
       </div>
     </div>
@@ -66,10 +66,10 @@ import { Sparkles, X, Upload, Check, RefreshCw, FileText, ArrowRight, Download, 
 
       <!-- Compact File Attachment Dropzone -->
       <div id="ai-dropzone" class="border border-dashed border-hairline hover:border-hairline-strong bg-canvas-soft rounded-sm p-4 flex flex-col items-center justify-center text-center cursor-pointer transition-all select-none">
-        <input type="file" id="ai-file-input" accept="image/png, image/jpeg, image/webp, application/pdf" multiple class="hidden" />
+        <input type="file" id="ai-file-input" accept="image/png, image/jpeg, image/webp" multiple class="hidden" />
         <Upload class="w-4 h-4 text-mute mb-1" />
         <span class="text-[11px] font-semibold text-ink">Attach a file to process</span>
-        <span class="text-[9px] text-mute">PNG, JPEG, WebP, or PDF</span>
+        <span class="text-[9px] text-mute">PNG, JPEG, or WebP</span>
       </div>
 
       <!-- Attached File Display Card (Hidden by default) -->
@@ -350,7 +350,7 @@ import { Sparkles, X, Upload, Check, RefreshCw, FileText, ArrowRight, Download, 
       e.preventDefault();
       
       // Accessing the feature requires user to be logged in!
-      const userStr = localStorage.getItem('filemitra_user');
+      const userStr = localStorage.getItem('imagemitra_user');
       if (!userStr) {
         window.location.href = '/auth?tab=login';
       } else {
@@ -539,7 +539,7 @@ import { Sparkles, X, Upload, Check, RefreshCw, FileText, ArrowRight, Download, 
     resetAttachedFile();
 
     // Welcome speech
-    speak("Hi there! I'm FileMitra AI. Please attach a file and type or speak your command.");
+    speak("Hi there! I'm imageMitra AI. Please attach a file and type or speak your command.");
   }
 
   function closeModal() {
@@ -765,22 +765,8 @@ import { Sparkles, X, Upload, Check, RefreshCw, FileText, ArrowRight, Download, 
       // ─── PIPELINE SELECTION ───
       const cleanName = activeFiles[0].name.substring(0, activeFiles[0].name.lastIndexOf('.')) || activeFiles[0].name;
 
-      // 1. Multiple Files Merge PDF
-      if (activeFiles.length > 1 && activeFiles.every(f => f.type === 'application/pdf') && (prompt.includes('merge') || prompt.includes('combine') || prompt.includes('join') || prompt.includes('concat'))) {
-        const mergedPdf = await PDFDocument.create();
-        for (const file of activeFiles) {
-          const arrayBuffer = await file.arrayBuffer();
-          const doc = await PDFDocument.load(arrayBuffer);
-          const copiedPages = await mergedPdf.copyPages(doc, doc.getPageIndices());
-          copiedPages.forEach((page) => mergedPdf.addPage(page));
-        }
-        const mergedPdfBytes = await mergedPdf.save();
-        resultBlob = new Blob([mergedPdfBytes], { type: 'application/pdf' });
-        resultUrl = URL.createObjectURL(resultBlob);
-        resultName = 'merged-document.pdf';
-      }
-      // 2. Multiple Files / Single file Image compiler to PDF
-      else if ((activeFiles.length > 1 && activeFiles.every(f => f.type.startsWith('image/'))) || (activeFiles.length === 1 && activeFiles[0].type.startsWith('image/') && convertFormat === 'application/pdf')) {
+      // 1. Multiple Files / Single file Image compiler to PDF
+      if ((activeFiles.length > 1 && activeFiles.every(f => f.type.startsWith('image/'))) || (activeFiles.length === 1 && activeFiles[0].type.startsWith('image/') && convertFormat === 'application/pdf')) {
         const pdfDoc = await PDFDocument.create();
         for (const file of activeFiles) {
           const arrayBuffer = await file.arrayBuffer();
@@ -817,84 +803,7 @@ import { Sparkles, X, Upload, Check, RefreshCw, FileText, ArrowRight, Download, 
         resultUrl = URL.createObjectURL(resultBlob);
         resultName = `${cleanName}-compiled.pdf`;
       }
-      // 3. Single PDF split/extract range
-      else if (activeFiles.length === 1 && activeFiles[0].type === 'application/pdf' && (prompt.includes('split') || prompt.includes('extract') || prompt.includes('page') || prompt.includes('range'))) {
-        const arrayBuffer = await activeFiles[0].arrayBuffer();
-        const sourceDoc = await PDFDocument.load(arrayBuffer);
-        const maxPages = sourceDoc.getPageCount();
-
-        const rangeMatch = prompt.match(/(?:pages?|extract|split|range)\s*([0-9\s,-]+)/i) || prompt.match(/\b([0-9\s,-]+)\b/);
-        let pageRangeStr = '';
-        if (rangeMatch) {
-          pageRangeStr = rangeMatch[1] || rangeMatch[0];
-        }
-
-        let targets: number[] = [];
-        if (pageRangeStr) {
-          targets = parsePageRange(pageRangeStr, maxPages);
-        }
-
-        if (targets.length === 0) {
-          if (prompt.includes('first page') || prompt.includes('page 1')) {
-            targets = [0];
-          } else if (prompt.includes('last page')) {
-            targets = [maxPages - 1];
-          } else {
-            targets = [0]; // default first page
-          }
-        }
-
-        const subDoc = await PDFDocument.create();
-        const copiedPages = await subDoc.copyPages(sourceDoc, targets);
-        copiedPages.forEach(page => subDoc.addPage(page));
-
-        const subDocBytes = await subDoc.save();
-        resultBlob = new Blob([subDocBytes], { type: 'application/pdf' });
-        resultUrl = URL.createObjectURL(resultBlob);
-        resultName = `${cleanName}-split.pdf`;
-      }
-      // 4. Single PDF to Image conversion
-      else if (activeFiles.length === 1 && activeFiles[0].type === 'application/pdf' && (prompt.includes('image') || prompt.includes('png') || prompt.includes('jpg') || prompt.includes('jpeg') || prompt.includes('convert'))) {
-        // Load PDF.js dynamically
-        await loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js');
-        // @ts-ignore
-        const pdfjsLib = window['pdfjs-dist/build/pdf'];
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
-
-        const arrayBuffer = await activeFiles[0].arrayBuffer();
-        const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
-        const pdf = await loadingTask.promise;
-
-        let targetPageNum = 1;
-        const pageMatch = prompt.match(/(?:page)\s*(\d+)/i);
-        if (pageMatch) {
-          const num = parseInt(pageMatch[1]);
-          if (num >= 1 && num <= pdf.numPages) targetPageNum = num;
-        }
-
-        const page = await pdf.getPage(targetPageNum);
-        const viewport = page.getViewport({ scale: 1.5 });
-        const canvas = document.createElement('canvas');
-        canvas.width = viewport.width;
-        canvas.height = viewport.height;
-        const context = canvas.getContext('2d');
-        if (!context) throw new Error("Could not create canvas context");
-
-        await page.render({
-          canvasContext: context,
-          viewport: viewport
-        }).promise;
-
-        const mime = convertFormat || 'image/png';
-        const ext = mime.split('/')[1];
-
-        resultBlob = await new Promise<Blob | null>((resolve) => canvas.toBlob(b => resolve(b), mime));
-        if (resultBlob) {
-          resultUrl = URL.createObjectURL(resultBlob);
-          resultName = `${cleanName}-page-${targetPageNum}.${ext}`;
-        }
-      }
-      // 5. Single Image Canvas pipeline (Compress / Resize / Convert Format / Remove BG)
+      // 2. Single Image Canvas pipeline (Compress / Resize / Convert Format / Remove BG)
       else if (activeFiles.length === 1 && activeFiles[0].type.startsWith('image/')) {
         const imgItem = sourceImages.find(item => item.name === activeFiles[0].name);
         const imgEl = imgItem ? imgItem.img : null;

@@ -32,7 +32,7 @@ import { Upload, Download, RefreshCw, Maximize2, RotateCw, RotateCcw, FlipHorizo
     <div id="workspace" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-6 items-start animate-in fade-in duration-200">
       
       <!-- Controls Panel (1 column) -->
-      <div class="flex flex-col gap-6 lg:col-span-1">
+      <div class="flex flex-col gap-6 lg:col-span-1 order-2 lg:order-1">
         <div class="bg-canvas border border-hairline rounded-md p-5 shadow-level-3 flex flex-col gap-5 max-h-[80vh] overflow-y-auto">
           
           <h3 class="font-sans font-semibold text-sm text-ink pb-2.5 border-b border-hairline select-none flex items-center gap-1.5">
@@ -204,7 +204,7 @@ import { Upload, Download, RefreshCw, Maximize2, RotateCw, RotateCcw, FlipHorizo
       </div>
 
       <!-- Preview Workspace (2 columns) -->
-      <div class="flex flex-col gap-6 lg:col-span-2">
+      <div class="flex flex-col gap-6 lg:col-span-2 order-1 lg:order-2">
         <div class="bg-canvas border border-hairline rounded-md p-6 shadow-level-3 flex flex-col gap-4">
           <div class="flex items-center justify-between select-none">
             <h3 class="font-sans font-semibold text-sm text-ink">Interactive Studio Canvas</h3>

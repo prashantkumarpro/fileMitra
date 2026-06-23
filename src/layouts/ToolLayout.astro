@@ -11,20 +11,15 @@ interface Props {
 const { title, description, activeTool } = Astro.props;
 
 const imageTools = [
+  { id: 'bg-remover', name: 'BG Remover & Passport', href: '/tools/bg-remover' },
   { id: 'image-compress', name: 'Compress Image', href: '/tools/image-compress' },
   { id: 'image-resize', name: 'Resize Image', href: '/tools/image-resize' },
   { id: 'image-convert', name: 'Convert Format', href: '/tools/image-convert' },
-];
-
-const pdfTools = [
-  { id: 'pdf-merge', name: 'Merge PDFs', href: '/tools/pdf-merge' },
-  { id: 'pdf-split', name: 'Split PDF', href: '/tools/pdf-split' },
-  { id: 'pdf-to-image', name: 'PDF to Image', href: '/tools/pdf-to-image' },
   { id: 'image-to-pdf', name: 'Image to PDF', href: '/tools/image-to-pdf' },
 ];
 ---
 
-<Layout title={`${title} - FileMitra`} description={description}>
+<Layout title={`${title} - imageMitra`} description={description}>
   <div class="flex-grow flex flex-col md:flex-row max-w-[1400px] w-full mx-auto px-4 py-8 gap-8">
     
     <!-- Left Sidebar: Tools Directory (Hidden on Mobile) -->
@@ -42,32 +37,6 @@ const pdfTools = [
         </div>
         <div class="flex flex-col gap-0.5">
           {imageTools.map((tool) => {
-            const isActive = tool.id === activeTool;
-            return (
-              <a
-                href={tool.href}
-                class={`flex items-center justify-between px-3 py-2 rounded-sm text-sm transition-all relative active:scale-[0.98] cursor-pointer ${
-                  isActive
-                    ? 'bg-canvas text-ink font-medium shadow-level-2 border-l-2 border-primary pl-2.5'
-                    : 'text-body hover:bg-canvas-soft-2 hover:text-ink'
-                }`}
-              >
-                {tool.name}
-                <ChevronRight class={`w-4 h-4 text-mute transition-transform ${isActive ? 'translate-x-0.5 text-ink' : ''}`} />
-              </a>
-            );
-          })}
-        </div>
-      </div>
-
-      <!-- PDF Tools Category -->
-      <div class="flex flex-col gap-1.5">
-        <div class="flex items-center gap-2 px-3 py-1 font-mono text-[11px] uppercase tracking-wider font-semibold text-mute select-none">
-          <FileText class="w-3.5 h-3.5" />
-          PDF Tools
-        </div>
-        <div class="flex flex-col gap-0.5">
-          {pdfTools.map((tool) => {
             const isActive = tool.id === activeTool;
             return (
               <a

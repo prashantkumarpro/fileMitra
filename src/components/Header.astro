@@ -6,7 +6,7 @@ import { Sparkles, Menu, X, Sun, Moon } from 'lucide-astro';
   <!-- Left: Logo -->
   <div class="flex items-center gap-6">
     <a href="/" class="flex items-center gap-2.5 group">
-      <!-- FileMitra Custom Isometric Folded Document Logo -->
+      <!-- imageMitra Custom Isometric Folded Document Logo -->
       <svg viewBox="0 0 100 100" class="w-6.5 h-6.5 transition-transform group-hover:scale-105" aria-hidden="true">
         <polygon points="20,35 50,15 50,85 20,65" fill="url(#nav-brand-grad-1)" />
         <polygon points="80,35 50,15 50,85 80,65" fill="url(#nav-brand-grad-2)" />
@@ -23,7 +23,7 @@ import { Sparkles, Menu, X, Sun, Moon } from 'lucide-astro';
         </defs>
       </svg>
       <span class="font-sans font-semibold text-lg tracking-tight select-none">
-        FileMitra<span class="text-mute font-normal text-sm ml-1 select-none">.com</span>
+        imageMitra<span class="text-mute font-normal text-sm ml-1 select-none">.com</span>
       </span>
     </a>
 
@@ -178,7 +178,7 @@ import { Sparkles, Menu, X, Sun, Moon } from 'lucide-astro';
 
   // Client-side authentication display logic
   function checkLoginState() {
-    const userStr = localStorage.getItem('filemitra_user');
+    const userStr = localStorage.getItem('imagemitra_user');
     if (userStr) {
       try {
         const user = JSON.parse(userStr);
@@ -223,12 +223,12 @@ import { Sparkles, Menu, X, Sun, Moon } from 'lucide-astro';
 
   // Wire up logouts
   document.getElementById('logout-btn')?.addEventListener('click', () => {
-    localStorage.removeItem('filemitra_user');
+    localStorage.removeItem('imagemitra_user');
     window.location.reload();
   });
 
   document.getElementById('mobile-logout-btn')?.addEventListener('click', () => {
-    localStorage.removeItem('filemitra_user');
+    localStorage.removeItem('imagemitra_user');
     window.location.reload();
   });
 

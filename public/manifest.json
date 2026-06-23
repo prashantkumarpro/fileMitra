@@ -1,7 +1,7 @@
 {
-  "name": "FileMitra - Local Browser File and Tool Engine",
-  "short_name": "FileMitra",
-  "description": "Progressive Web App for client-side privacy-first image and PDF processing tools.",
+  "name": "imageMitra - Local Browser Image Tool Engine",
+  "short_name": "imageMitra",
+  "description": "Progressive Web App for client-side privacy-first on-device image processing tools.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#fafafa",
